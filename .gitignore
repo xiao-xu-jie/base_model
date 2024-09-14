@@ -41,3 +41,5 @@ build/
 **/rebel.xml
 # 项目排除路径
 /out/
+logs
+logs/**
