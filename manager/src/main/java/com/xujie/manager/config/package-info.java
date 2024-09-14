@@ -3,4 +3,4 @@
  * 创建时间： 2024/9/14 08:48
  * 作者：Xujie
  */
-package com.xujie.config;
+package com.xujie.manager.config;

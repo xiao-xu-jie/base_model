@@ -3,4 +3,4 @@
  * 创建时间： 2024/9/14 08:51
  * 作者：Xujie
  */
-package com.xujie.domain.BO;
+package com.xujie.manager.domain.BO;

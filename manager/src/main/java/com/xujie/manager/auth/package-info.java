@@ -4,4 +4,4 @@
  * 作者：Xujie
  */
 
-package com.xujie.auth;
+package com.xujie.manager.auth;

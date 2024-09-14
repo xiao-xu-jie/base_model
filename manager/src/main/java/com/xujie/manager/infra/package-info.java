@@ -3,4 +3,4 @@
  * 创建时间： 2024/9/14 08:50
  * 作者：Xujie
  */
-package com.xujie.infra;
+package com.xujie.manager.infra;

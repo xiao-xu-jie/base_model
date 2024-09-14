@@ -1,4 +1,4 @@
-package com.xujie.controller;
+package com.xujie.manager.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
