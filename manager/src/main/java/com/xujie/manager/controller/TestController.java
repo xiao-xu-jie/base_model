@@ -1,5 +1,6 @@
 package com.xujie.manager.controller;
 
+import com.xujie.manager.common.entity.Result;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @RequestMapping("/hello")
-    public String hello() {
-        return "hello";
+    public Result<String> hello() {
+        return Result.ok("hello");
     }
 }

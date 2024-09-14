@@ -3,3 +3,5 @@ server:
 spring:
   profiles:
     active: ${env-flag:dev}
+logging:
+  config: classpath:log4j2-spring.xml

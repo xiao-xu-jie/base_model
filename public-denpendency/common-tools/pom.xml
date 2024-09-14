@@ -57,6 +57,8 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
+            <version>5.8.25</version>
+
         </dependency>
     </dependencies>
     <!-- 阿里云的Maven镜像源 -->
