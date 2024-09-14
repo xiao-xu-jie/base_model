@@ -2,9 +2,11 @@ package com.xujie.business.application.redis.utils;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings(value = {"unchecked"})
@@ -69,6 +71,33 @@ public class RedisUtils {
         return staticRedisTemplate.getExpire(key);
     }
 
+    /**
+     * zset添加元素
+     */
+    public static boolean zAdd(String key, Object value, double score) {
+        return Boolean.TRUE.equals(staticRedisTemplate.opsForZSet().add(key, value, score));
+    }
+
+    /**
+     * zset添加TypedTuple元素
+     */
+    public static Long zAdd(String key, Set<ZSetOperations.TypedTuple<Object>> tuple) {
+        return staticRedisTemplate.opsForZSet().add(key, tuple);
+    }
+
+    /**
+     * 获取zset的元素
+     */
+    public static Set<ZSetOperations.TypedTuple<Object>> zGet(String key, long start, long end) {
+        return staticRedisTemplate.opsForZSet().rangeByScoreWithScores(key, start, end);
+    }
+
+    /**
+     * 删除指定分数之前的元素
+     */
+    public static Long zRemoveRangeByScore(String key, double min, double max) {
+        return staticRedisTemplate.opsForZSet().removeRangeByScore(key, min, max);
+    }
     // Springboot启动成功之后会调用这个方法
     @PostConstruct
     public void initRedis() {

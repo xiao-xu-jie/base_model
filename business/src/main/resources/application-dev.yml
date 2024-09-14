@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://110.40.42.211:3306/pay?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
+    username: pay
+    password: w5HrnT8Zpf7Yzy7P
+    #    publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ0Ov8FF97EkC0OeLLqsQHd3WTQcfvL51YQ3q5b2jsgUGdqEJjQ3CxwiFn8w7kwxFmR9mC1JtQrbgClH1w3sLg0CAwEAAQ==
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 20
+      min-idle: 20
+      max-active: 100
+      max-wait: 60000
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 2000
+        wall:
+          enabled: true
+  rabbitmq:
+    host: 110.40.42.211
+    port: 5672
+    virtual-host: /
+    username: admin
+    password: 419a4576
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 123456
+      database: 0
+      lettuce:
+        pool:
+          max-active: 20
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 1
+      timeout: 3000ms
+mybatis-plus:
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+  mapper-locations: classpath:mapper/**.xml
+  type-aliases-package: com.xujie.**.basic.entity
+  global-config:
+    db-config:
+      logic-delete-field: is_delete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: assign_id
