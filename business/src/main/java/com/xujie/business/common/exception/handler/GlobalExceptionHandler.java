@@ -1,7 +1,7 @@
 package com.xujie.business.common.exception.handler;
 
 import com.xujie.business.common.entity.Result;
-import com.xujie.business.common.exception.CustomException;
+import com.xujie.business.common.exception.BaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -19,12 +19,12 @@ import java.util.Set;
  * @Date: 2024/7/15 21:59
  * @Description:
  **/
-@RestControllerAdvice(basePackages = "com.xujie.controller")
+@RestControllerAdvice(basePackages = "com.xujie.business")
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({CustomException.class})
-    public Result<Boolean> customExceptionHandler(CustomException e) {
+    @ExceptionHandler({BaseException.class})
+    public Result<Boolean> customExceptionHandler(BaseException e) {
         return Result.fail(e, null);
     }
 
@@ -49,11 +49,10 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler({RuntimeException.class})
-//    @ResponseStatus(code = HttpStatus.ACCEPTED, reason = "系统异常")
     public Result<Boolean> exceptionHandler(Exception e) {
-
         log.error("系统异常", e);
-        return Result.fail(e.getMessage().substring(1, 10), Arrays.toString(e.getStackTrace()).substring(1, 10));
+        int length = Math.min(e.getMessage().length(), 10);
+        return Result.fail(e.getMessage().substring(0, length), Arrays.toString(e.getStackTrace()).substring(1, 10));
     }
 
     @ExceptionHandler({IllegalArgumentException.class})

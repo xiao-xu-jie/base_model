@@ -1,7 +1,7 @@
 package com.xujie.business.common.entity;
 
 import com.xujie.business.common.enums.BaseResultEnum;
-import com.xujie.business.common.exception.CustomException;
+import com.xujie.business.common.exception.BaseException;
 import lombok.Data;
 
 /**
@@ -35,10 +35,10 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> fail(CustomException customException, String detail) {
+    public static <T> Result<T> fail(BaseException baseException, String detail) {
         Result<T> result = new Result<>();
-        result.setCode(customException.getCode());
-        result.setMessage(customException.getMessage());
+        result.setCode(baseException.getCode());
+        result.setMessage(baseException.getMessage());
         result.setSuccess(false);
         result.setDetail(detail);
         return result;

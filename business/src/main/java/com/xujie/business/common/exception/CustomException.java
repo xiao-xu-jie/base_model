@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 /**
  * @Author: Xujie
  * @Date: 2024/7/15 21:58
- * @Description:
+ * @Description: 业务异常
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomException extends RuntimeException {
+public class CustomException extends BaseException {
 
     private Integer code;
     private String message;

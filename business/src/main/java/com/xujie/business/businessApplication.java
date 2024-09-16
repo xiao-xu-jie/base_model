@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * @since 2024/9/13 17:24
  **/
 @Slf4j
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication
 public class businessApplication {
 
     public static String staticEnv;
