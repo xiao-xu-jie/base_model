@@ -3,12 +3,14 @@ package com.xujie.http.config;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
@@ -19,7 +21,7 @@ import java.time.Duration;
  * @author Xujie
  * @since 2024/9/15 11:45
  **/
-
+@Slf4j
 @Configuration
 public class WebclientConfig {
     @ConditionalOnProperty(prefix = "xujie", name = "webclient", havingValue = "true")
@@ -64,7 +66,17 @@ public class WebclientConfig {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.CONNECTION, "keep-alive")
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .filter(logRequest())
                 .build();
     }
 
+    private ExchangeFilterFunction logRequest() {
+        return (clientRequest, next) -> {
+            log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
+            clientRequest.headers()
+                    .forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));
+            return next.exchange(clientRequest);
+        };
+
+    }
 }
