@@ -4,6 +4,7 @@ import com.xujie.wx.config.WxAppConfig;
 import com.xujie.wx.constants.WxAppApiConstant;
 import com.xujie.wx.entity.WxAppInfo;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,9 +14,9 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @since 2024/9/15 10:18
  * Description: 微信小程序工具类
  **/
-
+@Slf4j
 @Component
-public class WxAppUtils {
+public class WxAppUtil {
     @Lazy
     @Resource
     private WxAppConfig wxAppConfig;
@@ -36,4 +37,5 @@ public class WxAppUtils {
                 .block();
         return wxAppInfo;
     }
+
 }

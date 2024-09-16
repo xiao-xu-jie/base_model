@@ -1,6 +1,6 @@
 package com.xujie.wx.config;
 
-import com.xujie.wx.utils.WxAppUtils;
+import com.xujie.wx.utils.WxAppUtil;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  **/
 
 @ComponentScan(value = "com.xujie.wx")
-@Import({WxAppUtils.class})
+@Import({WxAppUtil.class})
 public class wxAutoConfiguration {
     Logger logger = Logger.getLogger("wxAutoConfiguration");
 
