@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -31,6 +32,7 @@ import java.util.Map;
  * Description: 微信公众号工具类
  **/
 @Slf4j
+@ConditionalOnBean(value = {WxMpConfig.class})
 @Component
 public class WxMpUtil {
     @Lazy
@@ -42,6 +44,64 @@ public class WxMpUtil {
     private WxMpConfig wxMpConfig;
 
     private WxMpToken token;
+
+    /**
+     * 处理微信公众号登录
+     *
+     * @param request
+     * @param token
+     * @return scene_str
+     */
+    public static String handleWxMpLogin(HttpServletRequest request, String token) {
+        // 微信加密签名
+        final String signature = request.getParameter("signature");
+        // 时间戳
+        final String timestamp = request.getParameter("timestamp");
+        // 随机数
+        final String nonce = request.getParameter("nonce");
+        // 随机字符串
+        final String echostr = request.getParameter("echostr");
+        Boolean checked = checkSignature(signature, timestamp, nonce, token);
+
+        //将xml文件转成易处理的map(下方贴出)
+        final Map<String, String> map;
+        try {
+            map = parseXml(request);
+        } catch (Exception e) {
+            if (log.isInfoEnabled()) {
+                log.info("解析xml失败");
+            }
+            throw new RuntimeException("解析xml失败");
+        }
+        //开发者微信号
+        final String toUserName = map.get("ToUserName");
+        //OpenId
+        final String fromUserName = map.get("FromUserName");
+        //消息创建时间 （整型）
+        final String createTime = map.get("CreateTime");
+        //消息类型，event
+        final String msgType = map.get("MsgType");
+        //事件类型
+        final String event = map.get("Event");
+
+        String scene_str = "";
+        if ("event".equals(msgType)) {
+            if (event.equals("subscribe")) {
+                final String ticket = map.get("Ticket");
+                if (ticket != null) {
+                    scene_str = map.get("EventKey").replace("qrscene_", "");
+                }
+            }
+            //注：事件类型为SCAN即已关注
+            else if (event.equals("SCAN")) {
+                final String ticket = map.get("Ticket");
+                if (ticket != null) {
+                    scene_str = map.get("EventKey");
+                }
+            }
+        }
+        return scene_str;
+    }
 
     /**
      * 将xml文件转成易处理的map

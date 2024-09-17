@@ -179,6 +179,13 @@
             <artifactId>http-webclient-xujie-springboot-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!-- 微信支付 -->
+        <dependency>
+            <groupId>com.github.wechatpay-apiv3</groupId>
+            <artifactId>wechatpay-java</artifactId>
+            <version>0.2.12</version>
+        </dependency>
+
     </dependencies>
     <!-- 阿里云的Maven镜像源 -->
     <repositories>
