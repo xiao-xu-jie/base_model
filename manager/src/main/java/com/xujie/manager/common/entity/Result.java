@@ -1,7 +1,8 @@
 package com.xujie.manager.common.entity;
 
+
 import com.xujie.manager.common.enums.BaseResultEnum;
-import com.xujie.manager.common.exception.CustomException;
+import com.xujie.manager.common.exception.BaseException;
 import lombok.Data;
 
 /**
@@ -11,6 +12,7 @@ import lombok.Data;
  **/
 @Data
 public class Result<T> {
+
     private Integer code;
     private String message;
     private Boolean success;
@@ -26,6 +28,15 @@ public class Result<T> {
         return result;
     }
 
+    public static <T> Result<T> okMessage(String message) {
+        Result<T> result = new Result<>();
+        result.setCode(BaseResultEnum.SUCCESS.getCode());
+        result.setMessage(message);
+        result.setSuccess(true);
+        result.setData(null);
+        return result;
+    }
+
     public static <T> Result<T> fail(String message, String detail) {
         Result<T> result = new Result<>();
         result.setCode(BaseResultEnum.FAIL.getCode());
@@ -35,10 +46,10 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> fail(CustomException customException, String detail) {
+    public static <T> Result<T> fail(BaseException baseException, String detail) {
         Result<T> result = new Result<>();
-        result.setCode(customException.getCode());
-        result.setMessage(customException.getMessage());
+        result.setCode(baseException.getCode());
+        result.setMessage(baseException.getMessage());
         result.setSuccess(false);
         result.setDetail(detail);
         return result;

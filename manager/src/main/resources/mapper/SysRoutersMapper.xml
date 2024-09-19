@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.manager.infra.mapper.SysRoutersMapper">
+    <resultMap id="BaseResultMap" type="com.xujie.manager.infra.DO.SysRouters">
+        <!--@mbg.generated-->
+        <!--@Table sys_routers-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="redirect" jdbcType="VARCHAR" property="redirect"/>
+        <result column="component" jdbcType="VARCHAR" property="component"/>
+        <result column="showLink" jdbcType="BOOLEAN" property="showlink"/>
+        <result column="rank" jdbcType="INTEGER" property="rank"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, `name`, icon, title, parent_id, `path`, redirect, component, showLink, `rank`,
+        create_time, update_time, is_delete
+    </sql>
+</mapper>

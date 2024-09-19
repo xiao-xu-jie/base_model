@@ -1,0 +1,62 @@
+package com.xujie.manager.DTO.res;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.assertj.core.util.Lists;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @author Xujie
+ * @since 2024/9/17 22:47
+ **/
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class RouterResDTO {
+    /**
+     * 子节点
+     */
+    List<RouterResDTO> children;
+    List<String> roles = Lists.newArrayList("admin");
+    /**
+     * 路由ID
+     */
+
+    private Long id;
+    /**
+     * 名称
+     */
+
+    private String name;
+    private Meta meta;
+    /**
+     * 路径
+     */
+
+    private String path;
+    /**
+     * 重定向
+     */
+
+    private String redirect;
+    /**
+     * 组件
+     */
+
+    private String component;
+    /**
+     * 创建时间
+     */
+
+    private Date createTime;
+    /**
+     * 更新时间
+     */
+
+    private Date updateTime;
+}
+
