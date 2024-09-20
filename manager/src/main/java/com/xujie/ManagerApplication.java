@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * @author Xujie
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  **/
 @Slf4j
 @MapperScan("com.xujie.manager.infra.mapper")
+@EnableCaching
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class ManagerApplication {
     public static void main(String[] args) {
