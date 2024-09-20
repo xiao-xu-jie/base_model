@@ -1,11 +1,15 @@
 package com.xujie.manager.DTO.req;
 
+import com.xujie.manager.common.entity.Groups;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
+
+import java.util.List;
 
 /**
  * @author Xujie
@@ -17,6 +21,10 @@ import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBl
 @NoArgsConstructor
 public class UserAddReqDTO {
 
+    /**
+     * 用户ID
+     */
+    private Long id;
 
     /**
      * 用户名
@@ -27,8 +35,8 @@ public class UserAddReqDTO {
     /**
      * 密码
      */
-    @NotBlank(message = "密码不能为空")
-    @Size(min = 6, max = 20, message = "密码长度为6-20")
+    @NotBlank(message = "密码不能为空", groups = {Groups.Add.class})
+    @Size(min = 6, message = "密码长度不能小于6位", groups = {Groups.Add.class})
     private String password;
 
     /**
@@ -45,7 +53,7 @@ public class UserAddReqDTO {
     /**
      * 邮箱
      */
-    @NotBlank
+    @NotBlank(message = "邮箱不能为空", groups = {Groups.Add.class})
     @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "邮箱格式不正确")
     private String email;
 
@@ -53,8 +61,15 @@ public class UserAddReqDTO {
     /**
      * 手机号
      */
-    @NotBlank
+    @NotBlank(message = "手机号不能为空", groups = {Groups.Add.class})
     @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
     private String phone;
+
+    /**
+     * 角色
+     */
+    @NotNull(message = "角色不能为空")
+    @Size(min = 1, message = "至少选择一个角色")
+    private List<String> roles;
 
 }

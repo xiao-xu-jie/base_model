@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean updateUser(Long id, SysUser user) {
-        return false;
+        return baseMapper.updateById(user, id) > 0;
     }
 
     @Override

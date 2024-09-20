@@ -3,6 +3,7 @@ package com.xujie.manager.infra.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.manager.infra.DO.SysRole;
 import com.xujie.manager.infra.mapper.SysRoleMapper;
 import com.xujie.manager.infra.service.RoleService;
@@ -69,7 +70,26 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<SysRole> getAllRoleByCodes(List<String> codes) {
+        LambdaQueryWrapper<SysRole> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.in(SysRole::getCode, codes);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
     public SysRole getOneRoleByEntity(SysRole role) {
         return getAllRoleByEntity(role).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public Page<SysRole> getRolePageList(SysRole role, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<SysRole> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper
+                .eq(ObjectUtils.isNotNull(role.getId()), SysRole::getId, role.getId())
+                .eq(ObjectUtils.isNotNull(role.getName()), SysRole::getName, role.getName())
+                .eq(ObjectUtils.isNotNull(role.getCode()), SysRole::getCode, role.getCode())
+                .like(ObjectUtils.isNotNull(role.getRoleDesc()), SysRole::getRoleDesc, role.getRoleDesc());
+
+        return baseMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper);
     }
 }

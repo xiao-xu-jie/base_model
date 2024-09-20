@@ -36,6 +36,12 @@ public class CommonController {
     @Resource
     private UserDomainService userDomainService;
 
+    /**
+     * 用户登录
+     *
+     * @param loginReqDTO 登录信息
+     * @return 用户信息
+     */
     @PostMapping("/login")
     public Result<UserLoginResDTO> userLogin(@RequestBody @Validated LoginReqDTO loginReqDTO) {
         String password = loginReqDTO.getPassword();
@@ -49,6 +55,11 @@ public class CommonController {
         return Result.ok(user);
     }
 
+    /**
+     * 获取路由信息
+     *
+     * @return 路由信息
+     */
     @GetMapping("/getSyncRouter")
     public Result<List<RouterResDTO>> getSyncRouter() {
         List<RouterBO> routers = routerDomainService.getRouters();

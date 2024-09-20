@@ -4,6 +4,8 @@ package com.xujie.manager.domain.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.manager.domain.BO.UserBO;
 
+import java.util.List;
+
 /**
  * 用户领域服务
  */
@@ -23,4 +25,6 @@ public interface UserDomainService {
     void updateUser(UserBO userBO);
 
     UserBO handleLogin(String username, String password);
+
+    List<String> getUserRoleList(Long userId);
 }
