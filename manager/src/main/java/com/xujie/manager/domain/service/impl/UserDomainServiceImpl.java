@@ -14,6 +14,7 @@ import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,34 +41,37 @@ public class UserDomainServiceImpl implements UserDomainService {
      * @param userBO 用户信息
      */
     @Override
-    public void addUser(UserBO userBO) {
-        boolean success = baseService.addUser(userConvert.convertBO2DO(userBO));
-        userRoleService.saveUserRole(userBO.getId(), userBO.getRoles());
-        ConditionCheck.falseAndThrow(success, new CustomException("添加用户失败"));
+    @Transactional(rollbackFor = Exception.class)
+    public void add(UserBO userBO) {
+        Long userId = baseService.addOne(userConvert.convertBO2DO(userBO));
+        userRoleService.saveUserRole(userId, userBO.getRoles());
+        ConditionCheck.nullAndThrow(userId, new CustomException("添加用户失败"));
     }
 
     @Override
-    public Page<UserBO> getUserPageList(UserBO userBO, Integer pageNum, Integer pageSize) {
-        Page<SysUser> page = baseService.getUserPageList(userConvert.convertBO2DO(userBO), pageNum, pageSize);
+    public Page<UserBO> getPageList(UserBO userBO, Integer pageNum, Integer pageSize) {
+        Page<SysUser> page = baseService.getPageList(userConvert.convertBO2DO(userBO), pageNum, pageSize);
         return userConvert.convertPageDO2BO(page);
     }
 
     @Override
-    public void deleteUser(Long id) {
-        boolean b = baseService.deleteUser(id);
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long[] ids) {
+        boolean b = baseService.deleteBatch(ids);
         ConditionCheck.falseAndThrow(b, new CustomException("删除用户失败"));
     }
 
     @Override
-    public void updateUser(UserBO userBO) {
-        boolean b = baseService.updateUser(userBO.getId(), userConvert.convertBO2DO(userBO));
+    @Transactional(rollbackFor = Exception.class)
+    public void update(UserBO userBO) {
+        boolean b = baseService.updateOne(userBO.getId(), userConvert.convertBO2DO(userBO));
         userRoleService.saveUserRole(userBO.getId(), userBO.getRoles());
         ConditionCheck.falseAndThrow(b, new CustomException("更新用户失败"));
     }
 
     @Override
     public UserBO handleLogin(String username, String password) {
-        SysUser user = baseService.getOneUserByUserEntity(SysUser.builder().username(username).password(password).build());
+        SysUser user = baseService.getOneByEntity(SysUser.builder().username(username).password(password).build());
         ConditionCheck.anyNull(new CustomException("用户名或密码错误"), user);
         StpUtil.login(user.getId());
         UserBO userBO = userConvert.convertDO2BO(user);

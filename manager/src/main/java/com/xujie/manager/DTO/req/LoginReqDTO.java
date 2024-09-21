@@ -1,8 +1,10 @@
 package com.xujie.manager.DTO.req;
 
+import com.xujie.manager.common.base.model.BaseDTO;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
@@ -13,10 +15,11 @@ import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBl
  * @since 2024/9/17 21:03
  **/
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginReqDTO {
+public class LoginReqDTO extends BaseDTO {
     /**
      * 用户名
      */

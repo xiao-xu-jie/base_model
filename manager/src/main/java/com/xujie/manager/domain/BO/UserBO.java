@@ -1,7 +1,9 @@
 package com.xujie.manager.domain.BO;
 
+import com.xujie.manager.common.base.model.BaseBO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -12,10 +14,11 @@ import java.util.List;
  * @since 2024/9/19 10:40
  **/
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserBO {
+public class UserBO extends BaseBO {
     /**
      * 用户头像
      */

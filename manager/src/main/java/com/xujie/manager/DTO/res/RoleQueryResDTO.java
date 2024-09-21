@@ -9,75 +9,45 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 用户查询返回DTO
+ * 角色查询DTO
  *
  * @author Xujie
- * @since 2024/9/19 11:02
+ * @since 2024/9/20 21:55
  **/
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserQueryResDTO extends BaseDTO {
-    /**
-     * 用户头像
-     */
-
-    private String avatar;
+public class RoleQueryResDTO extends BaseDTO {
 
     /**
-     * 用户ID
+     * 角色id
      */
-
     private Long id;
 
-
     /**
-     * 用户名
+     * 角色code
      */
+    private String code;
 
-    private String username;
-
-
-    /**
-     * 名称
-     */
 
     private String name;
-    /**
-     * 性别
-     */
-
-    private Integer sex;
 
     /**
-     * 邮箱
+     * 角色描述
      */
-
-    private String email;
-
-    /**
-     * openId
-     */
-
-    private Integer openId;
-
-    /**
-     * 手机号
-     */
-
-    private String phone;
-
-    /**
-     * 更新时间
-     */
-
-    private Date updateTime;
+    private String roleDesc;
 
     /**
      * 创建时间
      */
-
     private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
 
 }

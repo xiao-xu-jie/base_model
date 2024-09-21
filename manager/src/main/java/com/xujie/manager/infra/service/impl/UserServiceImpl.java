@@ -27,12 +27,12 @@ public class UserServiceImpl implements UserService {
     private SysUserMapper baseMapper;
 
     @Override
-    public SysUser getOneUserByUserEntity(SysUser user) {
-        return getAllUserByUserEntity(user).stream().findFirst().orElse(null);
+    public SysUser getOneByEntity(SysUser user) {
+        return getListByEntity(user).stream().findFirst().orElse(null);
     }
 
     @Override
-    public List<SysUser> getAllUserByUserEntity(SysUser user) {
+    public List<SysUser> getListByEntity(SysUser user) {
         LambdaQueryWrapper<SysUser> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper
                 .eq(ObjectUtils.isNotNull(user.getId()), SysUser::getId, user.getId())
@@ -50,14 +50,14 @@ public class UserServiceImpl implements UserService {
      * @param user
      */
     @Override
-    public boolean addUser(SysUser user) {
+    public Long addOne(SysUser user) {
         try {
             baseMapper.insert(user);
         } catch (Exception e) {
             log.error("添加用户失败", e);
-            return false;
+            return null;
         }
-        return true;
+        return user.getId();
     }
 
     /**
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     @Override
-    public boolean deleteUser(Long id) {
+    public boolean deleteOne(Long id) {
         try {
             baseMapper.deleteById(id);
         } catch (Exception e) {
@@ -83,20 +83,26 @@ public class UserServiceImpl implements UserService {
      * @param user
      */
     @Override
-    public boolean updateUser(Long id, SysUser user) {
+    public boolean updateOne(Long id, SysUser user) {
         return baseMapper.updateById(user, id) > 0;
     }
 
     @Override
-    public Page<SysUser> getUserPageList(SysUser user, Integer pageNum, Integer pageSize) {
+    public Page<SysUser> getPageList(SysUser user, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<SysUser> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper
                 .eq(ObjectUtils.isNotNull(user.getId()), SysUser::getId, user.getId())
                 .eq(StringUtils.isNotBlank(user.getUsername()), SysUser::getUsername, user.getUsername())
                 .eq(StringUtils.isNotBlank(user.getPassword()), SysUser::getPassword, user.getPassword())
                 .eq(StringUtils.isNotBlank(user.getEmail()), SysUser::getEmail, user.getEmail())
-                .eq(StringUtils.isNotBlank(user.getPhone()), SysUser::getPhone, user.getPhone());
+                .eq(StringUtils.isNotBlank(user.getPhone()), SysUser::getPhone, user.getPhone())
+                .orderByAsc(SysUser::getCreateTime);
         return baseMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper);
 
+    }
+
+    @Override
+    public boolean deleteBatch(Long[] ids) {
+        return baseMapper.deleteByIds(List.of(ids)) > 0;
     }
 }

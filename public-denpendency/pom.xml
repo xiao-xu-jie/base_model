@@ -12,6 +12,7 @@
         <module>wx</module>
         <module>common-tools</module>
         <module>http-webclient</module>
+        <module>file-storage</module>
     </modules>
 
     <properties>

@@ -1,5 +1,6 @@
 package com.xujie.manager.DTO.req;
 
+import com.xujie.manager.common.base.model.BaseDTO;
 import com.xujie.manager.common.entity.Groups;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -16,15 +18,21 @@ import java.util.List;
  * @since 2024/9/19 15:14
  **/
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserAddReqDTO {
+public class UserAddReqDTO extends BaseDTO {
 
     /**
      * 用户ID
      */
     private Long id;
+
+    /**
+     * 头像
+     */
+    private String avatar;
 
     /**
      * 用户名

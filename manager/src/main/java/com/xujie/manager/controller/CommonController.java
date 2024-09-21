@@ -1,5 +1,6 @@
 package com.xujie.manager.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xujie.manager.DTO.req.LoginReqDTO;
 import com.xujie.manager.DTO.res.RouterResDTO;
@@ -11,8 +12,10 @@ import com.xujie.manager.domain.convert.RouterConvert;
 import com.xujie.manager.domain.service.RouterDomainService;
 import com.xujie.manager.domain.service.UserDomainService;
 import jakarta.annotation.Resource;
+import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,6 +39,9 @@ public class CommonController {
     @Resource
     private UserDomainService userDomainService;
 
+    @Resource
+    private FileStorageService fileStorageService;
+
     /**
      * 用户登录
      *
@@ -43,6 +49,7 @@ public class CommonController {
      * @return 用户信息
      */
     @PostMapping("/login")
+
     public Result<UserLoginResDTO> userLogin(@RequestBody @Validated LoginReqDTO loginReqDTO) {
         String password = loginReqDTO.getPassword();
         String username = loginReqDTO.getUsername();
@@ -65,5 +72,21 @@ public class CommonController {
         List<RouterBO> routers = routerDomainService.getRouters();
         List<RouterResDTO> routerResDTOS = dtoConvert.convertBO2DO(routers);
         return Result.ok(routerResDTOS);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param file 文件
+     * @return 文件url
+     */
+    @PostMapping("/upload")
+    @SaCheckLogin
+    public Result<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        String imgUrl = fileStorageService.of(file)
+                .setPath("img/")
+                .upload()
+                .getUrl();
+        return Result.ok(imgUrl);
     }
 }

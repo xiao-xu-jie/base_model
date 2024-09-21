@@ -1,6 +1,7 @@
 package com.xujie.manager.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xujie.manager.common.base.model.BaseDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "sys_role")
-public class SysRole {
+public class SysRole extends BaseDO {
     public static final String COL_ID = "id";
     public static final String COL_CODE = "code";
     public static final String COL_NAME = "name";

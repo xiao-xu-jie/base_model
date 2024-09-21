@@ -1,7 +1,9 @@
 package com.xujie.manager.DTO.res;
 
+import com.xujie.manager.common.base.model.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.assertj.core.util.Lists;
 
@@ -13,10 +15,11 @@ import java.util.List;
  * @since 2024/9/17 22:47
  **/
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouterResDTO {
+public class RouterResDTO extends BaseDTO {
     /**
      * 子节点
      */

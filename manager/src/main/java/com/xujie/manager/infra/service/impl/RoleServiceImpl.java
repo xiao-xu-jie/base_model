@@ -26,18 +26,18 @@ public class RoleServiceImpl implements RoleService {
     private SysRoleMapper baseMapper;
 
     @Override
-    public boolean addRole(SysRole role) {
+    public Long addOne(SysRole role) {
         try {
             baseMapper.insert(role);
         } catch (Exception e) {
             log.error("添加角色失败：{}", e.getMessage());
-            return Boolean.FALSE;
+            return null;
         }
-        return Boolean.TRUE;
+        return role.getId();
     }
 
     @Override
-    public boolean deleteRole(Long id) {
+    public boolean deleteOne(Long id) {
         try {
             baseMapper.deleteById(id);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean updateRole(Long id, SysRole role) {
+    public boolean updateOne(Long id, SysRole role) {
         try {
             role.setId(id);
             baseMapper.updateById(role);
@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<SysRole> getAllRoleByEntity(SysRole role) {
+    public List<SysRole> getListByEntity(SysRole role) {
         LambdaQueryWrapper<SysRole> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(ObjectUtils.isNotNull(role.getId()), SysRole::getId, role.getId())
                 .eq(ObjectUtils.isNotNull(role.getName()), SysRole::getName, role.getName())
@@ -77,12 +77,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public SysRole getOneRoleByEntity(SysRole role) {
-        return getAllRoleByEntity(role).stream().findFirst().orElse(null);
+    public SysRole getOneByEntity(SysRole role) {
+        return getListByEntity(role).stream().findFirst().orElse(null);
     }
 
     @Override
-    public Page<SysRole> getRolePageList(SysRole role, Integer pageNum, Integer pageSize) {
+    public Page<SysRole> getPageList(SysRole role, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<SysRole> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper
                 .eq(ObjectUtils.isNotNull(role.getId()), SysRole::getId, role.getId())
@@ -91,5 +91,10 @@ public class RoleServiceImpl implements RoleService {
                 .like(ObjectUtils.isNotNull(role.getRoleDesc()), SysRole::getRoleDesc, role.getRoleDesc());
 
         return baseMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper);
+    }
+
+    @Override
+    public boolean deleteBatch(Long[] ids) {
+        return baseMapper.deleteByIds(List.of(ids)) > 0;
     }
 }

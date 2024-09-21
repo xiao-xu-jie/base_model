@@ -1,8 +1,10 @@
 package com.xujie.manager.domain.BO;
 
 import com.xujie.manager.DTO.res.Meta;
+import com.xujie.manager.common.base.model.BaseBO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
@@ -13,10 +15,11 @@ import java.util.List;
  * @since 2024/9/17 22:30
  **/
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RouterBO {
+public class RouterBO extends BaseBO {
     /**
      * 子节点
      */

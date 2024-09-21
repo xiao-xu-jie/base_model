@@ -1,19 +1,18 @@
 package com.xujie.manager.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.xujie.manager.common.base.model.BaseDO;
+import lombok.*;
 
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "sys_user")
-public class SysUser {
+public class SysUser extends BaseDO {
     public static final String COL_ID = "id";
     public static final String COL_USERNAME = "username";
     public static final String COL_PASSWORD = "password";

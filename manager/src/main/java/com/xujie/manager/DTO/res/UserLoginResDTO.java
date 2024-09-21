@@ -1,9 +1,7 @@
 package com.xujie.manager.DTO.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.xujie.manager.common.base.model.BaseDTO;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,11 +11,12 @@ import java.util.List;
  * @author Xujie
  * @since 2024/9/19 16:08
  **/
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserLoginResDTO {
+public class UserLoginResDTO extends BaseDTO {
 
     /**
      * 用户头像
