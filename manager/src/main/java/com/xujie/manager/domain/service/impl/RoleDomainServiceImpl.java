@@ -6,11 +6,14 @@ import com.xujie.manager.domain.BO.RoleBO;
 import com.xujie.manager.domain.convert.RoleConvert;
 import com.xujie.manager.domain.service.RoleDomainService;
 import com.xujie.manager.infra.DO.SysRole;
+import com.xujie.manager.infra.DO.SysRoleRouter;
+import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RoleService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +28,10 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     @Resource
     private RoleService baseService;
     @Resource
+    private RoleRouterService roleRouterService;
+    @Resource
     private RoleConvert roleConvert;
+
 
 
     @Override
@@ -33,6 +39,13 @@ public class RoleDomainServiceImpl implements RoleDomainService {
         List<SysRole> allRoleByEntity = baseService.getListByEntity(SysRole.builder().build());
         List<RoleBO> list = roleConvert.convertListDO2BO(allRoleByEntity);
         return list;
+    }
+
+    @Override
+    public List<Long> getRoutersByRoleId(Long roleId) {
+        return roleRouterService.getRoleRouterByRoleId(roleId).stream()
+                .map(SysRoleRouter::getRouterId)
+                .toList();
     }
 
     @Override
@@ -54,7 +67,13 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(RoleBO roleBO) {
-
+        baseService.updateOne(roleBO.getId(), roleConvert.convertBO2DO(roleBO));
+        if(roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
+            return;
+        }
+        roleRouterService.deleteRoleRouterByRoleId(roleBO.getId());
+        roleRouterService.addRoleRouter(roleBO.getRouters(), roleBO.getId());
     }
 }

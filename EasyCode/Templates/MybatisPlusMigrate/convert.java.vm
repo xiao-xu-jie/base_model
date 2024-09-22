@@ -13,11 +13,7 @@ package ${ConvertPackageName};
 #tableComment("Convert 类")
 
 @Mapper(componentModel = "spring")
-public interface  $!{ConvertName} extends
-
-        BaseConvert
-
-<$!{QueryResDTOName},$!{AddReqDTOName},$!{QueryReqDTOName},$!{BOName},$!{entityName}> {
+public interface  $!{ConvertName} extends BaseConvert<$!{QueryResDTOName},$!{AddReqDTOName},$!{QueryReqDTOName},$!{BOName},$!{entityName}> {
 
 
 }

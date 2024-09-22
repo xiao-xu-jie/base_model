@@ -1,6 +1,6 @@
 package com.xujie.manager.common.utils;
 
-import com.xujie.manager.domain.BO.RouterBO;
+import com.xujie.manager.domain.BO.RoutersBO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,27 +12,29 @@ import java.util.List;
 
 
 public class RouterUtil {
-    public static List<RouterBO> setChildren(List<RouterBO> routerBOS) {
+    public static List<RoutersBO> setChildren(List<RoutersBO> routersBOS) {
 
         // 递归设置子节点
-        for (RouterBO routerBO : routerBOS) {
-            List<RouterBO> children = getChildren(routerBO.getId(), routerBOS);
+        for (RoutersBO routersBO : routersBOS) {
+            List<RoutersBO> children = getChildren(routersBO.getId(), routersBOS);
             if (!children.isEmpty()) {
-                routerBO.setChildren(children);
+                routersBO.setChildren(children);
+
             }
         }
-        return routerBOS.stream().filter(routerBO -> routerBO.getParentId() == null).toList();
+        return routersBOS.stream().filter(routersBO -> !routersBO.isFlag()).toList();
     }
 
-    private static List<RouterBO> getChildren(Long id, List<RouterBO> routerBOS) {
-        List<RouterBO> children = new ArrayList<>();
-        for (RouterBO routerBO : routerBOS) {
-            if (routerBO.getParentId() != null && routerBO.getParentId().equals(id)) {
-                children.add(routerBO);
+    private static List<RoutersBO> getChildren(Long id, List<RoutersBO> routersBOS) {
+        List<RoutersBO> children = new ArrayList<>();
+        for (RoutersBO routersBO : routersBOS) {
+            if (routersBO.getParentId() != null && routersBO.getParentId().equals(id)) {
+                children.add(routersBO);
+                routersBO.setFlag(true);
             }
         }
-        for (RouterBO child : children) {
-            List<RouterBO> children1 = getChildren(child.getId(), routerBOS);
+        for (RoutersBO child : children) {
+            List<RoutersBO> children1 = getChildren(child.getId(), routersBOS);
             if (!children1.isEmpty()) {
                 child.setChildren(children1);
             }

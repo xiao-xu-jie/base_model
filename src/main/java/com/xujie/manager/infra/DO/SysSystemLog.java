@@ -1,18 +1,13 @@
 package com.xujie.manager.infra.DO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.xujie.manager.common.base.model.BaseDO;
-import lombok.Data;
-
-import java.util.Date;
-
 /**
  * (SysSystemLog)表实体类
  *
  * @author xujie
- * @since 2024-09-22 10:18:06
+ * @since 2024-09-22 13:59:55
  */
 @Data
+@TableName(value = "sys_system_log")
 public class SysSystemLog extends BaseDO {
 
     public static final String COL_id = "id";

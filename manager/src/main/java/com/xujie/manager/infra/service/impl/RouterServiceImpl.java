@@ -1,11 +1,20 @@
 package com.xujie.manager.infra.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.manager.infra.DO.SysRoleRouter;
 import com.xujie.manager.infra.DO.SysRouters;
 import com.xujie.manager.infra.mapper.SysRoutersMapper;
+import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RouterService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -21,6 +30,8 @@ import java.util.List;
 public class RouterServiceImpl implements RouterService {
     @Resource
     private SysRoutersMapper baseMapper;
+    @Resource
+    private RoleRouterService roleRouterService;
 
 
     /**
@@ -31,23 +42,51 @@ public class RouterServiceImpl implements RouterService {
     @Override
     public List<SysRouters> getRouters() {
         List<SysRouters> sysRouters = baseMapper.selectList(null);
+        List<String> roleList = StpUtil.getRoleList();
+        List<SysRoleRouter> roleRouterByRoleId = roleRouterService.getRoleRouterByRoleCode(roleList);
+        List<Long> ids = roleRouterByRoleId.stream().map(SysRoleRouter::getRouterId).toList();
+        return sysRouters.stream().filter(item -> ids.contains(item.getId())).toList();
+    }
 
+    @Override
+    public List<SysRouters> getAllTopRouters() {
+        LambdaQueryWrapper<SysRouters> routersLambdaQueryWrapper = Wrappers.lambdaQuery();
+        routersLambdaQueryWrapper.eq(SysRouters::getParentId, 0);
+        List<SysRouters> sysRouters = baseMapper.selectList(routersLambdaQueryWrapper);
         return sysRouters;
     }
 
     @Override
-    public boolean addRouter(SysRouters router) {
+    public Long addOne(SysRouters router) {
         try {
             baseMapper.insert(router);
         } catch (Exception e) {
             log.error("添加路由失败：{}", e.getMessage());
-            return Boolean.FALSE;
+            return null;
         }
-        return Boolean.TRUE;
+        return router.getId();
     }
 
     @Override
-    public boolean deleteRouter(Long id) {
+    public SysRouters getOneByEntity(SysRouters baseDO) {
+        return getListByEntity(baseDO).stream().findAny().orElse(null);
+    }
+
+    @Override
+    public List<SysRouters> getListByEntity(SysRouters baseDO) {
+        LambdaQueryWrapper<SysRouters> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(baseDO.getId()!=null,SysRouters::getId, baseDO.getId());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getName()),SysRouters::getName, baseDO.getName());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getTitle()),SysRouters::getTitle, baseDO.getTitle());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getPath()),SysRouters::getPath, baseDO.getPath());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getComponent()),SysRouters::getComponent, baseDO.getComponent());
+        queryWrapper.eq(baseDO.getParentId()!=null,SysRouters::getParentId, baseDO.getParentId());
+
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public boolean deleteOne(Long id) {
         try {
             baseMapper.deleteById(id);
         } catch (Exception e) {
@@ -58,7 +97,7 @@ public class RouterServiceImpl implements RouterService {
     }
 
     @Override
-    public boolean updateRouter(Long id, SysRouters router) {
+    public boolean updateOne(Long id, SysRouters router) {
         try {
             router.setId(id);
             baseMapper.updateById(router);
@@ -67,5 +106,22 @@ public class RouterServiceImpl implements RouterService {
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Page<SysRouters> getPageList(SysRouters baseDO, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<SysRouters> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(baseDO.getId()!=null,SysRouters::getId, baseDO.getId());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getName()),SysRouters::getName, baseDO.getName());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getTitle()),SysRouters::getTitle, baseDO.getTitle());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getPath()),SysRouters::getPath, baseDO.getPath());
+        queryWrapper.eq(StringUtils.isNotBlank(baseDO.getComponent()),SysRouters::getComponent, baseDO.getComponent());
+        queryWrapper.eq(SysRouters::getParentId,0);
+        return baseMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper);
+    }
+
+    @Override
+    public boolean deleteBatch(Long[] ids) {
+        return baseMapper.deleteByIds(List.of(ids)) > 0;
     }
 }

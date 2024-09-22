@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Xujie
@@ -59,5 +60,9 @@ public class RoleBO extends BaseBO {
      */
 
     private String isDelete;
+    /**
+     * 路由id列表
+     */
+    List<Long> routers;
 
 }

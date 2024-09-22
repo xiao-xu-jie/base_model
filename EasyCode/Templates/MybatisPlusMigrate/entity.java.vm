@@ -14,6 +14,9 @@ package ${modelPackageName};
 #tableComment("表实体类")
 #if(${useLombok})
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 #end
 #if($useSwagger)
 @ApiModel(value = "$!{entityName}", description = "$!{tableInfo.comment}")
@@ -21,6 +24,7 @@ package ${modelPackageName};
 #if($useOpenApi)
 @Schema(name = "$!{entityName}", description = "$!{tableInfo.comment}")
 #end
+@TableName(value = "$!{tableInfo.obj.name}")
 public class $!{entityName}  extends BaseDO {
 
     #foreach($column in $tableInfo.fullColumn)
@@ -41,7 +45,7 @@ public class $!{entityName}  extends BaseDO {
         @Schema(description = "${column.comment}")
         #end
         #if(${column.obj.name} == ${tableInfo.pkColumn.get(0).obj.name})
-        @TableId(value = "${column.obj.name}", type = IdType.AUTO)
+        @TableId(value = "${column.obj.name}", type = IdType.ASSIGN_ID)
         #elseif (${column.obj.name} !="create_time" && ${column.obj.name} !="update_time")
         @TableField(value = "${column.obj.name}")
         #end

@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface RoleDomainService extends BaseDomainService<RoleBO> {
     List<RoleBO> getAllRoleList();
+
+    List<Long> getRoutersByRoleId(Long roleId);
+
 }

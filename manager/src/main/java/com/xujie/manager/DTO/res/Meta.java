@@ -24,4 +24,9 @@ public class Meta {
      */
     private Integer rank;
 
+    /**
+     * 是否显示
+     */
+    private Boolean showLink;
+
 }

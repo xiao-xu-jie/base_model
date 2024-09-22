@@ -1,22 +1,15 @@
-package com.xujie.manager.domain.BO;
-
-import com.xujie.manager.common.base.model.BaseBO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
+package com.xujie.manager.DTO.req;
 
 /**
- * (SysSystemLog)BO
+ * (SysSystemLog)添加DTO
  *
  * @author xujie
- * @since 2024-09-22 10:18:05
+ * @since 2024-09-22 13:59:54
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SystemLogBO extends BaseBO {
+public class SystemLogAddReqDTO extends BaseDTO {
 
 
     /**

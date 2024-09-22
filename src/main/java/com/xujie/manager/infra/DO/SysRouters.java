@@ -1,14 +1,5 @@
 package com.xujie.manager.infra.DO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.xujie.manager.common.base.model.BaseDO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
-
 /**
  * (SysRouters)表实体类
  *
@@ -17,9 +8,6 @@ import java.util.Date;
  */
 @Data
 @TableName(value = "sys_routers")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class SysRouters extends BaseDO {
 
     public static final String COL_id = "id";
@@ -31,7 +19,7 @@ public class SysRouters extends BaseDO {
     public static final String COL_redirect = "redirect";
     public static final String COL_component = "component";
     public static final String COL_showlink = "showLink";
-    public static final String COL_rank = "rank_num";
+    public static final String COL_rank = "rank";
     public static final String COL_createTime = "create_time";
     public static final String COL_updateTime = "update_time";
     public static final String COL_isDelete = "is_delete";
@@ -40,7 +28,7 @@ public class SysRouters extends BaseDO {
     /**
      * 路由ID
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -94,8 +82,8 @@ public class SysRouters extends BaseDO {
     /**
      * 排序
      */
-    @TableField(value = "rank_num")
-    private Integer rankNum;
+    @TableField(value = "rank")
+    private Integer rank;
 
     /**
      * 创建时间

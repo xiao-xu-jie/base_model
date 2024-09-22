@@ -6,10 +6,10 @@ import com.xujie.manager.DTO.req.LoginReqDTO;
 import com.xujie.manager.DTO.res.RouterResDTO;
 import com.xujie.manager.DTO.res.UserLoginResDTO;
 import com.xujie.manager.common.entity.Result;
-import com.xujie.manager.domain.BO.RouterBO;
+import com.xujie.manager.domain.BO.RoutersBO;
 import com.xujie.manager.domain.BO.UserBO;
-import com.xujie.manager.domain.convert.RouterConvert;
-import com.xujie.manager.domain.service.RouterDomainService;
+import com.xujie.manager.domain.convert.RoutersConvert;
+import com.xujie.manager.domain.service.RoutersDomainService;
 import com.xujie.manager.domain.service.UserDomainService;
 import jakarta.annotation.Resource;
 import org.dromara.x.file.storage.core.FileStorageService;
@@ -31,10 +31,10 @@ import java.util.List;
 public class CommonController {
 
     @Resource
-    private RouterDomainService routerDomainService;
+    private RoutersDomainService routerDomainService;
 
     @Resource
-    private RouterConvert dtoConvert;
+    private RoutersConvert dtoConvert;
 
     @Resource
     private UserDomainService userDomainService;
@@ -69,8 +69,8 @@ public class CommonController {
      */
     @GetMapping("/getSyncRouter")
     public Result<List<RouterResDTO>> getSyncRouter() {
-        List<RouterBO> routers = routerDomainService.getRouters();
-        List<RouterResDTO> routerResDTOS = dtoConvert.convertBO2DO(routers);
+        List<RoutersBO> routers = routerDomainService.getRouters();
+        List<RouterResDTO> routerResDTOS = dtoConvert.convertListBO2DTO2(routers);
         return Result.ok(routerResDTOS);
     }
 

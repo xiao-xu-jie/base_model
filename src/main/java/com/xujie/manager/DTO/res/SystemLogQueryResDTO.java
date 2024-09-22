@@ -1,22 +1,16 @@
-package com.xujie.manager.DTO.req;
+package com.xujie.manager.DTO.res;
 
-import com.xujie.manager.common.base.model.BaseDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 /**
- * (SysSystemLog)添加DTO
+ * (SysSystemLog)查询返回DTO
  *
  * @author xujie
- * @since 2024-09-22 10:17:58
+ * @since 2024-09-22 13:59:55
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SystemLogAddReqDTO extends BaseDTO {
+public class SystemLogQueryResDTO extends BaseDTO {
 
 
     /**

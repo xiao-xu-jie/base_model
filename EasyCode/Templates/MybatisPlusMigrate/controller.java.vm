@@ -3,7 +3,7 @@ $!{define.vm}
 $!{mybatisCodehelper.vm}
 
 ##设置表后缀（宏定义）
-#set($controllerName = $tool.append($tableInfo.name, "Controller"))
+#set($controllerName = $tool.append($EntityName, "Controller"))
 ##设置回调
 #set($controllerSavePath = $tool.append(${controllerSrcFolder},"/",${controllerPackageName.replace(".","/")}))
 

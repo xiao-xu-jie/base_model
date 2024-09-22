@@ -6,6 +6,7 @@ import com.xujie.manager.common.base.model.BaseBO;
 import com.xujie.manager.common.base.model.BaseDO;
 import com.xujie.manager.common.base.model.BaseDTO;
 import com.xujie.manager.common.base.service.BaseDomainService;
+import com.xujie.manager.common.entity.Groups;
 import com.xujie.manager.common.entity.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,7 @@ public abstract class BaseController<QueryReq extends BaseDTO
      * @return 添加结果
      */
     @PostMapping("/add")
-    public Result<Object> add(@RequestBody @Validated AddReq addReq) {
+    public Result<Object> add(@RequestBody @Validated(Groups.Add.class) AddReq addReq) {
         baseDomainService.add(baseConvert.convertDTO2BO(addReq));
         return Result.okMessage("添加成功");
     }
@@ -68,7 +69,7 @@ public abstract class BaseController<QueryReq extends BaseDTO
      * @return 更新结果
      */
     @PutMapping("/update")
-    public Result<Object> update(@RequestBody @Validated AddReq addReq) {
+    public Result<Object> update(@RequestBody @Validated(Groups.Update.class) AddReq addReq) {
         baseDomainService.update(baseConvert.convertDTO2BO(addReq));
         return Result.okMessage("修改成功");
     }

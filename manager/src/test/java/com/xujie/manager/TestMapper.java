@@ -1,6 +1,7 @@
 package com.xujie.manager;
 
 import com.xujie.ManagerApplication;
+import com.xujie.manager.infra.DO.SysRole;
 import com.xujie.manager.infra.mapper.SysRoutersMapper;
 import com.xujie.manager.infra.service.RoleService;
 import com.xujie.manager.infra.service.UserRoleService;
@@ -14,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @since 2024/9/17 22:18
  **/
 
-@SpringBootTest(classes = ManagerApplication.class)
+//@SpringBootTest(classes = ManagerApplication.class)
 public class TestMapper {
 
     @Resource
@@ -33,4 +34,12 @@ public class TestMapper {
 //        List<String> roleList = userRoleService.getRoleList(1836671538925948929L);
 //        System.out.println(roleList);
     }
+
+    @Test
+    public void test1() {
+        for (int i = 0; i < SysRole.class.getDeclaredFields().length; i++) {
+            System.out.println(SysRole.class.getDeclaredFields()[i].getName());
+        }
+    }
+
 }

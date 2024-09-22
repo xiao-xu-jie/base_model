@@ -12,6 +12,7 @@ import com.xujie.manager.domain.service.RoleDomainService;
 import com.xujie.manager.infra.DO.SysRole;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -43,5 +44,14 @@ public class RoleController extends BaseController<RoleQueryReqDTO, RoleQueryRes
         return Result.ok(baseConvert.convertListBO2DTO(allRoleList));
     }
 
+    /**
+     * 根据角色id获取路由
+     * @param roleId 角色id
+     * @return 路由id列表
+     */
+    @GetMapping("/getRoutersByRoleId")
+    public Result<List<Long>> getRoutersByRoleId(@RequestParam("roleId") Long roleId) {
+        return Result.ok(baseDomainService.getRoutersByRoleId(roleId));
+    }
 
 }

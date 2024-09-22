@@ -2,7 +2,7 @@
 $!{define.vm}
 
 $!{mybatisCodehelper.vm}
-#set($ServiceImplName = $tool.append($EntityName, "ServiceImpl"))
+#set($ServiceImplName = $tool.append($EntityName, "DomainServiceImpl"))
 ##设置回调
 ##$!callback.setFileName($tool.append($ServiceImplName, ".java"))
 ##$!callback.setSavePath($tool.append($tableInfo.savePath, "/service/impl"))
@@ -18,7 +18,7 @@ package $!{serviceImplPackageName};
 ##表注释（宏定义）
 #tableComment("表服务实现类")
 @Slf4j
-@Service("$!tool.firstLowerCase($tableInfo.name)Service")
-public class $!{ServiceImplName} implements $!{tableInfo.name}DomainService {
+@Service
+public class $!{ServiceImplName} implements $!{EntityName}DomainService {
 
 }

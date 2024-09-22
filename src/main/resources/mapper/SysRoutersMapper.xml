@@ -12,7 +12,7 @@
         <result property="redirect" column="redirect" jdbcType="VARCHAR"/>
         <result property="component" column="component" jdbcType="VARCHAR"/>
         <result property="showlink" column="showLink" jdbcType="BOOLEAN"/>
-        <result property="rankNum" column="rank_num" jdbcType="INTEGER"/>
+        <result property="rank" column="rank" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
@@ -27,8 +27,9 @@
         path,
         redirect,
         component,
+
         showLink,
-        rank_num,
+        rank,
         create_time,
         update_time,
         is_delete

@@ -17,8 +17,6 @@ import $!{modelPackageName}.$!{entityName};
 
 ##表注释（宏定义）
 #tableComment("表服务接口")
-public interface $!{serviceName} extends BaseDomainService
-
-<${BOName}> {
+public interface $!{serviceName} extends BaseDomainService<${BOName}> {
 
 }
