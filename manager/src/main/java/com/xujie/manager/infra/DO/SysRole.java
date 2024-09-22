@@ -56,5 +56,6 @@ public class SysRole extends BaseDO {
      * 是否删除
      */
     @TableField(value = "is_delete")
+    @TableLogic(value = "0", delval = "1")
     private String isDelete;
 }
