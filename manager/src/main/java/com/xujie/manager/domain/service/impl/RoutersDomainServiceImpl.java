@@ -1,6 +1,7 @@
 package com.xujie.manager.domain.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.xujie.manager.DTO.res.Meta;
 import com.xujie.manager.common.exception.CustomException;
 import com.xujie.manager.common.utils.RouterUtil;
@@ -8,11 +9,13 @@ import com.xujie.manager.domain.BO.RoutersBO;
 import com.xujie.manager.domain.convert.RoutersConvert;
 import com.xujie.manager.domain.service.RoutersDomainService;
 import com.xujie.manager.infra.DO.SysRouters;
+import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RouterService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +33,9 @@ public class RoutersDomainServiceImpl implements RoutersDomainService {
     @Resource
     private RouterService routerService;
 
+    @Resource
+    private RoleRouterService roleRouterService;
+
     @Override
     public void add(RoutersBO routersBO) {
         Long id = routerService.addOne(routerConvert.convertBO2DO(routersBO));
@@ -44,12 +50,15 @@ public class RoutersDomainServiceImpl implements RoutersDomainService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long[] ids) {
+        ConditionCheck.falseAndThrow(roleRouterService.getRoleRouterByRouterId(Lists.newArrayList(ids)).isEmpty(), new CustomException("该路由已被角色绑定，无法删除"));
         boolean flag = routerService.deleteBatch(ids);
         ConditionCheck.falseAndThrow(flag, new CustomException("删除路由失败"));
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(RoutersBO routersBO) {
         boolean b = routerService.updateOne(routersBO.getId(), routerConvert.convertBO2DO(routersBO));
         ConditionCheck.falseAndThrow(b, new CustomException("更新路由失败"));

@@ -50,7 +50,7 @@ public class RoleController extends BaseController<RoleQueryReqDTO, RoleQueryRes
      * @return 路由id列表
      */
     @GetMapping("/getRoutersByRoleId")
-    public Result<List<Long>> getRoutersByRoleId(@RequestParam("roleId") Long roleId) {
+    public Result<List<Long>> getRoutersByRoleId(@RequestParam(value = "roleId",required = false) Long roleId) {
         return Result.ok(baseDomainService.getRoutersByRoleId(roleId));
     }
 

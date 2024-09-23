@@ -2,6 +2,7 @@ package com.xujie.manager.infra.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xujie.manager.infra.DO.SysRole;
 import com.xujie.manager.infra.DO.SysRoleRouter;
@@ -15,6 +16,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.BatchResult;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class RoleRouterServiceImpl implements RoleRouterService {
     @Resource
     private SysRoleRouterMapper baseMapper;
     @Resource
+    @Lazy
     private RouterService routerService;
     @Resource
     private RoleService roleService;
@@ -54,9 +57,9 @@ public class RoleRouterServiceImpl implements RoleRouterService {
     }
 
     @Override
-    public List<SysRoleRouter> getRoleRouterByRoleId(Long roleId) {
+    public List<SysRoleRouter> getRoleRouterByRoleId(List<Long> roleIds) {
         LambdaQueryWrapper<SysRoleRouter> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(SysRoleRouter::getRoleId, roleId);
+        wrapper.in(ObjectUtils.isNotNull(roleIds),SysRoleRouter::getRoleId, roleIds);
         List<SysRoleRouter> sysRoleRouters = baseMapper.selectList(wrapper);
         return removeAllTopRouterId(sysRoleRouters);
     }
@@ -69,6 +72,14 @@ public class RoleRouterServiceImpl implements RoleRouterService {
                 .toList();
         LambdaQueryWrapper<SysRoleRouter> wrapper = Wrappers.lambdaQuery();
         wrapper.in(SysRoleRouter::getRoleId, roleIds);
+        return baseMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<SysRoleRouter> getRoleRouterByRouterId(List<Long> routerId) {
+        LambdaQueryWrapper<SysRoleRouter> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(ObjectUtils.isNotNull(routerId) && ObjectUtils.isNotEmpty(routerId),
+                SysRoleRouter::getRouterId, routerId);
         return baseMapper.selectList(wrapper);
     }
 

@@ -12,6 +12,7 @@ import com.xujie.manager.infra.service.RoleService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,15 +44,20 @@ public class RoleDomainServiceImpl implements RoleDomainService {
 
     @Override
     public List<Long> getRoutersByRoleId(Long roleId) {
-        return roleRouterService.getRoleRouterByRoleId(roleId).stream()
+        return roleRouterService.getRoleRouterByRoleId(Lists.newArrayList(roleId)).stream()
                 .map(SysRoleRouter::getRouterId)
                 .toList();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(RoleBO roleBO) {
         Long id = baseService.addOne(roleConvert.convertBO2DO(roleBO));
         ConditionCheck.nullAndThrow(id, new CustomException("添加角色失败"));
+        if(roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
+            return;
+        }
+        roleRouterService.addRoleRouter(roleBO.getRouters(), roleBO.getId());
     }
 
     @Override
@@ -61,7 +67,10 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long[] ids) {
+        ConditionCheck.falseAndThrow(roleRouterService.getRoleRouterByRoleId(Lists.newArrayList(ids)).isEmpty()
+                , new CustomException("删除角色失败，角色下存在路由"));
         boolean flag = baseService.deleteBatch(ids);
         ConditionCheck.falseAndThrow(flag, new CustomException("删除角色失败"));
     }
@@ -70,10 +79,10 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     @Transactional(rollbackFor = Exception.class)
     public void update(RoleBO roleBO) {
         baseService.updateOne(roleBO.getId(), roleConvert.convertBO2DO(roleBO));
+        roleRouterService.deleteRoleRouterByRoleId(roleBO.getId());
         if(roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
             return;
         }
-        roleRouterService.deleteRoleRouterByRoleId(roleBO.getId());
         roleRouterService.addRoleRouter(roleBO.getRouters(), roleBO.getId());
     }
 }
