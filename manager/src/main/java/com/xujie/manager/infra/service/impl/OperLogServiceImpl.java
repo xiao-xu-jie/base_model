@@ -1,5 +1,8 @@
 package com.xujie.manager.infra.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -9,6 +12,8 @@ import com.xujie.manager.infra.mapper.SysOperLogMapper;
 import com.xujie.manager.infra.service.OperLogService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,10 +68,26 @@ public class OperLogServiceImpl implements OperLogService {
     @Override
     public Page<SysOperLog> getPageList(SysOperLog baseDO, Integer pageNum, Integer pageSize) {
         Page<SysOperLog> page = new Page<>(pageNum, pageSize);
-        LambdaQueryWrapper<SysOperLog> queryWrapper = Wrappers.lambdaQuery(baseDO);
+        LambdaQueryWrapper<SysOperLog> queryWrapper = Wrappers.lambdaQuery();
+        if(ObjectUtil.isNotEmpty(baseDO.getSearchDate()) && baseDO.getSearchDate().length == 2){
+            try {
+                queryWrapper.between(SysOperLog::getCreateTime,
+                        DateTime.of(baseDO.getSearchDate()[0],"yyyy-MM-dd HH:mm:ss"),
+                        DateTime.of(baseDO.getSearchDate()[1],"yyyy-MM-dd HH:mm:ss"));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("日期格式错误");
+            }
+        }
         queryWrapper
-                .eq(baseDO.getId() != null, SysOperLog::getId, baseDO.getId())
-                .eq(baseDO.getLogDesc() != null, SysOperLog::getLogDesc, baseDO.getLogDesc());
+                .like(StringUtils.isNotBlank(baseDO.getLogDesc()), SysOperLog::getLogDesc, baseDO.getLogDesc())
+                .eq(StringUtils.isNotBlank(baseDO.getRequestType()), SysOperLog::getRequestType, baseDO.getRequestType())
+                .like(StringUtils.isNotBlank(baseDO.getMethodName()), SysOperLog::getMethodName, baseDO.getMethodName())
+                .like(StringUtils.isNotBlank(baseDO.getRequestPath()), SysOperLog::getRequestPath, baseDO.getRequestPath())
+                .like(StringUtils.isNotBlank(baseDO.getOperateIp()), SysOperLog::getOperateIp, baseDO.getOperateIp())
+                .eq(ObjectUtil.isNotEmpty(baseDO.getOperateUser()), SysOperLog::getOperateUser, baseDO.getOperateUser())
+                .eq(baseDO.getId()!=null, SysOperLog::getId, baseDO.getId())
+                .orderByDesc(SysOperLog::getCreateTime);
+
         return baseMapper.selectPage(page, queryWrapper);
     }
 

@@ -102,6 +102,10 @@ public class OperLogBO extends BaseBO {
 
     private Integer isDelete;
 
+    /**
+     * 操作时间
+     */
+    private String[] searchDate;
 
 }
 

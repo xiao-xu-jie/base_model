@@ -121,6 +121,11 @@ public class SysOperLog extends BaseDO {
     @TableLogic(value = "0", delval = "1")
     private Integer isDelete;
 
+    /**
+     * 操作时间
+     */
+    @TableField(exist = false)
+    private String[] searchDate;
 
 }
 

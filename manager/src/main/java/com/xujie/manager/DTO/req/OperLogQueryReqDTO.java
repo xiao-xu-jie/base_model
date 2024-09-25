@@ -104,6 +104,11 @@ public class OperLogQueryReqDTO extends BaseDTO {
 
     private Integer isDelete;
 
+    /**
+     * 操作时间
+     */
+    private String[] searchDate;
+
 
 }
 
