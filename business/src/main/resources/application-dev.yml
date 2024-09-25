@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://110.40.42.211:3306/pay?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
-    username: pay
-    password: w5HrnT8Zpf7Yzy7P
+    url: jdbc:mysql://127.0.0.1:3306/pay?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 123456
     #    publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ0Ov8FF97EkC0OeLLqsQHd3WTQcfvL51YQ3q5b2jsgUGdqEJjQ3CxwiFn8w7kwxFmR9mC1JtQrbgClH1w3sLg0CAwEAAQ==
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -70,13 +70,16 @@ sa-token:
   exclude-paths: /login,/test/*,/logout,/error,/favicon.ico,/static/**,/public/**,/resources/**,/assets/**,/upload/**
 wx:
   app:
+    enabled: true
     appId: wx7b3b3b3b3b3b3b3b
     appSecret: 123456
   mp:
     appId: wx371e7060bfa17db1
     appSecret: 5fb1e837e8b2eaeb3ad30f627d9c96c6
     token: 5Ghj9L2D4nKp3FvWX6QbR7s8Zy1cX
+    enabled: true
   pay:
+    enabled: true
     appId: wxd5bd00ccece6499a
     mchId: 1628531801
     merchantSerialNumber: 5404FCC05C1B85F2CB0186B6CAD51E1863924295

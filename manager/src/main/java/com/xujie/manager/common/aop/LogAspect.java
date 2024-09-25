@@ -1,8 +1,16 @@
 package com.xujie.manager.common.aop;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.google.gson.Gson;
 import com.xujie.manager.common.annotations.WebLog;
+import com.xujie.manager.common.exception.CustomException;
+import com.xujie.manager.domain.BO.OperLogBO;
+import com.xujie.manager.domain.service.OperLogDomainService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,6 +20,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
 
@@ -31,31 +41,52 @@ public class LogAspect {
     @Resource(name = "logExecutor")
     private ThreadPoolTaskExecutor logExecutor;
 
+    @Resource
+    private OperLogDomainService operLogDomainService;
+
     @Around("webLog()")
     public Object  around(ProceedingJoinPoint proceedingJoinPoint){
+        String errorMsg = null;
         Signature signature = proceedingJoinPoint.getSignature();
+        WebLog aspectLogDescription = null;
         try {
-            getAspectLogDescription(proceedingJoinPoint);
+            aspectLogDescription = getAspectLogDescription(proceedingJoinPoint);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("获取切面注解描述失败");
         }
         long startTime = System.currentTimeMillis();
         Object result = null;
         try {
             result = proceedingJoinPoint.proceed();
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            errorMsg = e.getMessage();
         }
         // 打印入参
         Object[] args = proceedingJoinPoint.getArgs();
         String request = new Gson().toJson(args);
         String response = new Gson().toJson(result);
         long endTime = System.currentTimeMillis();
-        logExecutor.execute(() -> {
-            log.info("request: {}", request);
-            log.info("response: {}", response);
-            log.info("time: {}", endTime - startTime);
-        });
+        // 获取请求
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest req = requestAttributes.getRequest();
+        String ip = req.getRemoteAddr();
+        String url = req.getRequestURI();
+        OperLogBO operLogBO = OperLogBO.builder()
+                .errorLog(errorMsg)
+                .logDesc(aspectLogDescription.desc())
+                .methodName(String.join(".",signature.getDeclaringType().getPackageName(),signature.getName()))
+                .requestParams(request)
+                .requestType(aspectLogDescription.method())
+                .responseBody(response)
+                .costTime(endTime - startTime)
+                .operateIp(ip)
+                .requestPath(url)
+                .operateUser(StpUtil.getLoginIdAsLong())
+                .build();
+        logExecutor.execute(new LogTask(operLogBO));
+        if(errorMsg != null){
+            throw new CustomException(errorMsg);
+        }
         return result;
 
     }
@@ -86,12 +117,20 @@ public class LogAspect {
         return null;
     }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     class LogTask implements Runnable{
-
+        private OperLogBO operLogBO;
 
         @Override
         public void run() {
-
+            try {
+                log.info("日志信息:{}",operLogBO);
+                operLogDomainService.add(operLogBO);
+            } catch (Exception e) {
+                log.error("日志记录失败:{}",e.getMessage());
+            }
         }
     }
 }

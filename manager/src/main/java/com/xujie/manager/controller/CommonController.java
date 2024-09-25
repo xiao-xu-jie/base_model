@@ -49,7 +49,7 @@ public class CommonController {
      * @param loginReqDTO 登录信息
      * @return 用户信息
      */
-    @WebLog(desc = "后台用户登录")
+    @WebLog(desc = "后台用户登录",method = "POST")
     @PostMapping("/login")
     public Result<UserLoginResDTO> userLogin(@RequestBody @Validated LoginReqDTO loginReqDTO) {
         String password = loginReqDTO.getPassword();
@@ -68,7 +68,7 @@ public class CommonController {
      *
      * @return 路由信息
      */
-    @WebLog(desc = "获取路由信息")
+    @WebLog(desc = "获取路由信息",method = "GET")
     @GetMapping("/getSyncRouter")
     public Result<List<RouterResDTO>> getSyncRouter() {
         List<RoutersBO> routers = routerDomainService.getRouters();

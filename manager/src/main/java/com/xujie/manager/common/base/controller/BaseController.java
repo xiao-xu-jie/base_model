@@ -1,6 +1,7 @@
 package com.xujie.manager.common.base.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.manager.common.annotations.WebLog;
 import com.xujie.manager.common.base.convert.BaseConvert;
 import com.xujie.manager.common.base.model.BaseBO;
 import com.xujie.manager.common.base.model.BaseDO;
@@ -56,6 +57,7 @@ public abstract class BaseController<QueryReq extends BaseDTO
      * @param addReq 添加信息
      * @return 添加结果
      */
+    @WebLog(desc = "添加", method = "POST")
     @PostMapping("/add")
     public Result<Object> add(@RequestBody @Validated(Groups.Add.class) AddReq addReq) {
         baseDomainService.add(baseConvert.convertDTO2BO(addReq));
@@ -68,6 +70,7 @@ public abstract class BaseController<QueryReq extends BaseDTO
      * @param addReq 更新信息
      * @return 更新结果
      */
+    @WebLog(desc = "更新", method = "PUT")
     @PutMapping("/update")
     public Result<Object> update(@RequestBody @Validated(Groups.Update.class) AddReq addReq) {
         baseDomainService.update(baseConvert.convertDTO2BO(addReq));
@@ -80,6 +83,7 @@ public abstract class BaseController<QueryReq extends BaseDTO
      * @param ids 删除id
      * @return 删除结果
      */
+    @WebLog(desc = "删除", method = "DELETE")
     @DeleteMapping("/delete")
     public Result<Object> delete(@RequestBody Long[] ids) {
         baseDomainService.delete(ids);

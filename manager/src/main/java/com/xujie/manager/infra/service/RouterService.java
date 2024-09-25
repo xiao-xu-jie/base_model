@@ -12,4 +12,5 @@ public interface RouterService extends BaseService<SysRouters> {
 
     List<SysRouters> getRouters();
     List<SysRouters> getAllTopRouters();
+    List<SysRouters> getAllRouters();
 }

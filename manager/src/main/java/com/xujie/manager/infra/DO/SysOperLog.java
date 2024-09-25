@@ -26,6 +26,8 @@ public class SysOperLog extends BaseDO {
     public static final String COL_requestParams = "request_params";
     public static final String COL_requestType = "request_type";
     public static final String COL_responseBody = "response_body";
+    public static final String COL_requestPath = "requestPath";
+
     public static final String COL_errorLog = "error_log";
     public static final String COL_operateUser = "operate_user";
     public static final String COL_operateIp = "operate_ip";
@@ -70,6 +72,11 @@ public class SysOperLog extends BaseDO {
      */
     @TableField(value = "response_body")
     private String responseBody;
+    /**
+     * 请求地址
+     */
+    @TableField(value = "request_path")
+    private String requestPath;
 
     /**
      * 错误信息

@@ -48,6 +48,15 @@ public class RouterServiceImpl implements RouterService {
         return sysRouters.stream().filter(item -> ids.contains(item.getId())).toList();
     }
 
+    /**
+     * 获取所有路由列表
+     *
+     * @return 路由列表
+     */
+    public List<SysRouters> getAllRouters() {
+        return baseMapper.selectList(null);
+    }
+
     @Override
     public List<SysRouters> getAllTopRouters() {
         LambdaQueryWrapper<SysRouters> routersLambdaQueryWrapper = Wrappers.lambdaQuery();

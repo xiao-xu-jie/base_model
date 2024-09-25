@@ -57,6 +57,11 @@ public class OperLogQueryResDTO extends BaseDTO {
      */
 
     private String responseBody;
+    /**
+     * 返回体
+     */
+
+    private String requestPath;
 
     /**
      * 错误信息

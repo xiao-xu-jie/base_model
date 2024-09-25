@@ -1,10 +1,7 @@
 package com.xujie.manager.domain.BO;
 
 import com.xujie.manager.common.base.model.BaseBO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -18,6 +15,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class OperLogBO extends BaseBO {
 
 
@@ -56,6 +54,11 @@ public class OperLogBO extends BaseBO {
      */
 
     private String responseBody;
+    /**
+     * 请求地址
+     */
+
+    private String requestPath;
 
     /**
      * 错误信息
