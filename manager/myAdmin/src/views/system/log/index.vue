@@ -123,15 +123,10 @@ const dataList = ref();
 const select = ref("no");
 const columns: TableColumnList = [
   {
-    label: "勾选列", // 如果需要表格多选，此处label必须设置
-    type: "selection",
-    fixed: "left",
-    reserveSelection: true // 数据刷新后保留选项
-  },
-  {
     label: "ID",
     prop: "id",
-    width: 90
+    width: 100,
+    fixed: "left"
   },
   {
     label: "日志描述",
@@ -139,6 +134,7 @@ const columns: TableColumnList = [
     slot: "logDesc",
     fixed: "left"
   },
+
   {
     label: "调用函数",
     prop: "methodName",
