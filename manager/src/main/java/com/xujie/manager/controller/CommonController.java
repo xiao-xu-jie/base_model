@@ -5,6 +5,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.xujie.manager.DTO.req.LoginReqDTO;
 import com.xujie.manager.DTO.res.RouterResDTO;
 import com.xujie.manager.DTO.res.UserLoginResDTO;
+import com.xujie.manager.common.annotations.WebLog;
 import com.xujie.manager.common.entity.Result;
 import com.xujie.manager.domain.BO.RoutersBO;
 import com.xujie.manager.domain.BO.UserBO;
@@ -48,8 +49,8 @@ public class CommonController {
      * @param loginReqDTO 登录信息
      * @return 用户信息
      */
+    @WebLog(desc = "后台用户登录")
     @PostMapping("/login")
-
     public Result<UserLoginResDTO> userLogin(@RequestBody @Validated LoginReqDTO loginReqDTO) {
         String password = loginReqDTO.getPassword();
         String username = loginReqDTO.getUsername();
@@ -67,6 +68,7 @@ public class CommonController {
      *
      * @return 路由信息
      */
+    @WebLog(desc = "获取路由信息")
     @GetMapping("/getSyncRouter")
     public Result<List<RouterResDTO>> getSyncRouter() {
         List<RoutersBO> routers = routerDomainService.getRouters();

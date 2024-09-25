@@ -12,6 +12,7 @@ import com.wechat.pay.java.core.notification.NotificationParser;
 import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ObjectUtils;
@@ -21,6 +22,7 @@ import org.springframework.util.ObjectUtils;
  * @Date: 2024/7/20 10:13
  * @Description: 微信支付配置
  **/
+@ConditionalOnProperty(prefix = "wx.pay", name = "enabled", havingValue = "true")
 @Configuration
 @Getter
 public class WxPayConfig {

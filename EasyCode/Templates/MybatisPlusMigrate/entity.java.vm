@@ -13,6 +13,7 @@ package ${modelPackageName};
 ##表注释（宏定义）
 #tableComment("表实体类")
 #if(${useLombok})
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

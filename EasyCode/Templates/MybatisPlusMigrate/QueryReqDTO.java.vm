@@ -13,6 +13,7 @@ package $!{ReqDTOPackageName};
 ##表注释（宏定义）
 #tableComment("查询请求DTO")
 #if(${useLombok})
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -167,6 +167,11 @@
             <artifactId>file-storage-xujie-spring-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!-- 切面 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
     </dependencies>
     <!-- 阿里云的Maven镜像源 -->
     <repositories>

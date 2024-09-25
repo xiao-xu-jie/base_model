@@ -2,18 +2,17 @@ package com.xujie.wx.config;
 
 import com.xujie.wx.utils.WxAppUtil;
 import jakarta.annotation.PostConstruct;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import java.util.logging.Logger;
 
-/**
- * @author Xujie
- * @since 2024/9/15 10:40
- **/
 
-@ComponentScan(value = "com.xujie.wx")
-@Import({WxAppUtil.class})
+@Configuration
+@ComponentScan("com.xujie.wx")
 public class wxAutoConfiguration {
     Logger logger = Logger.getLogger("wxAutoConfiguration");
 
@@ -33,4 +32,6 @@ public class wxAutoConfiguration {
         System.out.println(banner);
         System.out.println("\033[32m :: Wx Auto Count ::\033[0m               (v0.1)");
     }
+
+
 }

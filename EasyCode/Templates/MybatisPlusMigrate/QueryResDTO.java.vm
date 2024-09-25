@@ -14,6 +14,7 @@ package $!{ResDTOPackageName};
 ##表注释（宏定义）
 #tableComment("查询返回DTO")
 #if(${useLombok})
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

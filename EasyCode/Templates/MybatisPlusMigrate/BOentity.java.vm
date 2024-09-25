@@ -13,6 +13,7 @@ package $!{BOPackageName};
 ##表注释（宏定义）
 #tableComment("BO")
 #if(${useLombok})
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
