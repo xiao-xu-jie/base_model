@@ -16,6 +16,7 @@ import com.xujie.manager.infra.DO.SysRouters;
 import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RoleService;
 import com.xujie.manager.infra.service.RouterService;
+import com.xujie.manager.infra.service.UserRoleService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,8 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     private RouterService routerService;
     @Resource
     private RoutersConvert routersConvert;
+    @Resource
+    private UserRoleService userRoleService;
 
 
 
@@ -94,6 +97,8 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     public void delete(Long[] ids) {
         ConditionCheck.falseAndThrow(roleRouterService.getRoleRouterByRoleId(Lists.newArrayList(ids)).isEmpty()
                 , new CustomException("删除角色失败，角色下存在路由"));
+        ConditionCheck.falseAndThrow(userRoleService.getUserListByRoleId(ids).isEmpty()
+                , new CustomException("删除角色失败，有用户拥有该角色"));
         boolean flag = baseService.deleteBatch(ids);
         ConditionCheck.falseAndThrow(flag, new CustomException("删除角色失败"));
     }

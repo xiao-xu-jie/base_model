@@ -1,6 +1,7 @@
 package com.xujie.manager.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.xujie.manager.DTO.req.OperLogAddReqDTO;
 import com.xujie.manager.DTO.req.OperLogQueryReqDTO;
 import com.xujie.manager.DTO.res.OperLogQueryResDTO;

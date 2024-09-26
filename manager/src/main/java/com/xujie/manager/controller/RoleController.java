@@ -1,6 +1,7 @@
 package com.xujie.manager.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.xujie.manager.DTO.req.RoleAddReqDTO;
 import com.xujie.manager.DTO.req.RoleQueryReqDTO;
 import com.xujie.manager.DTO.res.RoleQueryResDTO;

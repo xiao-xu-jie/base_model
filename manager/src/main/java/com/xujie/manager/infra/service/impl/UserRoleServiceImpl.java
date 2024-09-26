@@ -1,5 +1,6 @@
 package com.xujie.manager.infra.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xujie.manager.infra.DO.SysRole;
 import com.xujie.manager.infra.DO.SysUserRole;
@@ -61,6 +62,14 @@ public class UserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserR
         List<SysRole> roleList = baseMapper.selectRoleByUserId(userId);
         return roleList;
     }
+
+    @Override
+    public List<SysUserRole> getUserListByRoleId(Long[] roleIds) {
+        LambdaQueryWrapper<SysUserRole> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SysUserRole::getRoleId, roleIds);
+        return baseMapper.selectList(queryWrapper);
+    }
+
 
     @Override
     public void saveUserRole(Long id, List<String> roles) {

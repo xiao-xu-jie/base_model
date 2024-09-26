@@ -4,6 +4,7 @@ import { getUserRoles } from "@/api/user";
 import { Plus } from "@element-plus/icons-vue";
 import { getToken } from "@/utils/auth";
 import { getAllRole } from "@/api/roles";
+import { message } from "@/utils/message";
 
 // 声明 props 类型
 export interface FormProps {
@@ -54,8 +55,13 @@ const getRoles = async () => {
     : null;
   newFormInline.value.roles = res?.data ?? [];
   res = await getAllRole();
+  if (!res.success) {
+    loading.value = false;
+    message(res.message, { type: "error" });
+    return;
+  }
   roles.value = res.data.map(item => ({
-    value: item.id,
+    value: item.code,
     label: item.name
   }));
   loading.value = false;

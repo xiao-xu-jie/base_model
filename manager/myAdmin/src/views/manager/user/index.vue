@@ -8,6 +8,8 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
 import forms from "./form.vue";
 import AddFill from "@iconify-icons/ri/add-fill";
+import { getAuths, hasAuth } from "@/router/utils";
+import { hasPerms } from "@/utils/auth";
 
 const formRef = ref();
 const tableRef = ref();
@@ -328,6 +330,7 @@ function handleClick(row) {
           </template>
           <template #operation="{ row }">
             <el-button
+              v-if="hasPerms('user:btn:edit')"
               link
               type="primary"
               size="small"
@@ -335,6 +338,7 @@ function handleClick(row) {
             >
               编辑
             </el-button>
+
             <el-popconfirm
               title="是否确认删除用户?"
               @confirm="onbatchDel(row.id)"

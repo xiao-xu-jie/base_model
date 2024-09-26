@@ -9,6 +9,7 @@ import com.xujie.manager.infra.mapper.SysRoleMapper;
 import com.xujie.manager.infra.service.RoleService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,8 +73,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<SysRole> getAllRoleByCodes(List<String> codes) {
         LambdaQueryWrapper<SysRole> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.in(SysRole::getCode, codes);
-        return baseMapper.selectList(queryWrapper);
+        queryWrapper.in(!codes.isEmpty(), SysRole::getCode, codes);
+
+        return codes.isEmpty() ? Lists.newArrayList() : baseMapper.selectList(queryWrapper);
     }
 
     @Override

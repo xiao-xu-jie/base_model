@@ -1,5 +1,6 @@
 package com.xujie.manager.infra.service.impl;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -18,11 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * 操作日志服务实现类
- * @author Xujie
- * @since 2024/9/25 16:12
- **/
 
 @Slf4j
 @Service

@@ -79,6 +79,13 @@ public class RedisUtils {
     }
 
     /**
+     * zset加分
+     */
+
+    public static Double zIncrementScore(String key, Object value, double delta) {
+        return staticRedisTemplate.opsForZSet().incrementScore(key, value, delta);
+    }
+    /**
      * zset添加TypedTuple元素
      */
     public static Long zAdd(String key, Set<ZSetOperations.TypedTuple<Object>> tuple) {

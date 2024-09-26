@@ -2,6 +2,7 @@ package com.xujie.manager.common.aop;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.google.gson.Gson;
+import com.xujie.manager.application.redis.utils.RedisUtils;
 import com.xujie.manager.common.annotations.WebLog;
 import com.xujie.manager.common.exception.CustomException;
 import com.xujie.manager.domain.BO.OperLogBO;
@@ -44,6 +45,8 @@ public class LogAspect {
     @Resource
     private OperLogDomainService operLogDomainService;
 
+    private final String URL_PREFIX = "api:rank";
+
     @Around("webLog()")
     public Object  around(ProceedingJoinPoint proceedingJoinPoint){
         String errorMsg = null;
@@ -71,19 +74,22 @@ public class LogAspect {
         HttpServletRequest req = requestAttributes.getRequest();
         String ip = req.getRemoteAddr();
         String url = req.getRequestURI();
-        OperLogBO operLogBO = OperLogBO.builder()
+        OperLogBO.OperLogBOBuilder logBOBuilder = OperLogBO.builder()
                 .errorLog(errorMsg)
                 .logDesc(aspectLogDescription.desc())
-                .methodName(String.join(".",signature.getDeclaringType().getPackageName(),signature.getName()))
+                .methodName(String.join(".", signature.getDeclaringType().getPackageName()
+                        , signature.getName()))
                 .requestParams(request)
                 .requestType(aspectLogDescription.method())
                 .responseBody(response)
                 .costTime(endTime - startTime)
                 .operateIp(ip)
-                .requestPath(url)
-                .operateUser(StpUtil.getLoginIdAsLong())
-                .build();
-        logExecutor.execute(new LogTask(operLogBO));
+                .requestPath(url);
+
+        if(StpUtil.isLogin()){
+            logBOBuilder.operateUser(StpUtil.getLoginIdAsLong());
+        }
+        logExecutor.execute(new LogTask(logBOBuilder.build()));
         if(errorMsg != null){
             throw new CustomException(errorMsg);
         }
@@ -128,6 +134,7 @@ public class LogAspect {
             try {
                 log.info("日志信息:{}",operLogBO);
                 operLogDomainService.add(operLogBO);
+                RedisUtils.zIncrementScore(URL_PREFIX,operLogBO.getRequestPath(),1);
             } catch (Exception e) {
                 log.error("日志记录失败:{}",e.getMessage());
             }

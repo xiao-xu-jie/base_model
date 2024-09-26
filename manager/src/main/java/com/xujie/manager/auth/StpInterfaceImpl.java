@@ -21,7 +21,7 @@ public class StpInterfaceImpl implements StpInterface {
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        return Lists.newArrayList("*.*.*");
+        return Lists.newArrayList("user:btn:edit");
     }
 
     @Override

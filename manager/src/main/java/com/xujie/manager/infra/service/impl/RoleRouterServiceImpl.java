@@ -1,6 +1,5 @@
 package com.xujie.manager.infra.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -8,14 +7,13 @@ import com.xujie.manager.infra.DO.SysRole;
 import com.xujie.manager.infra.DO.SysRoleRouter;
 import com.xujie.manager.infra.DO.SysRouters;
 import com.xujie.manager.infra.mapper.SysRoleRouterMapper;
-import com.xujie.manager.infra.mapper.SysRoutersMapper;
 import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RoleService;
 import com.xujie.manager.infra.service.RouterService;
 import jakarta.annotation.Resource;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.BatchResult;
+import org.assertj.core.util.Lists;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +57,7 @@ public class RoleRouterServiceImpl implements RoleRouterService {
     @Override
     public List<SysRoleRouter> getRoleRouterByRoleId(List<Long> roleIds) {
         LambdaQueryWrapper<SysRoleRouter> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(ObjectUtils.isNotNull(roleIds),SysRoleRouter::getRoleId, roleIds);
+        wrapper.in(ObjectUtils.isNotNull(roleIds), SysRoleRouter::getRoleId, roleIds);
         List<SysRoleRouter> sysRoleRouters = baseMapper.selectList(wrapper);
         return removeAllTopRouterId(sysRoleRouters);
     }
@@ -71,8 +69,8 @@ public class RoleRouterServiceImpl implements RoleRouterService {
                 .map(SysRole::getId)
                 .toList();
         LambdaQueryWrapper<SysRoleRouter> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(SysRoleRouter::getRoleId, roleIds);
-        return baseMapper.selectList(wrapper);
+        wrapper.in(!roleIds.isEmpty(),SysRoleRouter::getRoleId, roleIds);
+        return roleIds.isEmpty()? Lists.newArrayList():baseMapper.selectList(wrapper);
     }
 
     @Override

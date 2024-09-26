@@ -7,6 +7,7 @@ package com.xujie.manager.config;
  **/
 
 import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -101,6 +102,8 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
                     } catch (Exception e) {
                         throw new AuthException("请先登录", 401);
                     }
+                    SaRouter.match("/role/**", r -> StpUtil.checkRole("admin"));
+                    SaRouter.match("/operLog/**", r -> StpUtil.checkRole("admin"));
                 }))
                 .addPathPatterns("/**")
                 .excludePathPatterns(Objects.requireNonNull(env.getProperty("sa-token.exclude-paths")).split(","));

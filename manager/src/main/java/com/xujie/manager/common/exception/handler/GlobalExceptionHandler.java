@@ -1,15 +1,19 @@
 package com.xujie.manager.common.exception.handler;
 
 
+import cn.dev33.satoken.exception.*;
+import cn.dev33.satoken.util.SaResult;
 import com.xujie.manager.common.entity.Result;
 import com.xujie.manager.common.exception.BaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Arrays;
@@ -61,4 +65,46 @@ public class GlobalExceptionHandler {
         log.error("参数异常", e);
         return Result.fail(e.getMessage(), null);
     }
+
+    // 拦截：未登录异常
+    @ExceptionHandler(NotLoginException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result<Boolean> handlerException(NotLoginException e) {
+
+        // 打印堆栈，以供调试
+        e.printStackTrace();
+
+        // 返回给前端
+        return Result.fail(e.getMessage(), null);
+    }
+
+    // 拦截：缺少权限异常
+    @ExceptionHandler(NotPermissionException.class)
+    public Result<Boolean> handlerException(NotPermissionException e) {
+        e.printStackTrace();
+        return Result.fail(e.getMessage(), null);
+    }
+
+    // 拦截：缺少角色异常
+    @ExceptionHandler(NotRoleException.class)
+    public Result<Boolean> handlerException(NotRoleException e) {
+        e.printStackTrace();
+        return Result.fail("缺少角色：" + e.getRole(),null);
+    }
+
+    // 拦截：二级认证校验失败异常
+    @ExceptionHandler(NotSafeException.class)
+    public Result<Boolean> handlerException(NotSafeException e) {
+        e.printStackTrace();
+        return Result.fail("二级认证校验失败：" + e.getService(),null);
+    }
+
+    // 拦截：服务封禁异常
+    @ExceptionHandler(DisableServiceException.class)
+    public Result<Boolean> handlerException(DisableServiceException e) {
+        e.printStackTrace();
+        return Result.fail("当前账号 " + e.getService() + " 服务已被封禁 (level=" + e.getLevel() + ")：" + e.getDisableTime() + "秒后解封",null);
+    }
+
+
 }
