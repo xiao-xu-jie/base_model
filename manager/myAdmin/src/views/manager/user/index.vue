@@ -236,11 +236,11 @@ function handleClick(row) {
 
 <template>
   <div>
-    <div class="header">
+    <div class="header dark:text-white">
       <el-form
         ref="formRef"
         :inline="true"
-        class="search-form"
+        class="search-form dark:text-white"
         :model="searchForm"
       >
         <el-form-item label="用户名" prop="username">
@@ -357,7 +357,7 @@ function handleClick(row) {
 <style scoped lang="scss">
 .header {
   padding: 10px;
-  background-color: #fff;
+  //background-color: #fff;
 }
 
 .search-form {

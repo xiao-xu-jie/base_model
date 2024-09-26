@@ -1,7 +1,6 @@
-package com.xujie;
+package com.xujie.business;
 
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
-import com.xujie.business.businessApplication;
 import com.xujie.wx.config.WxAppConfig;
 import com.xujie.wx.config.WxPayConfig;
 import com.xujie.wx.entity.WxAppInfo;

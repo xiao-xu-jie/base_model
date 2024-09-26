@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.business.infra.mapper.SysOperLogMapper">
+  <resultMap id="BaseResultMap" type="com.xujie.business.infra.DO.SysOperLog">
+    <!--@mbg.generated-->
+    <!--@Table sys_oper_log-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="log_desc" jdbcType="VARCHAR" property="logDesc" />
+    <result column="method_name" jdbcType="VARCHAR" property="methodName" />
+    <result column="request_params" jdbcType="VARCHAR" property="requestParams" />
+    <result column="request_type" jdbcType="VARCHAR" property="requestType" />
+    <result column="response_body" jdbcType="LONGVARCHAR" property="responseBody" />
+    <result column="request_path" jdbcType="VARCHAR" property="requestPath" />
+    <result column="error_log" jdbcType="LONGVARCHAR" property="errorLog" />
+    <result column="operate_user" jdbcType="BIGINT" property="operateUser" />
+    <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
+    <result column="is_notify" jdbcType="VARCHAR" property="isNotify" />
+    <result column="cost_time" jdbcType="BIGINT" property="costTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, log_desc, method_name, request_params, request_type, response_body, request_path, 
+    error_log, operate_user, operate_ip, is_notify, cost_time, create_time, is_delete
+  </sql>
+</mapper>

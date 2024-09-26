@@ -387,7 +387,7 @@ const loadChildren = async (row, treeNode, resolve: (date: any[]) => void) => {
 <style scoped lang="scss">
 .header {
   padding: 10px;
-  background-color: #fff;
+  //background-color: #fff;
 }
 
 .search-form {

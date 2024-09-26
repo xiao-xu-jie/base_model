@@ -1,7 +1,6 @@
-package com.xujie;
+package com.xujie.business;
 
 import com.xujie.business.application.redis.utils.RedisUtils;
-import com.xujie.business.businessApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.DefaultTypedTuple;

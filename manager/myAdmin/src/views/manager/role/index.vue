@@ -220,7 +220,7 @@ function handleClick(row) {
       <el-form
         ref="formRef"
         :inline="true"
-        class="search-form"
+        class="search-form dark:text-white"
         :model="searchForm"
       >
         <el-form-item label="角色名" prop="username">
@@ -322,7 +322,6 @@ function handleClick(row) {
 <style scoped lang="scss">
 .header {
   padding: 10px;
-  background-color: #fff;
 }
 
 .search-form {

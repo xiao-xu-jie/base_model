@@ -1,6 +1,5 @@
-package com.xujie;
+package com.xujie.business;
 
-import com.xujie.business.businessApplication;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

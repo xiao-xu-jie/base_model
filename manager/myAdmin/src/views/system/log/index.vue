@@ -473,7 +473,7 @@ const requestTypeTag = {
 <style scoped lang="scss">
 .header {
   padding: 10px;
-  background-color: #fff;
+  //background-color: #fff;
 }
 
 .search-form {

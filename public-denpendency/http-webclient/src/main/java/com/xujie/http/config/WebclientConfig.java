@@ -31,11 +31,11 @@ public class WebclientConfig {
         ConnectionProvider provider = ConnectionProvider
                 .builder("custom")
                 // 等待超时时间
-                .pendingAcquireTimeout(Duration.ofSeconds(10))
+                .pendingAcquireTimeout(Duration.ofSeconds(60))
                 // 最大连接数
                 .maxConnections(200)
                 // 最大空闲时间
-                .maxIdleTime(Duration.ofSeconds(5))
+                .maxIdleTime(Duration.ofSeconds(60))
                 // 最大等待连接数量
                 .pendingAcquireMaxCount(1000)
                 .build();
@@ -48,13 +48,13 @@ public class WebclientConfig {
          * doOnUnbound	当服务器channel解绑的时候被调用。
          */
         HttpClient httpClient = HttpClient.create(provider)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 6000)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 60000)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .responseTimeout(Duration.ofSeconds(6))
                 .keepAlive(true)
                 //连接成功
-                .doOnConnected(connection -> connection.addHandlerLast(new ReadTimeoutHandler(6))
-                        .addHandlerLast(new WriteTimeoutHandler(6)))
+                .doOnConnected(connection -> connection.addHandlerLast(new ReadTimeoutHandler(60))
+                        .addHandlerLast(new WriteTimeoutHandler(60)))
                 //每次请求后执行flush，防止服务器主动断开连接
                 .doAfterRequest((httpClientRequest, connection) -> {
                     connection.channel().alloc().buffer().release();
