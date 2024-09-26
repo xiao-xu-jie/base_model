@@ -26,6 +26,14 @@ public class Result<T> {
         return result;
     }
 
+    public static <T> Result<T> okMessage(String message) {
+        Result<T> result = new Result<>();
+        result.setCode(BaseResultEnum.SUCCESS.getCode());
+        result.setMessage(message);
+        result.setSuccess(true);
+        result.setData(null);
+        return result;
+    }
     public static <T> Result<T> fail(String message, String detail) {
         Result<T> result = new Result<>();
         result.setCode(BaseResultEnum.FAIL.getCode());

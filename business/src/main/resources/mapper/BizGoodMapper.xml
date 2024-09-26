@@ -5,6 +5,7 @@
     <!--@mbg.generated-->
     <!--@Table biz_good-->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
     <result column="good_name" jdbcType="VARCHAR" property="goodName" />
     <result column="good_desc" jdbcType="VARCHAR" property="goodDesc" />
     <result column="good_price" jdbcType="DECIMAL" property="goodPrice" />
@@ -17,7 +18,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, good_name, good_desc, good_price, good_rank, good_params, station_id, create_time, 
-    update_time, is_delete
+    id, category_id, good_name, good_desc, good_price, good_rank, good_params, station_id, 
+    create_time, update_time, is_delete
   </sql>
 </mapper>

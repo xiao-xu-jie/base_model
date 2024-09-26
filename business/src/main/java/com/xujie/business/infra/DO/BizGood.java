@@ -25,6 +25,12 @@ public class BizGood {
     private Long id;
 
     /**
+     * 分类id
+     */
+    @TableField(value = "category_id")
+    private Long categoryId;
+
+    /**
      * 商品名称
      */
     @TableField(value = "good_name")
@@ -79,6 +85,8 @@ public class BizGood {
     private Integer isDelete;
 
     public static final String COL_ID = "id";
+
+    public static final String COL_CATEGORY_ID = "category_id";
 
     public static final String COL_GOOD_NAME = "good_name";
 
