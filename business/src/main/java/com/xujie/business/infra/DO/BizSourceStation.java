@@ -39,7 +39,7 @@ public class BizSourceStation {
      * uid
      */
     @TableField(value = "`uid`")
-    private byte[] uid;
+    private String uid;
 
     /**
      * 对接key
@@ -50,8 +50,8 @@ public class BizSourceStation {
     /**
      * 站点状态
      */
-    @TableField(value = "station_station")
-    private String stationStation;
+    @TableField(value = "station_status")
+    private Integer stationStatus;
 
     /**
      * 创建时间

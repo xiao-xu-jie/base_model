@@ -29,7 +29,7 @@ package ${modelPackageName};
 public class $!{entityName}  extends BaseDO {
 
     #foreach($column in $tableInfo.fullColumn)
-        public static final String COL_$!{column.name} = "$!{column.obj.name}";
+        public static final String COL_$!{column.name} = "$!{tableInfo.obj.name}.$!{column.obj.name}";
     #end
 
     #foreach($column in $tableInfo.fullColumn)

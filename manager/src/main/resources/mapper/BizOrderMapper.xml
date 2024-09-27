@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.manager.infra.mapper.BizOrderMapper">
+    <resultMap id="BaseResultMap" type="com.xujie.manager.infra.DO.BizOrder">
+        <!--@Table biz_order-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="orderNo" column="order_no" jdbcType="INTEGER"/>
+        <result property="goodId" column="good_id" jdbcType="INTEGER"/>
+        <result property="goodName" column="good_name" jdbcType="VARCHAR"/>
+        <result property="goodDesc" column="good_desc" jdbcType="VARCHAR"/>
+        <result property="totalPrice" column="total_price" jdbcType="VARCHAR"/>
+        <result property="school" column="school" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="classInfo" column="class_info" jdbcType="VARCHAR"/>
+        <result property="orderStatus" column="order_status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="payTime" column="pay_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        order_no,
+        good_id,
+        good_name,
+        good_desc,
+        total_price,
+        school,
+        phone,
+
+        password,
+        class_info,
+        order_status,
+        create_time,
+        pay_time,
+        is_delete,
+        version
+    </sql>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into chaoxingv2.biz_order(order_no, good_id, good_name, good_desc, total_price, school, phone, password,
+        class_info, order_status, create_time, pay_time, is_delete, version)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.orderNo}, #{entity.goodId}, #{entity.goodName}, #{entity.goodDesc}, #{entity.totalPrice},
+            #{entity.school}, #{entity.phone}, #{entity.password}, #{entity.classInfo}, #{entity.orderStatus},
+            #{entity.createTime}, #{entity.payTime}, #{entity.isDelete}, #{entity.version})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into chaoxingv2.biz_order(order_no, good_id, good_name, good_desc, total_price, school, phone, password,
+        class_info, order_status, create_time, pay_time, is_delete, version)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.orderNo}, #{entity.goodId}, #{entity.goodName}, #{entity.goodDesc}, #{entity.totalPrice},
+            #{entity.school}, #{entity.phone}, #{entity.password}, #{entity.classInfo}, #{entity.orderStatus},
+            #{entity.createTime}, #{entity.payTime}, #{entity.isDelete}, #{entity.version})
+        </foreach>
+        on duplicate key update
+        order_no = values(order_no) , good_id = values(good_id) , good_name = values(good_name) , good_desc =
+        values(good_desc) , total_price = values(total_price) , school = values(school) , phone = values(phone) ,
+        password = values(password) , class_info = values(class_info) , order_status = values(order_status) ,
+        create_time = values(create_time) , pay_time = values(pay_time) , is_delete = values(is_delete) , version =
+        values(version)
+    </insert>
+</mapper>
+

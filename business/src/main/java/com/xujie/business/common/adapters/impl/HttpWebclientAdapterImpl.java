@@ -1,8 +1,10 @@
 package com.xujie.business.common.adapters.impl;
 
 import cn.hutool.http.body.MultipartBody;
+import com.xujie.business.DTO.req.WxOrderCreateReqDTO;
 import com.xujie.business.DTO.res.QueryResDTO;
 import com.xujie.business.common.adapters.HttpAdapter;
+import com.xujie.business.common.entity.Result;
 import jakarta.annotation.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -34,5 +36,17 @@ public class HttpWebclientAdapterImpl implements HttpAdapter{
                 .bodyToMono(QueryResDTO.class)
                 .block();
         return block;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Result<String> createOrder(WxOrderCreateReqDTO wxOrderCreateReqDTO) {
+        return webClient.post()
+                .uri("http://110.40.42.211:9928/pay/order/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(wxOrderCreateReqDTO))
+                .retrieve()
+                .bodyToMono(Result.class)
+                .block(Duration.ofSeconds(10));
     }
 }

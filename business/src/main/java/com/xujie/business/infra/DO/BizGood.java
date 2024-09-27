@@ -59,6 +59,11 @@ public class BizGood {
      */
     @TableField(value = "good_params")
     private String goodParams;
+    /**
+     * 平台ID
+     */
+    @TableField(value = "platform_id")
+    private Integer platformId;
 
     /**
      * 货源站ID

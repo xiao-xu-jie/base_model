@@ -1,12 +1,11 @@
 package com.xujie.business.infra.DO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.xujie.business.common.enums.OrderStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -75,14 +74,14 @@ public class BizOrder {
     /**
      * 课程ID 数组
      */
-    @TableField(value = "class_id")
-    private String classId;
+    @TableField(value = "class_info")
+    private String classInfo;
 
     /**
      * 订单状态
      */
     @TableField(value = "order_status")
-    private Integer orderStatus;
+    private OrderStatusEnum orderStatus;
 
     /**
      * 创建时间
@@ -106,6 +105,7 @@ public class BizOrder {
      * 版本号
      */
     @TableField(value = "version")
+    @Version
     private Long version;
 
     public static final String COL_ID = "id";
