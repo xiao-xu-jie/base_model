@@ -2,6 +2,7 @@ package com.xujie.manager.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.xujie.manager.common.base.model.BaseDO;
+import com.xujie.manager.common.enums.OrderStatusEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.*;
@@ -78,7 +79,7 @@ public class BizOrder extends BaseDO {
 
   /** 订单状态 */
   @TableField(value = "order_status")
-  private Integer orderStatus;
+  private OrderStatusEnum orderStatus;
 
   /** 创建时间 */
   @TableField(value = "create_time", fill = FieldFill.INSERT)

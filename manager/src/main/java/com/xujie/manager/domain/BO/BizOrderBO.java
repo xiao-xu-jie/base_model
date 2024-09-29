@@ -1,6 +1,7 @@
 package com.xujie.manager.domain.BO;
 
 import com.xujie.manager.common.base.model.BaseBO;
+import com.xujie.manager.common.enums.OrderStatusEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class BizOrderBO extends BaseBO {
   private Object classInfo;
 
   /** 订单状态 */
-  private Integer orderStatus;
+  private OrderStatusEnum orderStatus;
 
   /** 创建时间 */
   private Date createTime;

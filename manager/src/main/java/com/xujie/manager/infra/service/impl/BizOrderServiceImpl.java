@@ -1,10 +1,15 @@
 package com.xujie.manager.infra.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.manager.infra.DO.BizOrder;
+import com.xujie.manager.infra.mapper.BizOrderMapper;
 import com.xujie.manager.infra.service.BizOrderService;
+import jakarta.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,38 +21,46 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class BizOrderServiceImpl implements BizOrderService {
+  @Resource private BizOrderMapper baseMapper;
+
   @Override
   public Long addOne(BizOrder baseDO) {
-    return 0L;
+    return baseMapper.insert(baseDO) > 0 ? baseDO.getId() : null;
   }
 
   @Override
   public BizOrder getOneByEntity(BizOrder baseDO) {
-    return null;
+    return getListByEntity(baseDO).stream().findFirst().orElse(null);
   }
 
   @Override
   public List<BizOrder> getListByEntity(BizOrder baseDO) {
-    return List.of();
+    return baseMapper.getByAll(baseDO);
   }
 
   @Override
   public boolean deleteOne(Long id) {
-    return false;
+    return deleteBatch(new Long[] {id});
   }
 
   @Override
   public boolean updateOne(Long id, BizOrder baseDO) {
-    return false;
+    return baseMapper.updateById(baseDO, id) > 0;
   }
 
   @Override
   public Page<BizOrder> getPageList(BizOrder baseDO, Integer pageNum, Integer pageSize) {
-    return null;
+    LambdaQueryWrapper<BizOrder> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(baseDO.getId() != null, BizOrder::getId, baseDO.getId());
+    queryWrapper.eq(baseDO.getOrderNo() != null, BizOrder::getOrderNo, baseDO.getOrderNo());
+    queryWrapper.eq(
+        StringUtils.isNotBlank(baseDO.getPhone()), BizOrder::getPhone, baseDO.getPhone());
+    return baseMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper);
   }
 
   @Override
   public boolean deleteBatch(Long[] ids) {
-    return false;
+    System.out.println("deleteBatch");
+    return baseMapper.deleteByIds(Arrays.asList(ids)) > 0;
   }
 }

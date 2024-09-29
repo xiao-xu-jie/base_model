@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/my_admin?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
-    username: root
-    password: 123456
+    url: jdbc:mysql://110.40.42.211:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
+    username: chaoxingv2
+    password: EL3txhRAcn2f4c8G
     #    publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ0Ov8FF97EkC0OeLLqsQHd3WTQcfvL51YQ3q5b2jsgUGdqEJjQ3CxwiFn8w7kwxFmR9mC1JtQrbgClH1w3sLg0CAwEAAQ==
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -21,6 +21,7 @@ spring:
         stat:
           log-slow-sql: true
           slow-sql-millis: 2000
+
   rabbitmq:
     host: 110.40.42.211
     port: 5672
@@ -29,9 +30,9 @@ spring:
     password: 419a4576
   data:
     redis:
-      host: 127.0.0.1
+      host: 110.40.42.211
       port: 6379
-      password: 123456
+      password: xujie520
       database: 0
       lettuce:
         pool:
@@ -74,5 +75,13 @@ dromara:
     default-platform: aliyun-oss-1 #默认使用的存储平台
     thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
     #对应平台的配置写在这里，注意缩进要对齐
-
+    aliyun-oss:
+      - platform: aliyun-oss-1 # 存储平台标识
+        enable-storage: true  # 启用存储
+        access-key: LTAI5tAa5t76CnMpWi9Rayfj
+        secret-key: 3VcC1c6x9ckqWWMTVT7vqNaDRC0vLr
+        end-point: oss-cn-hangzhou.aliyuncs.com
+        bucket-name: xu3285503539
+        domain: https://xu3285503539.oss-cn-hangzhou.aliyuncs.com/ # 访问域名，注意“/”结尾，例如：https://abc.oss-cn-shanghai.aliyuncs.com/
+        base-path: admin/ # 基础路径
 

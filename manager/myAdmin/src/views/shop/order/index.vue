@@ -2,7 +2,12 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addRole, deleteRole, getRoleList, updateRole } from "@/api/roles";
+import {
+  addbizOrder,
+  deletebizOrder,
+  getbizOrderList,
+  updatebizOrder
+} from "@/api/order";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -31,7 +36,7 @@ async function onbatchDel(id = null) {
     ids = [id];
   }
   console.log("curSelected===>>>: ", ids);
-  const res = await deleteRole(ids);
+  const res = await deletebizOrder(ids);
   if (res.success) {
     message(res.message, { type: "success" });
     tableRef.value.getTableRef().clearSelection();
@@ -60,15 +65,21 @@ const pagination = ref({
 
 function onFullscreenIconClick(title, item) {
   addDialog({
-    title: `${title}角色`,
+    title: `${title}订单信息`,
     fullscreenIcon: true,
     sureBtnLoading: true,
     props: {
       formInline: {
         id: item?.id ?? "",
-        name: item?.name ?? "",
-        code: item?.code ?? "",
-        roleDesc: item?.roleDesc ?? ""
+        orderNo: item?.orderNo ?? "",
+        goodId: item?.goodId ?? "",
+        goodName: item?.goodName ?? "",
+        goodDesc: item?.goodDesc ?? "",
+        totalPrice: item?.totalPrice ?? 0,
+        phone: item?.phone ?? "",
+        password: item?.password ?? "",
+        classInfo: item?.classInfo ?? "",
+        orderStatus: item?.orderStatus ?? ""
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -82,8 +93,8 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateRole(options.props.formInline)
-            : await addRole(options.props.formInline);
+            ? await updatebizOrder(options.props.formInline)
+            : await addbizOrder(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -107,13 +118,14 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
-  username: null
+  phone: null,
+  orderNo: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
   let res;
   try {
-    res = await getRoleList({
+    res = await getbizOrderList({
       ...searchForm.value,
       pageNum: flag == 1 ? pagination.value.currentPage : 1,
       pageSize: pagination.value.pageSize
@@ -145,39 +157,49 @@ const columns: TableColumnList = [
   {
     label: "ID",
     prop: "id",
-    width: 180
+    width: 100
   },
   {
-    label: "角色名称",
-    prop: "name",
+    label: "订单号",
+    prop: "orderNo",
     width: 150
   },
   {
-    label: "名称",
-    prop: "name",
+    label: "商品名称",
+    prop: "goodName",
     width: 130
   },
   {
-    label: "角色Code",
-    prop: "code",
-    width: 130
+    label: "商品描述",
+    prop: "goodDesc"
   },
   {
-    label: "角色描述",
-    prop: "roleDesc"
+    label: "订单总价",
+    prop: "totalPrice",
+    slot: "totalPrice"
+  },
+  {
+    label: "用户手机号",
+    prop: "phone"
+  },
+  {
+    label: "订单状态",
+    prop: "orderStatus",
+    slot: "orderStatus"
   },
   {
     label: "创建时间",
     prop: "createTime"
   },
   {
-    label: "更新时间",
-    prop: "updateTime"
+    label: "支付时间",
+    prop: "payTime"
   },
   {
     label: "操作",
     fixed: "right",
-    slot: "operation"
+    slot: "operation",
+    width: 150
   }
 ];
 
@@ -204,7 +226,12 @@ function onCurrentChange(val) {
   console.log("val===>>>: ", val);
   loadData(1);
 }
-
+const orderStatus = {
+  1: "待支付",
+  2: "已支付",
+  3: "已取消",
+  4: "已退款"
+};
 function handleClick(row) {
   console.log(
     "%crow===>>>: ",
@@ -223,13 +250,21 @@ function handleClick(row) {
         class="search-form dark:text-white"
         :model="searchForm"
       >
-        <el-form-item label="角色名" prop="username">
+        <el-form-item label="订单号" prop="orderNo">
           <el-input
-            v-model="searchForm.username"
+            v-model="searchForm.orderNo"
             clearable
-            placeholder="请输入角色名"
+            placeholder="请输入用户订单号"
           />
         </el-form-item>
+        <el-form-item label="用户手机号" prop="phone">
+          <el-input
+            v-model="searchForm.phone"
+            clearable
+            placeholder="请输入用户手机号"
+          />
+        </el-form-item>
+
         <el-form-item>
           <el-button
             :icon="useRenderIcon('ri:search-line')"
@@ -243,16 +278,7 @@ function handleClick(row) {
         </el-form-item>
       </el-form>
     </div>
-    <PureTableBar :columns="columns" title="角色管理" @refresh="loadData">
-      <template #buttons>
-        <el-button
-          type="primary"
-          :icon="useRenderIcon(AddFill)"
-          @click="onFullscreenIconClick('新增', {})"
-        >
-          新增角色
-        </el-button>
-      </template>
+    <PureTableBar :columns="columns" title="订单管理" @refresh="loadData">
       <template v-slot="{ size, dynamicColumns }">
         <div
           v-if="selectedNum > 0"
@@ -295,23 +321,26 @@ function handleClick(row) {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
+          <template #totalPrice="{ row }">
+            <el-tag size="small">{{ row.totalPrice / 100.0 }} 元</el-tag>
+          </template>
+          <template #orderStatus="{ row }">
+            <el-tag
+              :type="row.orderStatus === '已支付' ? 'success' : 'warning'"
+              size="small"
+            >
+              {{ row.orderStatus }}
+            </el-tag>
+          </template>
           <template #operation="{ row }">
             <el-button
               link
               type="primary"
               size="small"
-              @click="onFullscreenIconClick('编辑', row)"
+              @click="onFullscreenIconClick('查看', row)"
             >
-              编辑
+              查看
             </el-button>
-            <el-popconfirm
-              title="删除角色会连带用户授权记录一并情况，是否确认删除?"
-              @confirm="onbatchDel(row.id)"
-            >
-              <template #reference>
-                <el-button type="danger" text class="mr-1"> 删除</el-button>
-              </template>
-            </el-popconfirm>
           </template>
         </pure-table>
       </template>

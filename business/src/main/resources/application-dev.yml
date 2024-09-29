@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
-    username: root
-    password: 123456
+    url: jdbc:mysql://110.40.42.211:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
+    username: chaoxingv2
+    password: EL3txhRAcn2f4c8G
     #    publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ0Ov8FF97EkC0OeLLqsQHd3WTQcfvL51YQ3q5b2jsgUGdqEJjQ3CxwiFn8w7kwxFmR9mC1JtQrbgClH1w3sLg0CAwEAAQ==
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -29,9 +29,9 @@ spring:
     password: 419a4576
   data:
     redis:
-      host: 127.0.0.1
+      host: 110.40.42.211
       port: 6379
-      password: 123456
+      password: xujie520
       database: 0
       lettuce:
         pool:
@@ -116,3 +116,7 @@ wx:
       -----END PRIVATE KEY-----
 xujie:
   webclient: true
+site:
+  id: 1824692250274197505
+  key: 2be88ca4242c76e8253ac62474851065032d6833
+  notifyKey: xujie520.

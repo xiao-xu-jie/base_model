@@ -1,6 +1,8 @@
 package com.xujie.manager.infra.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xujie.manager.infra.DO.BizOrder;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -29,4 +31,12 @@ public interface BizOrderMapper extends BaseMapper<BizOrder> {
    * @throws org.springframework.jdbc.BadSqlGrammarException 入参是空List的时候会抛SQL语句错误的异常，请自行校验入参
    */
   int insertOrUpdateBatch(@Param("entities") List<BizOrder> entities);
+
+  List<BizOrder> getByAll(BizOrder bizOrder);
+
+  default int updateById(BizOrder updated, Long id) {
+    LambdaUpdateWrapper<BizOrder> myQuery = Wrappers.lambdaUpdate(BizOrder.class);
+    myQuery.eq(BizOrder::getId, id);
+    return update(null, myQuery);
+  }
 }

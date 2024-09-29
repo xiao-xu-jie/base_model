@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,6 +35,7 @@ public class OrderDomainServiceImpl implements OrderDomainService {
   @Resource private BizOrderMapper bizOrderMapper;
   @Resource private SiteConfig siteConfig;
 
+  @Cacheable(value = "order", key = "#p0+':'+#p1+':'+#p2+':'+#p3", unless = "#result == null")
   @Override
   public Long createOrder(Long goodId, String user, String pass, String classJson, Integer num) {
     log.info("goodId: {}, user: {}, pass: {}, classJson: {}", goodId, user, pass, classJson);

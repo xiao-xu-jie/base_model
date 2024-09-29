@@ -1,5 +1,6 @@
 package com.xujie.business.domain.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.xujie.business.DTO.res.SubmitOrderResDTO;
@@ -48,6 +49,7 @@ public class NotifyDomainServiceImpl implements NotifyDomainService {
                 return;
               }
               order.setOrderStatus(OrderStatusEnum.PAID);
+              order.setPayTime(DateUtil.date());
               orderService.updateOrder(order);
               log.info("订单支付成功，订单号：{}", orderNo);
               submitOrder(order);
@@ -60,7 +62,6 @@ public class NotifyDomainServiceImpl implements NotifyDomainService {
     map.add("pass", order.getPassword());
     String classInfo = order.getClassInfo();
     JSONArray jsonArray = JSONUtil.parseArray(classInfo);
-
     map.add("school", "school");
     List<BizGood> goodListByEntity =
         categoryGoodService.getGoodListByEntity(BizGood.builder().id(order.getGoodId()).build());
@@ -78,7 +79,7 @@ public class NotifyDomainServiceImpl implements NotifyDomainService {
               .findFirst()
               .orElseThrow(() -> new CustomException("货源站不存在"));
       map.add("uid", sourceStation.getUid());
-      map.add("key", sourceStation.getKey());
+      map.add("key", sourceStation.getSecret());
       map.add("url", sourceStation.getStationUrl());
       for (int i = 0; i < jsonArray.size(); i++) {
         map.add("kcname", jsonArray.getJSONObject(i).getStr("name"));

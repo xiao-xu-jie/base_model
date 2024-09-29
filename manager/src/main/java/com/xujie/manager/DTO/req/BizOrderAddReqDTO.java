@@ -1,6 +1,7 @@
 package com.xujie.manager.DTO.req;
 
 import com.xujie.manager.common.base.model.BaseDTO;
+import com.xujie.manager.common.enums.OrderStatusEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -49,7 +50,7 @@ public class BizOrderAddReqDTO extends BaseDTO {
   private Object classInfo;
 
   /** 订单状态 */
-  private Integer orderStatus;
+  private OrderStatusEnum orderStatus;
 
   /** 创建时间 */
   private Date createTime;

@@ -2,6 +2,6 @@ server:
   port: 9999
 spring:
   profiles:
-    active: ${env-flag:dev}
+    active: ${env-flag:prod}
 logging:
   config: classpath:log4j2-spring.xml

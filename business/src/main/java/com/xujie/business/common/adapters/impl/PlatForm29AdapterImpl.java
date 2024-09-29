@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -48,6 +49,10 @@ public class PlatForm29AdapterImpl
   @Resource private CategoryGoodService categoryGoodService;
   @Resource private WebClient webClient;
 
+  @Cacheable(
+      value = "class",
+      key = "#p0.user+':'+#p0.pass+':'+#p0.good_id",
+      unless = "#result == null")
   @Override
   public List<ClassQueryResDTO> queryUserClass(ClassQueryReqDTO classQueryReqDTO) {
 
@@ -87,7 +92,7 @@ public class PlatForm29AdapterImpl
     map.add(
         "key",
         Optional.of(bizSourceStation)
-            .map(BizSourceStation::getKey)
+            .map(BizSourceStation::getSecret)
             .orElseThrow(() -> new CustomException("货源站点信息错误")));
     QueryResDTO post = new QueryResDTO();
     try {

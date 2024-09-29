@@ -73,7 +73,7 @@ const menusData = ref([]);
     </el-form-item>
     <el-form-item label="secret">
       <el-input
-        v-model.number="newFormInline.secret"
+        v-model="newFormInline.secret"
         class="!w-[220px]"
         placeholder="请输入对接secret"
       />

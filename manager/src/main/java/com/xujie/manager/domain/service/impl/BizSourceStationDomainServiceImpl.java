@@ -59,6 +59,8 @@ public class BizSourceStationDomainServiceImpl implements BizSourceStationDomain
 
   @Override
   public List<BizSourceStationBO> list() {
-    return baseService.getListByEntity(null).stream().map(baseConvert::convertDO2BO).toList();
+    return baseService.getListByEntity(BizSourceStation.builder().isDelete(0).build()).stream()
+        .map(baseConvert::convertDO2BO)
+        .toList();
   }
 }
