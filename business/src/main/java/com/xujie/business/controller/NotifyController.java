@@ -2,8 +2,10 @@ package com.xujie.business.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.xujie.business.common.entity.Result;
+import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.config.SiteConfig;
 import com.xujie.business.domain.service.NotifyDomainService;
+import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class NotifyController {
   public Result<Boolean> notify(@RequestBody Map<String, String> map) {
     String key = map.get("key");
     String orderNo = map.get("orderId");
+    ConditionCheck.anyNull(new CustomException("参数错误"), orderNo, key);
     if (key.equals(siteConfig.getNotifyKey())) {
       notifyDomainService.handlePaySuccess(Long.valueOf(orderNo));
       return Result.okMessage("success");

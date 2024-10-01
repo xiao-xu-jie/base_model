@@ -32,6 +32,12 @@ public class OrderServiceImpl implements OrderService {
     queryWrapper.eq(BizOrder::getOrderNo, order.getOrderNo());
 
     bizOrderMapper.update(
-        BizOrder.builder().orderStatus(order.getOrderStatus()).build(), queryWrapper);
+        BizOrder.builder()
+            .orderStatus(order.getOrderStatus())
+            .payTime(order.getPayTime())
+            .errorData(order.getErrorData())
+            .submitStatus(order.getSubmitStatus())
+            .build(),
+        queryWrapper);
   }
 }

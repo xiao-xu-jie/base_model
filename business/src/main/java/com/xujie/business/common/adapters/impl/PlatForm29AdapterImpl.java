@@ -100,7 +100,7 @@ public class PlatForm29AdapterImpl
     } catch (Exception e) {
       throw new CustomException("请求失败");
     } finally {
-      log.info("请求结果：{}", post);
+      log.info("查课请求结果：{}", post);
     }
     Optional.ofNullable(post)
         .map(QueryResDTO::getMsg)
@@ -127,11 +127,15 @@ public class PlatForm29AdapterImpl
               .retrieve()
               .bodyToMono(SubmitOrderResDTO.class)
               .block(Duration.of(10, ChronoUnit.SECONDS));
+
+      if (post.getCode() != null && post.getCode() != 0) {
+        throw new CustomException(post.getMsg());
+      }
     } catch (Exception e) {
-      throw new CustomException("请求失败");
+      throw new CustomException(e.getMessage());
     } finally {
-      log.info("请求结果：{}", post);
+      log.info("订单提交请求结果：{}", post);
     }
-    return null;
+    return post;
   }
 }
