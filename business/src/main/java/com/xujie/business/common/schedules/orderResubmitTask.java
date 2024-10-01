@@ -25,8 +25,10 @@ public class orderResubmitTask {
   @Scheduled(cron = "0 0/1 * * * ? ", zone = "Asia/Shanghai")
   public void orderResubmit() {
     log.info("====重新提交订单定时任务开始==== {}", DateTime.now());
+
     BizOrder bizOrder = BizOrder.builder().submitStatus(SubmitStatusEnum.SUBMIT_RETRY).build();
     List<BizOrder> retryList = orderService.getOrderListByEntity(bizOrder);
+    log.info("====本次任务数量==== {}", retryList.size());
     // 重新提交逻辑
     if (ObjectUtils.isNotEmpty(retryList)) {
       notifyDomainService.reSubmitOrder(retryList);
