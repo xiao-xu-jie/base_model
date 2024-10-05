@@ -1,17 +1,13 @@
 package com.xujie.business.infra.mapper;
+import org.apache.ibatis.annotations.Param;
+import java.util.List;
+import java.util.Date;
 
-import com.xujie.business.domain.BO.BizUser;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xujie.business.infra.DO.BizUser;
 
-public interface BizUserMapper {
-    int deleteByPrimaryKey(Long id);
+public interface BizUserMapper extends BaseMapper<BizUser> {
+	List<BizUser> getByAll(BizUser bizUser);
 
-    int insert(BizUser record);
 
-    int insertSelective(BizUser record);
-
-    BizUser selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(BizUser record);
-
-    int updateByPrimaryKey(BizUser record);
 }

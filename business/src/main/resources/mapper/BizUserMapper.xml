@@ -1,186 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xujie.business.infra.mapper.BizUserMapper">
-  <resultMap id="BaseResultMap" type="com.xujie.business.domain.BO.BizUser">
-    <!--@mbg.generated-->
-    <!--@Table biz_user-->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="wx_open_id" jdbcType="VARCHAR" property="wxOpenId" />
-    <result column="wx_union_id" jdbcType="VARCHAR" property="wxUnionId" />
-    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="user_avatar" jdbcType="VARCHAR" property="userAvatar" />
-    <result column="user_desc" jdbcType="VARCHAR" property="userDesc" />
-    <result column="user_location" jdbcType="VARCHAR" property="userLocation" />
-    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, phone, wx_open_id, wx_union_id, nick_name, user_avatar, user_desc, user_location, 
-    user_status, create_time, update_time, is_delete
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from biz_user
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    <!--@mbg.generated-->
-    delete from biz_user
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.xujie.business.domain.BO.BizUser">
-    <!--@mbg.generated-->
-    insert into biz_user (id, phone, wx_open_id, 
-      wx_union_id, nick_name, user_avatar, 
-      user_desc, user_location, user_status, 
-      create_time, update_time, is_delete
-      )
-    values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{wxOpenId,jdbcType=VARCHAR}, 
-      #{wxUnionId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{userAvatar,jdbcType=VARCHAR}, 
-      #{userDesc,jdbcType=VARCHAR}, #{userLocation,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=INTEGER}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.xujie.business.domain.BO.BizUser">
-    <!--@mbg.generated-->
-    insert into biz_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="phone != null">
-        phone,
-      </if>
-      <if test="wxOpenId != null">
-        wx_open_id,
-      </if>
-      <if test="wxUnionId != null">
-        wx_union_id,
-      </if>
-      <if test="nickName != null">
-        nick_name,
-      </if>
-      <if test="userAvatar != null">
-        user_avatar,
-      </if>
-      <if test="userDesc != null">
-        user_desc,
-      </if>
-      <if test="userLocation != null">
-        user_location,
-      </if>
-      <if test="userStatus != null">
-        user_status,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="isDelete != null">
-        is_delete,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="wxOpenId != null">
-        #{wxOpenId,jdbcType=VARCHAR},
-      </if>
-      <if test="wxUnionId != null">
-        #{wxUnionId,jdbcType=VARCHAR},
-      </if>
-      <if test="nickName != null">
-        #{nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="userAvatar != null">
-        #{userAvatar,jdbcType=VARCHAR},
-      </if>
-      <if test="userDesc != null">
-        #{userDesc,jdbcType=VARCHAR},
-      </if>
-      <if test="userLocation != null">
-        #{userLocation,jdbcType=VARCHAR},
-      </if>
-      <if test="userStatus != null">
-        #{userStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xujie.business.domain.BO.BizUser">
-    <!--@mbg.generated-->
-    update biz_user
-    <set>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="wxOpenId != null">
-        wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
-      </if>
-      <if test="wxUnionId != null">
-        wx_union_id = #{wxUnionId,jdbcType=VARCHAR},
-      </if>
-      <if test="nickName != null">
-        nick_name = #{nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="userAvatar != null">
-        user_avatar = #{userAvatar,jdbcType=VARCHAR},
-      </if>
-      <if test="userDesc != null">
-        user_desc = #{userDesc,jdbcType=VARCHAR},
-      </if>
-      <if test="userLocation != null">
-        user_location = #{userLocation,jdbcType=VARCHAR},
-      </if>
-      <if test="userStatus != null">
-        user_status = #{userStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDelete != null">
-        is_delete = #{isDelete,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.xujie.business.domain.BO.BizUser">
-    <!--@mbg.generated-->
-    update biz_user
-    set phone = #{phone,jdbcType=VARCHAR},
-      wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
-      wx_union_id = #{wxUnionId,jdbcType=VARCHAR},
-      nick_name = #{nickName,jdbcType=VARCHAR},
-      user_avatar = #{userAvatar,jdbcType=VARCHAR},
-      user_desc = #{userDesc,jdbcType=VARCHAR},
-      user_location = #{userLocation,jdbcType=VARCHAR},
-      user_status = #{userStatus,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      is_delete = #{isDelete,jdbcType=INTEGER}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+    <resultMap id="BaseResultMap" type="com.xujie.business.infra.DO.BizUser">
+        <!--@mbg.generated-->
+        <!--@Table biz_user-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="wx_open_id" jdbcType="VARCHAR" property="wxOpenId"/>
+        <result column="wx_union_id" jdbcType="VARCHAR" property="wxUnionId"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="user_avatar" jdbcType="VARCHAR" property="userAvatar"/>
+        <result column="user_desc" jdbcType="VARCHAR" property="userDesc"/>
+        <result column="user_location" jdbcType="VARCHAR" property="userLocation"/>
+        <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, phone, wx_open_id, wx_union_id, nick_name, user_avatar, user_desc, user_location,
+        user_status, create_time, update_time, is_delete
+    </sql>
+
+    <!--auto generated by MybatisCodeHelper on 2024-10-05-->
+    <select id="getByAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_user
+        <where>
+            <if test="id != null">
+                and id=#{id,jdbcType=BIGINT}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone=#{phone,jdbcType=VARCHAR}
+            </if>
+            <if test="wxOpenId != null and wxOpenId != ''">
+                and wx_open_id=#{wxOpenId,jdbcType=VARCHAR}
+            </if>
+            <if test="wxUnionId != null and wxUnionId != ''">
+                and wx_union_id=#{wxUnionId,jdbcType=VARCHAR}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and nick_name=#{nickName,jdbcType=VARCHAR}
+            </if>
+            <if test="userAvatar != null and userAvatar != ''">
+                and user_avatar=#{userAvatar,jdbcType=VARCHAR}
+            </if>
+            <if test="userDesc != null and userDesc != ''">
+                and user_desc=#{userDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="userLocation != null and userLocation != ''">
+                and user_location=#{userLocation,jdbcType=VARCHAR}
+            </if>
+            <if test="userStatus != null">
+                and user_status=#{userStatus,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and create_time=#{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null">
+                and update_time=#{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="isDelete != null">
+                and is_delete=#{isDelete,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2024-10-05-->
 </mapper>

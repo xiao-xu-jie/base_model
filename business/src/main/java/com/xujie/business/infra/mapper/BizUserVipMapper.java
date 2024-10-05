@@ -1,9 +1,7 @@
 package com.xujie.business.infra.mapper;
 
-import com.xujie.business.domain.BO.BizUserVip;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xujie.business.infra.DO.BizUserVip;
 
-public interface BizUserVipMapper {
-    int insert(BizUserVip record);
-
-    int insertSelective(BizUserVip record);
+public interface BizUserVipMapper extends BaseMapper<BizUserVip> {
 }
