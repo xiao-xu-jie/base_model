@@ -6,15 +6,25 @@ import com.xujie.business.common.chain.register.RegisterChain;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.utils.SMSUtil;
 import com.xujie.business.convert.UserConvert;
+import com.xujie.business.domain.BO.BizCertificationBO;
 import com.xujie.business.domain.BO.BizUserBO;
+import com.xujie.business.domain.BO.BizVipBO;
+import com.xujie.business.domain.service.CertificationDomainService;
 import com.xujie.business.domain.service.UserDomainService;
+import com.xujie.business.domain.service.VipDomainService;
 import com.xujie.business.infra.DO.BizUser;
 import com.xujie.business.infra.service.UserService;
 import com.xujie.tools.ConditionCheck;
 import com.xujie.wx.entity.WxAppInfo;
 import com.xujie.wx.utils.WxAppUtil;
 import jakarta.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,10 +37,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDomainServiceImpl implements UserDomainService {
   @Resource private UserService userService;
+  @Resource private VipDomainService vipDomainService;
+  @Resource private CertificationDomainService certificationDomainService;
   @Resource private SMSUtil smsUtil;
   @Resource private UserConvert userConvert;
   @Resource private WxAppUtil wxAppUtil;
   @Resource private RegisterChain registerChain;
+
+  @Resource(name = "asyncExecutor")
+  private ThreadPoolTaskExecutor asyncExecutor;
 
   /**
    * 通过手机号登录
@@ -45,7 +60,7 @@ public class UserDomainServiceImpl implements UserDomainService {
     ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
     smsUtil.checkCode(phone, code);
     StpUtil.login(userByEntity.getId());
-    return userConvert.convertDO2BO(userByEntity);
+    return setUserInfo(userByEntity);
   }
 
   /**
@@ -56,21 +71,39 @@ public class UserDomainServiceImpl implements UserDomainService {
    */
   @Override
   public BizUserBO loginByWx(String code) {
-    WxAppInfo wxAppInfo = null;
+
+    CompletableFuture<BizUserBO> userByEntityCompletableFuture =
+        CompletableFuture.supplyAsync(
+                () -> {
+                  WxAppInfo wxAppInfo = null;
+                  try {
+                    wxAppInfo = wxAppUtil.getWxAppInfo(code);
+                  } catch (Exception e) {
+                    log.error("[用户登录][获取微信code]获取微信用户信息失败", e);
+                    throw new CustomException("获取微信用户信息失败");
+                  }
+                  if (wxAppInfo.getErrcode() != null) {
+                    throw new CustomException("获取微信用户信息失败");
+                  }
+                  BizUser userByEntity =
+                      userService.getUserByEntity(
+                          BizUser.builder().wxOpenId(wxAppInfo.getOpenid()).build());
+                  ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
+                  return userByEntity;
+                },
+                asyncExecutor)
+            .thenApply(this::setUserInfo);
     try {
-      wxAppInfo = wxAppUtil.getWxAppInfo(code);
-    } catch (Exception e) {
-      log.error("[用户登录][获取微信code]获取微信用户信息失败", e);
-      throw new CustomException("获取微信用户信息失败");
+      BizUserBO bizUserBO = userByEntityCompletableFuture.get(3, TimeUnit.SECONDS);
+      StpUtil.login(bizUserBO.getId());
+      return bizUserBO;
+    } catch (ExecutionException e) {
+      throw new CustomException(e.getMessage());
+    } catch (InterruptedException e) {
+      throw new CustomException("登录中断");
+    } catch (TimeoutException e) {
+      throw new CustomException("登录超时");
     }
-    if (wxAppInfo.getErrcode() != null) {
-      throw new CustomException("获取微信用户信息失败");
-    }
-    BizUser userByEntity =
-        userService.getUserByEntity(BizUser.builder().wxOpenId(wxAppInfo.getOpenid()).build());
-    ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
-    StpUtil.login(userByEntity.getId());
-    return userConvert.convertDO2BO(userByEntity);
   }
 
   @Override
@@ -91,6 +124,9 @@ public class UserDomainServiceImpl implements UserDomainService {
 
   @Override
   public BizUserBO register(BizUserBO userBo, String code) {
+    BizUser userByEntity =
+        userService.getUserByEntity(BizUser.builder().phone(userBo.getPhone()).build());
+    ConditionCheck.trueAndThrow(userByEntity != null, new CustomException("手机号已经绑定用户"));
     WxAppInfo wxAppInfo = null;
     try {
       wxAppInfo = wxAppUtil.getWxAppInfo(code);
@@ -101,9 +137,6 @@ public class UserDomainServiceImpl implements UserDomainService {
     if (wxAppInfo.getErrcode() != null) {
       throw new CustomException("获取微信用户信息失败");
     }
-    BizUser userByEntity =
-        userService.getUserByEntity(BizUser.builder().phone(userBo.getPhone()).build());
-    ConditionCheck.trueAndThrow(userByEntity != null, new CustomException("手机号已经绑定用户"));
     BizUser user = userConvert.convertBO2DO(userBo);
     user.setWxOpenId(wxAppInfo.getOpenid());
     try {
@@ -117,7 +150,41 @@ public class UserDomainServiceImpl implements UserDomainService {
     } catch (Exception e) {
       log.error("[用户注册][注册后操作]注册后操作失败", e);
     }
+    StpUtil.login(user.getId());
     // 执行注册后的操作
-    return userConvert.convertDO2BO(user);
+    return setUserInfo(user);
+  }
+
+  @Override
+  public BizUserBO getUserProfile(long loginIdAsLong) {
+    return setUserInfo(userService.getUserByEntity(BizUser.builder().id(loginIdAsLong).build()));
+  }
+
+  @NotNull
+  private BizUserBO setUserInfo(BizUser user) {
+    BizUserBO bizUserBO = userConvert.convertDO2BO(user);
+    try {
+      // 查询用户VIP信息
+      CompletableFuture<BizVipBO> vipByUserIdCompletableFuture =
+          CompletableFuture.supplyAsync(
+              () -> vipDomainService.getVipByUserId(user.getId()), asyncExecutor);
+      CompletableFuture<BizCertificationBO> myCertificationCompletableFuture =
+          CompletableFuture.supplyAsync(
+              () -> certificationDomainService.getMyCertification(user.getId()), asyncExecutor);
+
+      CompletableFuture<BizUserBO> bizUserBOCompletableFuture =
+          vipByUserIdCompletableFuture.thenCombine(
+              myCertificationCompletableFuture,
+              (vipBO, certificationBO) -> {
+                bizUserBO.setUserVip(vipBO);
+                bizUserBO.setUserCertification(certificationBO);
+                log.info("[用户登录][用户信息]{}", bizUserBO);
+                return bizUserBO;
+              });
+      return bizUserBOCompletableFuture.get(3, TimeUnit.SECONDS);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new CustomException("获取用户信息失败");
+    }
   }
 }

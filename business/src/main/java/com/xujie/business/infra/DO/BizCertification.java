@@ -1,6 +1,7 @@
 package com.xujie.business.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xujie.business.common.enums.CertificationStatusEnum;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,7 @@ public class BizCertification {
 
   /** 认证类型 */
   @TableField(value = "cert_type")
-  private Object certType;
+  private String certType;
 
   /** 其余资料 */
   @TableField(value = "imgs")
@@ -43,7 +44,7 @@ public class BizCertification {
 
   /** 认证状态 */
   @TableField(value = "cert_status")
-  private Integer certStatus;
+  private CertificationStatusEnum certStatus;
 
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;

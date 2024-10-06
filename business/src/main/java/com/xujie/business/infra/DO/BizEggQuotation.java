@@ -33,6 +33,18 @@ public class BizEggQuotation {
   @TableField(value = "quotation_location")
   private String quotationLocation;
 
+  /** 最高价 */
+  @TableField(value = "quotation_max_price")
+  private Double quotationMaxPrice;
+
+  /** 参考价 */
+  @TableField(value = "quotation_avg_price")
+  private Double quotationAvgPrice;
+
+  /** 最低价 */
+  @TableField(value = "quotation_min_price")
+  private Double quotationMinPrice;
+
   /** 是否显示 */
   @TableField(value = "quotation_status")
   private Integer quotationStatus;
@@ -43,7 +55,7 @@ public class BizEggQuotation {
 
   /** 发布日期（yyyy_mm_dd) */
   @TableField(value = "data_date")
-  private Date dataDate;
+  private String dataDate;
 
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;
@@ -64,6 +76,12 @@ public class BizEggQuotation {
   public static final String COL_EGG_TYPE_NAME = "egg_type_name";
 
   public static final String COL_QUOTATION_LOCATION = "quotation_location";
+
+  public static final String COL_QUOTATION_MAX_PRICE = "quotation_max_price";
+
+  public static final String COL_QUOTATION_AVG_PRICE = "quotation_avg_price";
+
+  public static final String COL_QUOTATION_MIN_PRICE = "quotation_min_price";
 
   public static final String COL_QUOTATION_STATUS = "quotation_status";
 

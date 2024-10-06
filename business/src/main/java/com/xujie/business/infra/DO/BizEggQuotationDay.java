@@ -1,7 +1,11 @@
 package com.xujie.business.infra.DO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import java.math.BigDecimal;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.xujie.business.common.enums.QuotationTypeEnum;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,17 +24,20 @@ public class BizEggQuotationDay {
   @TableField(value = "type_id")
   private Long typeId;
 
+  @TableField(value = "quotation_type")
+  private QuotationTypeEnum quotationType;
+
   /** 平均价 */
   @TableField(value = "avg_num")
-  private BigDecimal avgNum;
+  private Double avgNum;
 
   /** 最高价 */
   @TableField(value = "max_num")
-  private BigDecimal maxNum;
+  private Double maxNum;
 
   /** 最低价 */
   @TableField(value = "min_num")
-  private BigDecimal minNum;
+  private Double minNum;
 
   /** 报价人数 */
   @TableField(value = "people_number")
@@ -50,12 +57,13 @@ public class BizEggQuotationDay {
   private Date updateTime;
 
   @TableField(value = "is_delete")
-  @TableLogic
   private Integer isDelete;
 
   public static final String COL_ID = "id";
 
   public static final String COL_TYPE_ID = "type_id";
+
+  public static final String COL_QUOTATION_TYPE = "quotation_type";
 
   public static final String COL_AVG_NUM = "avg_num";
 

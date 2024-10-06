@@ -39,6 +39,10 @@ public class BizUserBO {
   /** 用户状态-0,1 */
   private UserStatusEnum userStatus;
 
+  private BizVipBO userVip;
+
+  private BizCertificationBO userCertification;
+
   private Date createTime;
 
   private Date updateTime;

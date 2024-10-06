@@ -12,6 +12,7 @@ import com.xujie.business.infra.service.UserService;
 import com.xujie.business.infra.service.VipService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
@@ -83,5 +84,15 @@ public class VipServiceImpl implements VipService {
     // 查询用户VIP
     return userVipMapper.selectOne(
         new LambdaQueryWrapper<BizUserVip>().eq(BizUserVip::getUserId, user.getId()));
+  }
+
+  @Override
+  public List<BizVip> listVip() {
+    return vipMapper.selectList(null);
+  }
+
+  @Override
+  public BizVip getVipByEntity(BizVip build) {
+    return vipMapper.selectOne(new LambdaQueryWrapper<BizVip>().eq(BizVip::getId, build.getId()));
   }
 }

@@ -1,5 +1,7 @@
 package com.xujie.business.DTO.res.user;
 
+import com.xujie.business.DTO.res.cert.UserCertificationResDTO;
+import com.xujie.business.DTO.res.vip.VipUserResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,6 +36,12 @@ public class UserLoginResDTO {
 
   /** 用户位置 */
   private String userLocation;
+
+  /** 用户VIP */
+  private VipUserResDTO userVip;
+
+  /** 用户认证信息 */
+  private UserCertificationResDTO userCertification;
 
   /** Token */
   private String token;

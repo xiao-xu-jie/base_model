@@ -69,7 +69,7 @@ public class SMSUtil {
   public void checkCode(String phone, String code) {
     String cacheCode =
         RedisUtils.<String>getCacheObject(SMSConstant.SMS_REDIS_KEY + phone)
-            .orElseThrow(() -> new CustomException("验证码已过期"));
+            .orElseThrow(() -> new CustomException("验证码错误或已过期"));
     if (!code.equals(cacheCode)) {
       throw new CustomException("验证码错误");
     }

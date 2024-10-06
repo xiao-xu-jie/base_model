@@ -1,6 +1,7 @@
 package com.xujie.business.DTO.req.user;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,10 @@ public class UserRegisterReqDTO {
   @NotBlank(message = "用户手机号不能为空")
   private String phone;
 
+  /** 手机验证码 */
+  @NotBlank(message = "手机验证码不能为空")
+  private String phoneCode;
+
   /** 微信openid */
   @NotBlank(message = "微信code不能为空")
   private String code;
@@ -29,10 +34,10 @@ public class UserRegisterReqDTO {
 
   /** 头像 */
   @NotBlank(message = "头像不能为空")
+  @Pattern(regexp = "^(http|https)://.*$", message = "头像格式不正确")
   private String userAvatar;
 
   /** 用户介绍 */
-  @NotBlank(message = "用户介绍不能为空")
   private String userDesc;
 
   /** 用户位置 */

@@ -1,6 +1,7 @@
 package com.xujie.business.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xujie.business.common.enums.ShowStatusEnum;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +44,7 @@ public class BizCommunityPost {
 
   /** 状态 0,1 */
   @TableField(value = "`status`")
-  private Integer status;
+  private ShowStatusEnum status;
 
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;

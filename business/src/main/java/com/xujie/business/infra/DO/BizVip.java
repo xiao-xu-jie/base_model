@@ -1,6 +1,7 @@
 package com.xujie.business.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xujie.business.common.enums.ShowStatusEnum;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class BizVip {
 
   /** 会员状态 0,1 */
   @TableField(value = "vip_status")
-  private Integer vipStatus;
+  private ShowStatusEnum vipStatus;
 
   /** 是否默认赠送 */
   @TableField(value = "is_default")

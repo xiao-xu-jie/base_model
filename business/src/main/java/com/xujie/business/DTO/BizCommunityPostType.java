@@ -1,5 +1,6 @@
 package com.xujie.business.DTO;
 
+import com.xujie.business.common.enums.ShowStatusEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -33,7 +34,7 @@ public class BizCommunityPostType {
 
   /** 发布类型状态 0,1 */
   @NotNull(message = "发布类型状态 0,1不能为null")
-  private Integer postTypeStatus;
+  private ShowStatusEnum postTypeStatus;
 
   @NotNull(message = "不能为null")
   private Date createTime;

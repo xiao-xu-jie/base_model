@@ -1,5 +1,6 @@
 package com.xujie.business.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.xujie.business.DTO.req.user.UserPhoneLonginReqDTO;
 import com.xujie.business.DTO.req.user.UserRegisterReqDTO;
@@ -7,6 +8,7 @@ import com.xujie.business.DTO.req.user.UserSendCodeReqDTO;
 import com.xujie.business.DTO.req.user.UserWxLoginReqDTO;
 import com.xujie.business.DTO.res.user.UserLoginResDTO;
 import com.xujie.business.common.entity.Result;
+import com.xujie.business.common.utils.SMSUtil;
 import com.xujie.business.convert.UserConvert;
 import com.xujie.business.domain.BO.BizUserBO;
 import com.xujie.business.domain.service.UserDomainService;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
   @Resource private UserDomainService userDomainService;
   @Resource private UserConvert userConvert;
+  @Resource private SMSUtil smsUtil;
 
   /**
    * 通过手机号登录
@@ -60,6 +63,7 @@ public class UserController {
    * @param wxLoginReqDTO 微信登录请求
    * @return 用户信息
    */
+  @SaIgnore
   @PostMapping("/loginByWx")
   Result<UserLoginResDTO> loginByWx(@RequestBody @Validated UserWxLoginReqDTO wxLoginReqDTO) {
     BizUserBO bizUserBO = userDomainService.loginByWx(wxLoginReqDTO.getCode());
@@ -71,15 +75,29 @@ public class UserController {
   /**
    * 用户注册
    *
-   * @param userRegisterReqDTO 手机号登录请求
+   * @param userRegisterReqDTO 用户注册请求
    * @return
    */
   @PostMapping("/register")
   public Result<UserLoginResDTO> register(
       @RequestBody @Validated UserRegisterReqDTO userRegisterReqDTO) {
     BizUserBO userBO = userConvert.convertRegisterReqDTO2BO(userRegisterReqDTO);
+    smsUtil.checkCode(userBO.getPhone(), userRegisterReqDTO.getPhoneCode());
     BizUserBO bizUserBO = userDomainService.register(userBO, userRegisterReqDTO.getCode());
     UserLoginResDTO userLoginResDTO = userConvert.convertBO2LoginResDTO(bizUserBO);
+    userLoginResDTO.setToken(StpUtil.getTokenValue());
+    return Result.ok(userLoginResDTO);
+  }
+
+  /**
+   * 获取用户信息
+   *
+   * @return 用户信息
+   */
+  @GetMapping("/profile")
+  public Result<UserLoginResDTO> profile() {
+    BizUserBO userProfile = userDomainService.getUserProfile(StpUtil.getLoginIdAsLong());
+    UserLoginResDTO userLoginResDTO = userConvert.convertBO2LoginResDTO(userProfile);
     userLoginResDTO.setToken(StpUtil.getTokenValue());
     return Result.ok(userLoginResDTO);
   }

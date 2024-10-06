@@ -1,6 +1,7 @@
 package com.xujie.business.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xujie.business.common.enums.ShowStatusEnum;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,13 +26,17 @@ public class BizCommunityPostType {
   @TableField(value = "post_type_desc")
   private String postTypeDesc;
 
+  /** 发布类型icon */
+  @TableField(value = "post_type_icon")
+  private String postTypeIcon;
+
   /** 发布类型图片 */
   @TableField(value = "post_type_img")
   private String postTypeImg;
 
   /** 发布类型状态 0,1 */
   @TableField(value = "post_type_status")
-  private Integer postTypeStatus;
+  private ShowStatusEnum postTypeStatus;
 
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;
@@ -39,8 +44,8 @@ public class BizCommunityPostType {
   @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
   private Date updateTime;
 
-  @TableLogic
   @TableField(value = "is_delete")
+  @TableLogic
   private Integer isDelete;
 
   public static final String COL_ID = "id";
@@ -48,6 +53,8 @@ public class BizCommunityPostType {
   public static final String COL_POST_TYPE_NAME = "post_type_name";
 
   public static final String COL_POST_TYPE_DESC = "post_type_desc";
+
+  public static final String COL_POST_TYPE_ICON = "post_type_icon";
 
   public static final String COL_POST_TYPE_IMG = "post_type_img";
 

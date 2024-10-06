@@ -29,4 +29,6 @@ public interface UserDomainService {
   Boolean sendCode(String phone);
 
   BizUserBO register(BizUserBO userBO, String code);
+
+  BizUserBO getUserProfile(long loginIdAsLong);
 }
