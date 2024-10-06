@@ -54,6 +54,10 @@ public class BizVip {
   @TableField(value = "vip_status")
   private Integer vipStatus;
 
+  /** 是否默认赠送 */
+  @TableField(value = "is_default")
+  private Integer isDefault;
+
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;
 
@@ -83,6 +87,8 @@ public class BizVip {
   public static final String COL_VIP_EFFECTIVE_DAY = "vip_effective_day";
 
   public static final String COL_VIP_STATUS = "vip_status";
+
+  public static final String COL_IS_DEFAULT = "is_default";
 
   public static final String COL_CREATE_TIME = "create_time";
 

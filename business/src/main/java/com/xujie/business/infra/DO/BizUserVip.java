@@ -1,6 +1,7 @@
 package com.xujie.business.infra.DO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.xujie.business.common.enums.VipExpireStatusEnum;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,7 @@ public class BizUserVip {
 
   /** 是否到期 */
   @TableField(value = "is_expire")
-  private Integer isExpire;
+  private VipExpireStatusEnum isExpire;
 
   /** 发布次数 */
   @TableField(value = "post_count")

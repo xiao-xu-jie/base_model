@@ -64,6 +64,7 @@ public class UserController {
   Result<UserLoginResDTO> loginByWx(@RequestBody @Validated UserWxLoginReqDTO wxLoginReqDTO) {
     BizUserBO bizUserBO = userDomainService.loginByWx(wxLoginReqDTO.getCode());
     UserLoginResDTO userLoginResDTO = userConvert.convertBO2LoginResDTO(bizUserBO);
+    userLoginResDTO.setToken(StpUtil.getTokenValue());
     return Result.ok(userLoginResDTO);
   }
 

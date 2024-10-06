@@ -2,6 +2,7 @@ package com.xujie.business.domain.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.xujie.business.common.chain.register.RegisterChain;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.utils.SMSUtil;
 import com.xujie.business.convert.UserConvert;
@@ -29,6 +30,7 @@ public class UserDomainServiceImpl implements UserDomainService {
   @Resource private SMSUtil smsUtil;
   @Resource private UserConvert userConvert;
   @Resource private WxAppUtil wxAppUtil;
+  @Resource private RegisterChain registerChain;
 
   /**
    * 通过手机号登录
@@ -54,8 +56,21 @@ public class UserDomainServiceImpl implements UserDomainService {
    */
   @Override
   public BizUserBO loginByWx(String code) {
-
-    return null;
+    WxAppInfo wxAppInfo = null;
+    try {
+      wxAppInfo = wxAppUtil.getWxAppInfo(code);
+    } catch (Exception e) {
+      log.error("[用户登录][获取微信code]获取微信用户信息失败", e);
+      throw new CustomException("获取微信用户信息失败");
+    }
+    if (wxAppInfo.getErrcode() != null) {
+      throw new CustomException("获取微信用户信息失败");
+    }
+    BizUser userByEntity =
+        userService.getUserByEntity(BizUser.builder().wxOpenId(wxAppInfo.getOpenid()).build());
+    ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
+    StpUtil.login(userByEntity.getId());
+    return userConvert.convertDO2BO(userByEntity);
   }
 
   @Override
@@ -63,7 +78,7 @@ public class UserDomainServiceImpl implements UserDomainService {
     BizUser userByEntity = userService.getUserByEntity(BizUser.builder().phone(phone).build());
     ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
     String code = RandomUtil.randomNumbers(4);
-    log.info("{} == 验证码：{}", phone, code);
+    log.info("[用户发送验证码]{} == 验证码：{}", phone, code);
     try {
       smsUtil.sendCode(phone, code);
     } catch (CustomException e) {
@@ -80,7 +95,7 @@ public class UserDomainServiceImpl implements UserDomainService {
     try {
       wxAppInfo = wxAppUtil.getWxAppInfo(code);
     } catch (Exception e) {
-      log.error("获取微信用户信息失败", e);
+      log.error("[用户注册][获取微信code]获取微信用户信息失败", e);
       throw new CustomException("获取微信用户信息失败");
     }
     if (wxAppInfo.getErrcode() != null) {
@@ -96,6 +111,13 @@ public class UserDomainServiceImpl implements UserDomainService {
     } catch (Exception e) {
       throw new CustomException("注册失败，请联系管理员");
     }
+    // 注册后操作
+    try {
+      registerChain.handle(user.getId());
+    } catch (Exception e) {
+      log.error("[用户注册][注册后操作]注册后操作失败", e);
+    }
+    // 执行注册后的操作
     return userConvert.convertDO2BO(user);
   }
 }

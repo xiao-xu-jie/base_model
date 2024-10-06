@@ -14,6 +14,7 @@
     <result column="vip_notify_count" jdbcType="INTEGER" property="vipNotifyCount" />
     <result column="vip_effective_day" jdbcType="INTEGER" property="vipEffectiveDay" />
     <result column="vip_status" jdbcType="INTEGER" property="vipStatus" />
+    <result column="is_default" jdbcType="INTEGER" property="isDefault" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="is_delete" jdbcType="VARCHAR" property="isDelete" />
@@ -21,6 +22,6 @@
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
     id, vip_name, vip_desc, vip_icon, vip_img, vip_price, vip_post_count, vip_notify_count, 
-    vip_effective_day, vip_status, create_time, update_time, is_delete
+    vip_effective_day, vip_status, is_default, create_time, update_time, is_delete
   </sql>
 </mapper>
