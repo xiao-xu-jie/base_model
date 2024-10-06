@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "biz_community_post")
-public class BizCommunityPost {
-  /** 发布ID */
+@TableName(value = "biz_certification")
+public class BizCertification {
+  /** 认证ID */
   @TableId(value = "id", type = IdType.ASSIGN_ID)
   private Long id;
 
@@ -21,29 +21,29 @@ public class BizCommunityPost {
   @TableField(value = "user_id")
   private Long userId;
 
-  /** 发布类型ID */
-  @TableField(value = "post_type_id")
-  private Long postTypeId;
+  /** 真实名称 */
+  @TableField(value = "real_name")
+  private String realName;
 
-  /** 发布类型名称 */
-  @TableField(value = "post_type_name")
-  private String postTypeName;
+  /** 身份证号 */
+  @TableField(value = "id_card_no")
+  private String idCardNo;
 
-  /** 发布标题 */
-  @TableField(value = "title")
-  private String title;
+  /** 手机号 */
+  @TableField(value = "phone_number")
+  private String phoneNumber;
 
-  /** 内容 */
-  @TableField(value = "content")
-  private String content;
+  /** 认证类型 */
+  @TableField(value = "cert_type")
+  private Object certType;
 
-  /** 图片数组 */
-  @TableField(value = "img_array")
-  private String imgArray;
+  /** 其余资料 */
+  @TableField(value = "imgs")
+  private String imgs;
 
-  /** 状态 0,1 */
-  @TableField(value = "`status`")
-  private Integer status;
+  /** 认证状态 */
+  @TableField(value = "cert_status")
+  private Integer certStatus;
 
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;
@@ -59,17 +59,17 @@ public class BizCommunityPost {
 
   public static final String COL_USER_ID = "user_id";
 
-  public static final String COL_POST_TYPE_ID = "post_type_id";
+  public static final String COL_REAL_NAME = "real_name";
 
-  public static final String COL_POST_TYPE_NAME = "post_type_name";
+  public static final String COL_ID_CARD_NO = "id_card_no";
 
-  public static final String COL_TITLE = "title";
+  public static final String COL_PHONE_NUMBER = "phone_number";
 
-  public static final String COL_CONTENT = "content";
+  public static final String COL_CERT_TYPE = "cert_type";
 
-  public static final String COL_IMG_ARRAY = "img_array";
+  public static final String COL_IMGS = "imgs";
 
-  public static final String COL_STATUS = "status";
+  public static final String COL_CERT_STATUS = "cert_status";
 
   public static final String COL_CREATE_TIME = "create_time";
 

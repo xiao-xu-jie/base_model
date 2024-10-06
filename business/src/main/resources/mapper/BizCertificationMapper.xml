@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.business.infra.mapper.BizCertificationMapper">
+  <resultMap id="BaseResultMap" type="com.xujie.business.infra.DO.BizCertification">
+    <!--@mbg.generated-->
+    <!--@Table biz_certification-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="cert_type" jdbcType="OTHER" property="certType" />
+    <result column="imgs" jdbcType="VARCHAR" property="imgs" />
+    <result column="cert_status" jdbcType="INTEGER" property="certStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_id, real_name, id_card_no, phone_number, cert_type, imgs, cert_status, create_time, 
+    update_time, is_delete
+  </sql>
+</mapper>

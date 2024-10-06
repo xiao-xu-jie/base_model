@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -20,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Component
 public class SMSUtil {
   @Resource private WebClient webClient;
+  private ReentrantLock lock = new ReentrantLock();
 
   /**
    * 发送短信验证码
@@ -28,6 +30,18 @@ public class SMSUtil {
    * @param code 验证码
    */
   public void sendCode(String phone, String code) {
+    // 限制判断
+    lock.lock();
+    try {
+      int count = RedisUtils.<Integer>getCacheObject(SMSConstant.SMS_REDIS_COUNT_KEY).orElse(0);
+      if (count >= 1) {
+        throw new CustomException("发送次数过多，请稍后再试");
+      }
+      RedisUtils.setCacheObject(SMSConstant.SMS_REDIS_COUNT_KEY, count + 1, 1, TimeUnit.MINUTES);
+    } finally {
+      lock.unlock();
+    }
+
     // 发送短信验证码
     String url = String.format(SMSConstant.SMS_CODE_API, phone, code);
 
@@ -39,7 +53,7 @@ public class SMSUtil {
             .bodyToMono(String.class)
             .block(Duration.of(3, ChronoUnit.SECONDS));
     JSONObject jsonObject = new JSONObject(res);
-    if (!"0".equals(jsonObject.getStr("code"))) {
+    if ("0".equals(jsonObject.getStr("code"))) {
       throw new CustomException("短信发送失败");
     }
     // 验证码缓存

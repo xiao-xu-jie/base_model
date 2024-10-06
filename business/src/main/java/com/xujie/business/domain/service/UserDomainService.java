@@ -19,4 +19,14 @@ public interface UserDomainService {
    * @return 用户信息
    */
   BizUserBO loginByWx(String code);
+
+  /**
+   * 发送验证码
+   *
+   * @param phone 手机号
+   * @return 是否发送成功
+   */
+  Boolean sendCode(String phone);
+
+  BizUserBO register(BizUserBO userBO, String code);
 }

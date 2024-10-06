@@ -10,4 +10,6 @@ public interface UserService {
    * @return
    */
   BizUser getUserByEntity(BizUser user);
+
+  void saveUser(BizUser user);
 }

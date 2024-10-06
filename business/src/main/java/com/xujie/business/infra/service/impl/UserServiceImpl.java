@@ -36,4 +36,9 @@ public class UserServiceImpl implements UserService {
         });
     return userOptional.orElse(null);
   }
+
+  @Override
+  public void saveUser(BizUser user) {
+    userMapper.insert(user);
+  }
 }

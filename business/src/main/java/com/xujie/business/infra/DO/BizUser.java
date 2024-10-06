@@ -1,10 +1,6 @@
 package com.xujie.business.infra.DO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.xujie.business.common.enums.UserStatusEnum;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -61,6 +57,7 @@ public class BizUser {
   private Date updateTime;
 
   @TableField(value = "is_delete")
+  @TableLogic
   private Integer isDelete;
 
   public static final String COL_ID = "id";

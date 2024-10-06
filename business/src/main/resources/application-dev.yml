@@ -40,6 +40,10 @@ spring:
           max-idle: 10
           min-idle: 1
       timeout: 3000ms
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 mybatis-plus:
   configuration:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
@@ -67,52 +71,26 @@ sa-token:
   # 是否输出操作日志
   is-log: true
   token-prefix: xiaox
-  exclude-paths: /login,/test/*,/logout,/error,/favicon.ico,/static/**,/public/**,/resources/**,/assets/**,/upload/**
+  exclude-paths: /user/loginByPhone,/user/register,/file/upload,/user/sendCode,/test/*,/logout,/error,/favicon.ico,/static/**,/public/**,/resources/**,/assets/**,/upload/**
 wx:
   app:
     enabled: true
-    appId: wx7b3b3b3b3b3b3b3b
-    appSecret: 123456
-  mp:
-    appId: wx371e7060bfa17db1
-    appSecret: 5fb1e837e8b2eaeb3ad30f627d9c96c6
-    token: 5Ghj9L2D4nKp3FvWX6QbR7s8Zy1cX
-    enabled: true
-  pay:
-    enabled: true
     appId: wxd5bd00ccece6499a
-    mchId: 1628531801
-    merchantSerialNumber: 5404FCC05C1B85F2CB0186B6CAD51E1863924295
-    keyPath: classpath:wechat//apiclient_key.pem
-    apiV3Key: e10adc3949ba59abbe56e057f20f883e
-    notifyUrl: https://pay.xxce.cn/pay/wxpay/notify
-    privateKey: -----BEGIN PRIVATE KEY-----
-      MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCvY4D3qlikhzib
-      THW2g5B0xfShAXGqMcEFzzzzA5wTzX4WqDPwJfvCuD4PcCK3AGW++hj6AweVMrwl
-      NjPHaAeMw75PiCWJvHb9Ay8RgSIou1gcG1iwHI+JHegywpQIqU2Ax5vNGq7oYTKx
-      75sKz6x1rH11QQZD7sKDr674NYsA4etb0d0j/wKd8Fd+yFiwnV1/hhGsEVByETG9
-      Dg55d3Chir5dcfubD+O243DOjYGdfBqXg5rF9ybTZZfTOuOQbOgxIDQQffsIXGkB
-      0vxbQH4BZx9m5ZSTTJheWolGL7Lp6dVpQk+HYA2ULOGakHjEmJpTBY1Zu6Pqm04d
-      BRdY23hTAgMBAAECggEAHlkNW81yASYUuWqFg8tIF6yZI7LoRBbP2318gmBBhXut
-      MaZxNkCcS5ktw+YXW6sJ7/2+jKQxj7NzssyqMPrjM4w7Re+87xRZUnZWkqTRkFK6
-      cEKbGf4XKBawsvfQPZ9t9baUUu0nDrai2v8myLwej04Fd2CFAQQzTC3+DJzXLJOh
-      kCvCElt2wNnRujtgoHBasWkD3SKvBLDb/BPX4BIOva/kJD1nyAcS3W1skv0+2gNj
-      7hYfSvfwePpo2C8iePmMRSY43WrGu6+1LHwSBVlxeiRpkdI0Zv7Sa/3k+6XWYKf3
-      mIfs8FMTUt5Hi3O22vDO8IlG5Z5AoVlHSbYx1wrJQQKBgQDcA/QPC+Q6d39WE69h
-      KI8XJpVShPxKW1UFQ4mG2r3mvuGErRfyz83rCLVLLaNpY1LbS/IBRfKB0dDQzR/V
-      T+J4OUhHpp/84rnLarTrH6G/2V8VhbpTSLlBeCh8X4L6Cglbyj8aMqK3mz8r0zV/
-      jekC3SwkKdnLWuYbZMsfPuwn2QKBgQDMEwczuVhuea9YMgDK1lLU+zc9+bGwxQQ3
-      vbKsjfnExELIuIi4CJjdZgYwdIlAbWabdT2uEFWn9yGxvq3Svfd90DxhuJ3gYf2e
-      TvCXBnISJQJEEpFsm66rFd3ec7/pCdA3JjPBprtEUe2Qt3q0+jFPXuiA9fldCkq4
-      YtwRRFySCwKBgQC6BXGt4x0FvhFgwuYO3M8XAN1R1vTFHbGl8LNv3LShSxS8K+nK
-      t55gMY2vUZgPvBXLKswj/XMMBk1qrXRT0+YkRjJxulUc6Mm0TrVG8wi8f9pgBSBD
-      2IIh86kvd0XziNbe0AJIcTWYzd88e6iI/4BalowCy4vE30cdNDx1X6smCQKBgBIu
-      k9Kw7ccSAmRaOCXaSJD/POHBsGouc3y/4v5qu9kjH0wg3NWAtpXrNBv3Fg9ub9jj
-      7jXm8KrBYvgiI/yFvlowRmDygOZv9Je5MshR47HoKDaGbPx/NmW50gWyzGNn42w2
-      dCAJyd+BaSgeoMklDWWj8BUlVS1L8HJTJIZJT/IXAoGBAKIwNGkoR9vC90W8jOjh
-      2CyhYINPVh2PCQbvANQLN1gj296LTkDfHQNPYnCfiYJGmNLsdUzxRfsp3o0T6Yju
-      q8O6XRPrgMLvDjXJBcOE7zW9iyV0yaEju7bAx1DMIcPL7Px0zbhXJ0EJKaQfqaJk
-      GMz2VAESdTEhAG920jQB3dA7
-      -----END PRIVATE KEY-----
+    appSecret: 1dc05ca969cffe986800362dd36c9d90
 xujie:
   webclient: true
+dromara:
+  x-file-storage: #文件存储配置
+    default-platform: minio-1 #默认使用的存储平台
+    thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
+    #对应平台的配置写在这里，注意缩进要对齐
+    minio:
+      - platform: minio-1 # 存储平台标识
+        enable-storage: true  # 启用存储
+        access-key: py4VRYigx2aRxD36WPBA
+        secret-key: Zk6GJ08w1YGxA2NtYtaSOCP51Q0shRLdrYOpwGLa
+        end-point: http://minio.upload.xxce.cn
+        bucket-name: xujie
+        domain: http://minio.upload.xxce.cn/xujie/ # 访问域名，注意“/”结尾，例如：http://minio.abc.com/abc/
+        base-path: baojiav2/ # 基础路径
+

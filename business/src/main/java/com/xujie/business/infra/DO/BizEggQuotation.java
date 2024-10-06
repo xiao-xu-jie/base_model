@@ -1,10 +1,6 @@
 package com.xujie.business.infra.DO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,82 +13,67 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName(value = "biz_egg_quotation")
 public class BizEggQuotation {
-    /**
-     * 报价ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+  /** 报价ID */
+  @TableId(value = "id", type = IdType.ASSIGN_ID)
+  private Long id;
 
-    /**
-     * 用户ID
-     */
-    @TableField(value = "user_id")
-    private Long userId;
+  /** 用户ID */
+  @TableField(value = "user_id")
+  private Long userId;
 
-    /**
-     * 蛋类型ID
-     */
-    @TableField(value = "egg_type_id")
-    private Long eggTypeId;
+  /** 蛋类型ID */
+  @TableField(value = "egg_type_id")
+  private Long eggTypeId;
 
-    /**
-     * 蛋类型名称
-     */
-    @TableField(value = "egg_type_name")
-    private String eggTypeName;
+  /** 蛋类型名称 */
+  @TableField(value = "egg_type_name")
+  private String eggTypeName;
 
-    /**
-     * 报价地址
-     */
-    @TableField(value = "quotation_location")
-    private String quotationLocation;
+  /** 报价地址 */
+  @TableField(value = "quotation_location")
+  private String quotationLocation;
 
-    /**
-     * 是否显示
-     */
-    @TableField(value = "quotation_status")
-    private Integer quotationStatus;
+  /** 是否显示 */
+  @TableField(value = "quotation_status")
+  private Integer quotationStatus;
 
-    /**
-     * 0-收购价，1-出售价
-     */
-    @TableField(value = "quotation_type")
-    private Integer quotationType;
+  /** 0-收购价，1-出售价 */
+  @TableField(value = "quotation_type")
+  private Integer quotationType;
 
-    /**
-     * 发布日期（yyyy_mm_dd)
-     */
-    @TableField(value = "data_date")
-    private Date dataDate;
+  /** 发布日期（yyyy_mm_dd) */
+  @TableField(value = "data_date")
+  private Date dataDate;
 
-    @TableField(value = "create_time",fill = FieldFill.INSERT)
-    private Date createTime;
+  @TableField(value = "create_time", fill = FieldFill.INSERT)
+  private Date createTime;
 
-    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+  @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+  private Date updateTime;
 
-    @TableField(value = "is_delete")
-    private Integer isDelete;
+  @TableField(value = "is_delete")
+  @TableLogic
+  private Integer isDelete;
 
-    public static final String COL_ID = "id";
+  public static final String COL_ID = "id";
 
-    public static final String COL_USER_ID = "user_id";
+  public static final String COL_USER_ID = "user_id";
 
-    public static final String COL_EGG_TYPE_ID = "egg_type_id";
+  public static final String COL_EGG_TYPE_ID = "egg_type_id";
 
-    public static final String COL_EGG_TYPE_NAME = "egg_type_name";
+  public static final String COL_EGG_TYPE_NAME = "egg_type_name";
 
-    public static final String COL_QUOTATION_LOCATION = "quotation_location";
+  public static final String COL_QUOTATION_LOCATION = "quotation_location";
 
-    public static final String COL_QUOTATION_STATUS = "quotation_status";
+  public static final String COL_QUOTATION_STATUS = "quotation_status";
 
-    public static final String COL_QUOTATION_TYPE = "quotation_type";
+  public static final String COL_QUOTATION_TYPE = "quotation_type";
 
-    public static final String COL_DATA_DATE = "data_date";
+  public static final String COL_DATA_DATE = "data_date";
 
-    public static final String COL_CREATE_TIME = "create_time";
+  public static final String COL_CREATE_TIME = "create_time";
 
-    public static final String COL_UPDATE_TIME = "update_time";
+  public static final String COL_UPDATE_TIME = "update_time";
 
-    public static final String COL_IS_DELETE = "is_delete";
+  public static final String COL_IS_DELETE = "is_delete";
 }

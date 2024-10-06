@@ -1,6 +1,7 @@
 package com.xujie.business.domain.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.utils.SMSUtil;
 import com.xujie.business.convert.UserConvert;
@@ -9,6 +10,7 @@ import com.xujie.business.domain.service.UserDomainService;
 import com.xujie.business.infra.DO.BizUser;
 import com.xujie.business.infra.service.UserService;
 import com.xujie.tools.ConditionCheck;
+import com.xujie.wx.entity.WxAppInfo;
 import com.xujie.wx.utils.WxAppUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -54,5 +56,46 @@ public class UserDomainServiceImpl implements UserDomainService {
   public BizUserBO loginByWx(String code) {
 
     return null;
+  }
+
+  @Override
+  public Boolean sendCode(String phone) {
+    BizUser userByEntity = userService.getUserByEntity(BizUser.builder().phone(phone).build());
+    ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
+    String code = RandomUtil.randomNumbers(4);
+    log.info("{} == 验证码：{}", phone, code);
+    try {
+      smsUtil.sendCode(phone, code);
+    } catch (CustomException e) {
+      throw new CustomException(e.getMessage());
+    } catch (RuntimeException e) {
+      throw new CustomException("发送验证码失败");
+    }
+    return Boolean.TRUE;
+  }
+
+  @Override
+  public BizUserBO register(BizUserBO userBo, String code) {
+    WxAppInfo wxAppInfo = null;
+    try {
+      wxAppInfo = wxAppUtil.getWxAppInfo(code);
+    } catch (Exception e) {
+      log.error("获取微信用户信息失败", e);
+      throw new CustomException("获取微信用户信息失败");
+    }
+    if (wxAppInfo.getErrcode() != null) {
+      throw new CustomException("获取微信用户信息失败");
+    }
+    BizUser userByEntity =
+        userService.getUserByEntity(BizUser.builder().phone(userBo.getPhone()).build());
+    ConditionCheck.trueAndThrow(userByEntity != null, new CustomException("手机号已经绑定用户"));
+    BizUser user = userConvert.convertBO2DO(userBo);
+    user.setWxOpenId(wxAppInfo.getOpenid());
+    try {
+      userService.saveUser(user);
+    } catch (Exception e) {
+      throw new CustomException("注册失败，请联系管理员");
+    }
+    return userConvert.convertDO2BO(user);
   }
 }
