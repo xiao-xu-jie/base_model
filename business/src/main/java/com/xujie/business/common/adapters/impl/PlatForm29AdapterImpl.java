@@ -102,15 +102,9 @@ public class PlatForm29AdapterImpl
     } finally {
       log.info("查课请求结果：{}", post);
     }
-    Optional.ofNullable(post)
-        .map(QueryResDTO::getMsg)
-        .ifPresent(
-            msg -> {
-              if (!msg.contains("成功")) {
-                throw new CustomException(msg);
-              }
-            });
-    return Optional.ofNullable(post).map(QueryResDTO::getData).orElse(null);
+    ConditionCheck.trueAndThrow(
+        post.getCode() != null && post.getCode() != 0, new CustomException(post.getMsg()));
+    return Optional.of(post).map(QueryResDTO::getData).orElse(null);
   }
 
   @Override
