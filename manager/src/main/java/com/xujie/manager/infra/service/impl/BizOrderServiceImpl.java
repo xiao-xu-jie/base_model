@@ -55,6 +55,7 @@ public class BizOrderServiceImpl implements BizOrderService {
     queryWrapper.eq(baseDO.getOrderNo() != null, BizOrder::getOrderNo, baseDO.getOrderNo());
     queryWrapper.eq(
         StringUtils.isNotBlank(baseDO.getPhone()), BizOrder::getPhone, baseDO.getPhone());
+    queryWrapper.orderByDesc(BizOrder::getPayTime, BizOrder::getCreateTime);
     return baseMapper.selectPage(new Page<>(pageNum, pageSize), queryWrapper);
   }
 
