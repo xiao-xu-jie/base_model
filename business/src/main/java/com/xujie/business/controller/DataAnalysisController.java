@@ -1,5 +1,6 @@
 package com.xujie.business.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.xujie.business.DTO.res.quotation.BizAreaUpDownDataResDTO;
 import com.xujie.business.DTO.res.quotation.BizEggWeekDataResDTO;
 import com.xujie.business.common.entity.Result;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/dataAnalysis")
+@SaIgnore
 public class DataAnalysisController {
 
   @Resource private DataAnalysisDomainService dataAnalysisDomainService;
