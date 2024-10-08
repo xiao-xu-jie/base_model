@@ -1,10 +1,14 @@
 package com.xujie.business.convert;
 
+import com.xujie.business.DTO.res.quotation.BizAreaUpDownDataResDTO;
 import com.xujie.business.DTO.res.quotation.BizEggQuotationResDTO;
+import com.xujie.business.DTO.res.quotation.BizEggWeekDataResDTO;
 import com.xujie.business.DTO.res.quotation.EggTypeResDTO;
 import com.xujie.business.common.enums.QuotationTypeEnum;
+import com.xujie.business.domain.BO.BizAreaUpDownDataBO;
 import com.xujie.business.domain.BO.BizEggQuotationBO;
 import com.xujie.business.domain.BO.BizEggTypeBO;
+import com.xujie.business.domain.BO.BizWeekDataBO;
 import com.xujie.business.infra.DO.BizEggQuotation;
 import com.xujie.business.infra.DO.BizEggType;
 import java.util.List;
@@ -38,4 +42,8 @@ public interface QuotationConvert {
 
   List<BizEggQuotationResDTO> convertEggQuotationBOList2ResDTOList(
       List<BizEggQuotationBO> bizEggQuotationBOS);
+
+  BizEggWeekDataResDTO convertWeekDataBO2DTO(BizWeekDataBO weekData);
+
+  BizAreaUpDownDataResDTO convertAreaUpDownDataBO2DTO(BizAreaUpDownDataBO areaSaleUpDownData);
 }

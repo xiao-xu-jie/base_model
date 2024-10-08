@@ -13,6 +13,7 @@
         <result column="quotation_avg_price" jdbcType="DOUBLE" property="quotationAvgPrice"/>
         <result column="quotation_min_price" jdbcType="DOUBLE" property="quotationMinPrice"/>
         <result column="quotation_status" jdbcType="INTEGER" property="quotationStatus"/>
+        <result column="quotation_float_status" jdbcType="INTEGER" property="quotationFloatStatus"/>
         <result column="quotation_type" jdbcType="INTEGER" property="quotationType"/>
         <result column="data_date" jdbcType="VARCHAR" property="dataDate"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -22,7 +23,7 @@
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         id, user_id, egg_type_id, egg_type_name, quotation_location, quotation_max_price,
-        quotation_avg_price, quotation_min_price, quotation_status, quotation_type, data_date,
+        quotation_avg_price, quotation_min_price, quotation_status, quotation_float_status,quotation_type, data_date,
         create_time, update_time, is_delete
     </sql>
 

@@ -2,8 +2,10 @@ package com.xujie.business.common.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import org.joda.time.DateTime;
 
 /**
@@ -41,5 +43,28 @@ public class DateUtil {
   public static String getTodayString() {
     // 将当前日期格式化为字符串
     return DateTime.now().toString("yyyy-MM-dd");
+  }
+
+  /** 获取第几天前的日期 */
+  public static String getDateStringBefore(int day) {
+    return DateTime.now().plusDays(-day).toString("yyyy-MM-dd");
+  }
+
+  public static String getDateMonthDayStringBefore(int day) {
+    return DateTime.now().plusDays(-day).toString("MM-dd");
+  }
+
+  public static void main(String[] args) {
+    System.out.println(getToday());
+    System.out.println(getTodayString());
+    System.out.println(getDateMonthDayStringBefore(6));
+  }
+
+  public static List<String> getWeekDateList() {
+    List<String> dateList = new ArrayList<>(7);
+    for (int i = 0; i < 7; i++) {
+      dateList.add(getDateMonthDayStringBefore(6 - i));
+    }
+    return dateList;
   }
 }

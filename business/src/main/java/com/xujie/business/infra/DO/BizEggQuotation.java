@@ -49,6 +49,10 @@ public class BizEggQuotation {
   @TableField(value = "quotation_status")
   private Integer quotationStatus;
 
+  /** 0-正常，1-上浮，2-下浮 */
+  @TableField(value = "quotation_float_status")
+  private Integer quotationFloatStatus;
+
   /** 0-收购价，1-出售价 */
   @TableField(value = "quotation_type")
   private Integer quotationType;

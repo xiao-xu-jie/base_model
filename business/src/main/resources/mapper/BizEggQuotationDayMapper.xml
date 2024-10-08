@@ -12,7 +12,7 @@
         <result column="min_num" jdbcType="DOUBLE" property="minNum"/>
         <result column="people_number" jdbcType="INTEGER" property="peopleNumber"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
-        <result column="data_time" jdbcType="TIMESTAMP" property="dataTime"/>
+        <result column="data_time" jdbcType="VARCHAR" property="dataTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="is_delete" jdbcType="INTEGER" property="isDelete"/>

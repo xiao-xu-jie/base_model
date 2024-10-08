@@ -48,7 +48,7 @@ public class BizEggQuotationDay {
   private Integer status;
 
   @TableField(value = "data_time")
-  private Date dataTime;
+  private String dataTime;
 
   @TableField(value = "create_time", fill = FieldFill.INSERT)
   private Date createTime;
