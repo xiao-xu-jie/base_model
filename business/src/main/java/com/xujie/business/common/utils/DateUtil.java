@@ -60,6 +60,14 @@ public class DateUtil {
     System.out.println(getDateMonthDayStringBefore(6));
   }
 
+  public static List<String> getWeekDateTimeList() {
+    List<String> dateList = new ArrayList<>(7);
+    for (int i = 0; i < 7; i++) {
+      dateList.add(getDateStringBefore(6 - i));
+    }
+    return dateList;
+  }
+
   public static List<String> getWeekDateList() {
     List<String> dateList = new ArrayList<>(7);
     for (int i = 0; i < 7; i++) {

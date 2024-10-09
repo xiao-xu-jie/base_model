@@ -105,15 +105,16 @@ public class DataAnalysisDomainServiceImpl implements DataAnalysisDomainService 
     AtomicInteger buyUp = new AtomicInteger();
     AtomicInteger buyDown = new AtomicInteger();
     AtomicInteger buyNormal = new AtomicInteger();
+
     buyList.stream()
         .map(BizEggQuotation::getQuotationFloatStatus)
         .forEach(
             item -> {
               // 统计
               switch (item) {
-                case -1 -> buyUp.getAndIncrement();
+                case 1 -> buyUp.getAndIncrement();
                 case 0 -> buyNormal.getAndIncrement();
-                case 1 -> buyDown.getAndIncrement();
+                case -1 -> buyDown.getAndIncrement();
                 default -> {
                   log.error("未知的status:{}", item);
                 }
@@ -138,9 +139,9 @@ public class DataAnalysisDomainServiceImpl implements DataAnalysisDomainService 
             item -> {
               // 统计
               switch (item) {
-                case -1 -> saleUp.getAndIncrement();
+                case 1 -> saleUp.getAndIncrement();
                 case 0 -> saleNormal.getAndIncrement();
-                case 1 -> saleDown.getAndIncrement();
+                case -1 -> saleDown.getAndIncrement();
                 default -> {
                   log.error("未知的status:{}", item);
                 }

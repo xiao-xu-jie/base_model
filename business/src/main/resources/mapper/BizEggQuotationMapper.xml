@@ -77,4 +77,32 @@
             </if>
         </where>
     </select>
+
+    <select id="getByPage" resultMap="BaseResultMap">
+        SELECT
+        user_id,
+        JSON_OBJECT(
+        'nickName', biz_user.nick_name,
+        'userAvatar',biz_user.user_avatar,
+        'userDesc',biz_user.user_desc
+        ) as userJson,
+        JSON_ARRAYAGG(
+        JSON_OBJECT(
+        'id', biz_egg_quotation.id,
+        'eggTypeName', biz_egg_quotation.egg_type_name,
+        'quotationType',case (biz_egg_quotation.quotation_type)
+        when 1 THEN '收购价'
+        when 2 THEN '销售价'
+        END ,
+        'quotationAvgPrice', biz_egg_quotation.quotation_avg_price,
+        'quotationMaxPrice', biz_egg_quotation.quotation_max_price,
+        'quotationMinPrice', biz_egg_quotation.quotation_min_price,
+        'date', data_date
+        )
+        ) AS jsonArr
+        FROM
+        biz_egg_quotation
+        left JOIN biz_user ON biz_user.id = biz_egg_quotation.user_id
+        ${ew.customSqlSegment}
+    </select>
 </mapper>

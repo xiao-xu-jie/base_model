@@ -1,9 +1,8 @@
 package com.xujie.business.convert;
 
-import com.xujie.business.DTO.res.quotation.BizAreaUpDownDataResDTO;
-import com.xujie.business.DTO.res.quotation.BizEggQuotationResDTO;
-import com.xujie.business.DTO.res.quotation.BizEggWeekDataResDTO;
-import com.xujie.business.DTO.res.quotation.EggTypeResDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.DTO.req.quotation.BizEggQuotationQueryReqDTO;
+import com.xujie.business.DTO.res.quotation.*;
 import com.xujie.business.common.enums.QuotationTypeEnum;
 import com.xujie.business.domain.BO.BizAreaUpDownDataBO;
 import com.xujie.business.domain.BO.BizEggQuotationBO;
@@ -46,4 +45,11 @@ public interface QuotationConvert {
   BizEggWeekDataResDTO convertWeekDataBO2DTO(BizWeekDataBO weekData);
 
   BizAreaUpDownDataResDTO convertAreaUpDownDataBO2DTO(BizAreaUpDownDataBO areaSaleUpDownData);
+
+  Page<BizEggQuotationBO> convertEggQuotationPageDO2BO(Page<BizEggQuotation> bizEggQuotationPage);
+
+  BizEggQuotationBO convertEggQuotationQueryReqDTO2BO(BizEggQuotationQueryReqDTO reqDTO);
+
+  Page<BizEggQuotationQueryResDTO> convertEggQuotationPageBO2ResDTO(
+      Page<BizEggQuotationBO> bizEggQuotationBOPage);
 }

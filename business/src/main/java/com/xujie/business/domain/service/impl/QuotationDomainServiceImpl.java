@@ -1,12 +1,14 @@
 package com.xujie.business.domain.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.utils.DateUtil;
 import com.xujie.business.convert.QuotationConvert;
 import com.xujie.business.domain.BO.BizEggQuotationBO;
 import com.xujie.business.domain.BO.BizEggTypeBO;
 import com.xujie.business.domain.service.QuotationDomainService;
+import com.xujie.business.domain.service.UserDomainService;
 import com.xujie.business.infra.DO.BizEggQuotation;
 import com.xujie.business.infra.DO.BizEggType;
 import com.xujie.business.infra.service.QuotationService;
@@ -14,6 +16,7 @@ import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,7 +29,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuotationDomainServiceImpl implements QuotationDomainService {
   @Resource private QuotationService quotationService;
+  @Resource private UserDomainService userDomainService;
   @Resource private QuotationConvert quotationConvert;
+
+  @Resource(name = "asyncExecutor")
+  private ThreadPoolTaskExecutor asyncExecutor;
 
   @Override
   public List<BizEggTypeBO> listEggType() {
@@ -51,5 +58,14 @@ public class QuotationDomainServiceImpl implements QuotationDomainService {
         BizEggQuotation.builder().userId(userId).dataDate(DateUtil.getTodayString()).build();
     List<BizEggQuotation> bizEggQuotations = quotationService.listByEntity(build);
     return quotationConvert.convertEggQuotationDOList2BOList(bizEggQuotations);
+  }
+
+  @Override
+  public Page<BizEggQuotationBO> selectPage(
+      BizEggQuotationBO entity, Integer pageNum, Integer pageSize) {
+    Page<BizEggQuotation> bizEggQuotationPage =
+        quotationService.selectPage(
+            quotationConvert.convertEggQuotationBO2DO(entity), pageNum, pageSize);
+    return quotationConvert.convertEggQuotationPageDO2BO(bizEggQuotationPage);
   }
 }

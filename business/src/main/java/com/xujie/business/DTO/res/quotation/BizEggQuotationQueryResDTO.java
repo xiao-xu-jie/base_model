@@ -1,23 +1,17 @@
-package com.xujie.business.domain.BO;
+package com.xujie.business.DTO.res.quotation;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Xujie
+ * @since 2024/10/9 08:20
+ */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BizEggQuotationBO {
-  /** 报价ID */
-  private Long id;
-
-  /** 用户ID */
-  private Long userId;
-
-  /** 蛋类型ID */
-  private Long eggTypeId;
+public class BizEggQuotationQueryResDTO {
 
   /** 蛋类型名称 */
   private String eggTypeName;
@@ -43,6 +37,7 @@ public class BizEggQuotationBO {
   /** 发布日期（yyyy_mm_dd) */
   private String dataDate;
 
+  private Long userId;
   private String jsonArr;
 
   private String userJson;

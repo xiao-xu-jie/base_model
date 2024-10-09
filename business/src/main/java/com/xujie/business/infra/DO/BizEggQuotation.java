@@ -71,6 +71,12 @@ public class BizEggQuotation {
   @TableLogic
   private Integer isDelete;
 
+  @TableField(exist = false)
+  private String jsonArr;
+
+  @TableField(exist = false)
+  private String userJson;
+
   public static final String COL_ID = "id";
 
   public static final String COL_USER_ID = "user_id";

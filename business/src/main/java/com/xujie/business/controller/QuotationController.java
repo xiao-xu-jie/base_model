@@ -1,10 +1,14 @@
 package com.xujie.business.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.DTO.req.quotation.BizEggQuotationQueryReqDTO;
 import com.xujie.business.DTO.req.quotation.BizUserSubmitTodayEggQuotationReqDTO;
 import com.xujie.business.DTO.req.quotation.BizUserUpdateTodayEggQuotationReqDTO;
+import com.xujie.business.DTO.res.quotation.BizEggQuotationQueryResDTO;
 import com.xujie.business.DTO.res.quotation.BizEggQuotationResDTO;
 import com.xujie.business.common.entity.Result;
 import com.xujie.business.convert.QuotationConvert;
+import com.xujie.business.domain.BO.BizEggQuotationBO;
 import com.xujie.business.domain.service.QuotationDomainService;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -60,5 +64,22 @@ public class QuotationController {
   public Result<Boolean> updateTodayQuotation(
       @RequestBody @Validated BizUserUpdateTodayEggQuotationReqDTO reqDTO) {
     return Result.ok(Boolean.TRUE);
+  }
+
+  /**
+   * 分页查询报价
+   *
+   * @param reqDTO 查询条件
+   * @return 报价分页数据
+   */
+  @PostMapping("/selectPage")
+  public Result<Page<BizEggQuotationQueryResDTO>> selectPage(
+      @RequestBody @Validated BizEggQuotationQueryReqDTO reqDTO) {
+    Page<BizEggQuotationBO> bizEggQuotationBOPage =
+        quotationDomainService.selectPage(
+            quotationConvert.convertEggQuotationQueryReqDTO2BO(reqDTO),
+            reqDTO.getPageNum(),
+            reqDTO.getPageSize());
+    return Result.ok(quotationConvert.convertEggQuotationPageBO2ResDTO(bizEggQuotationBOPage));
   }
 }

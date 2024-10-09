@@ -1,5 +1,9 @@
 package com.xujie.business.infra.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.common.utils.DateUtil;
 import com.xujie.business.infra.DO.BizEggQuotation;
 import com.xujie.business.infra.DO.BizEggType;
 import com.xujie.business.infra.mapper.BizEggQuotationMapper;
@@ -35,5 +39,21 @@ public class QuotationServiceImpl implements QuotationService {
   @Override
   public List<BizEggQuotation> listByEntity(BizEggQuotation entity) {
     return bizEggQuotationMapper.getByAll(entity);
+  }
+
+  @Override
+  public Page<BizEggQuotation> selectPage(
+      BizEggQuotation entity, Integer pageNum, Integer pageSize) {
+    QueryWrapper<BizEggQuotation> wrapper = new QueryWrapper<>(entity);
+    List<String> weekDateList = DateUtil.getWeekDateTimeList();
+    wrapper.eq(ObjectUtil.isNotNull(entity.getEggTypeId()), "egg_type_id", entity.getEggTypeId());
+    wrapper.eq(
+        ObjectUtil.isNotNull(entity.getQuotationType()),
+        "quotation_type",
+        entity.getQuotationType());
+    wrapper.in("data_date", weekDateList);
+    wrapper.groupBy("user_id");
+    wrapper.orderBy(true, true, "data_date");
+    return bizEggQuotationMapper.getByPage(wrapper, new Page<>(pageNum, pageSize));
   }
 }
