@@ -103,7 +103,7 @@ public class PlatForm29AdapterImpl
       log.info("查课请求结果：{}", post);
     }
     ConditionCheck.trueAndThrow(
-        post.getCode() != null && post.getCode() != 0, new CustomException(post.getMsg()));
+        post.getData() != null && post.getData().isEmpty(), new CustomException(post.getMsg()));
     return Optional.of(post).map(QueryResDTO::getData).orElse(null);
   }
 
