@@ -1,6 +1,8 @@
 package com.xujie.business.domain.service;
 
 import com.xujie.business.domain.BO.BizCertificationBO;
+import java.util.Map;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface CertificationDomainService {
   /**
@@ -17,4 +19,6 @@ public interface CertificationDomainService {
    * @param certificationBO 认证信息
    */
   void submit(BizCertificationBO certificationBO);
+
+  Map<String, String> uploadUserCard(MultipartFile file);
 }

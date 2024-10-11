@@ -18,6 +18,8 @@ public class BizEggQuotationDay {
   /** 平均价 */
   private Double avgNum;
 
+  private Double avgSaleNum;
+
   /** 最高价 */
   private Double maxNum;
 

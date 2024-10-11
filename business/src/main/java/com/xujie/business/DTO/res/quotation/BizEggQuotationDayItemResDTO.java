@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class BizEggQuotationDayItemResDTO {
   private Long typeId;
 
+  private Double avgSaleNum;
+
   /** 平均价 */
   private Double avgNum;
 

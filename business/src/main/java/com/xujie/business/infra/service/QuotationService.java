@@ -21,6 +21,8 @@ public interface QuotationService {
    */
   List<BizEggQuotation> listByEntity(BizEggQuotation entity);
 
+  BizEggQuotation getByEntity(BizEggQuotation entity);
+
   /**
    * 分页查询报价列表
    *
@@ -30,4 +32,12 @@ public interface QuotationService {
    * @return
    */
   Page<BizEggQuotation> selectPage(BizEggQuotation entity, Integer pageNum, Integer pageSize);
+
+  /**
+   * 插入报价
+   *
+   * @param entity 报价实体
+   * @return 插入结果
+   */
+  int add(BizEggQuotation entity);
 }

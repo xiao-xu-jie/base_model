@@ -28,6 +28,9 @@ public class BizEggQuotationBO {
   /** 是否显示 */
   private Integer quotationStatus;
 
+  /** -1-下浮，0-正常，1-上浮 */
+  private Integer quotationFloatStatus;
+
   /** 0-收购价，1-出售价 */
   private Integer quotationType;
 

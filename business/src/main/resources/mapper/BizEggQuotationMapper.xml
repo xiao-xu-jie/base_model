@@ -94,9 +94,11 @@
         when 1 THEN '收购价'
         when 2 THEN '销售价'
         END ,
+        'quotationLocation',biz_egg_quotation.quotation_location,
         'quotationAvgPrice', biz_egg_quotation.quotation_avg_price,
         'quotationMaxPrice', biz_egg_quotation.quotation_max_price,
         'quotationMinPrice', biz_egg_quotation.quotation_min_price,
+        'quotationFloatStatus',biz_egg_quotation.quotation_float_status,
         'date', data_date
         )
         ) AS jsonArr

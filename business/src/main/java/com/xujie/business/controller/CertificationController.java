@@ -8,7 +8,9 @@ import com.xujie.business.convert.CertificationConvert;
 import com.xujie.business.domain.BO.BizCertificationBO;
 import com.xujie.business.domain.service.CertificationDomainService;
 import jakarta.annotation.Resource;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 认证控制器
@@ -46,5 +48,16 @@ public class CertificationController {
     certificationDomainService.submit(
         certificationConvert.convertResDTO2BO(userCertificationSubmitReqDTO));
     return Result.ok(Boolean.TRUE);
+  }
+
+  /**
+   * 上传用户身份证
+   *
+   * @param file 文件
+   * @return 文件路径
+   */
+  @PostMapping("/uploadUserCard")
+  public Result<Map<String, String>> uploadUserCard(@RequestParam("file") MultipartFile file) {
+    return Result.ok(certificationDomainService.uploadUserCard(file));
   }
 }

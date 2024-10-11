@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BizEggQuotationQueryReqDTO {
   /** 报价地址 */
-  @Pattern(regexp = "^*-*-*", message = "报价地址非法")
+  @Pattern(regexp = "[\\u4e00-\\u9fa5]+", message = "报价地址必须为中文")
   private String quotationLocation;
 
   /** 报价类型 */

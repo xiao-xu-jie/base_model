@@ -29,4 +29,17 @@ public class QuotationDayServiceImpl implements QuotationDayService {
         .between(BizEggQuotationDay::getDataTime, startTime, endTime);
     return bizEggQuotationDayMapper.selectList(queryWrapper);
   }
+
+  @Override
+  public int addOrUpdateQuotationDayList(List<BizEggQuotationDay> list) {
+    bizEggQuotationDayMapper.insertOrUpdate(list);
+    return 1;
+  }
+
+  @Override
+  public void deleteByTime(String todayString) {
+    LambdaQueryWrapper<BizEggQuotationDay> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(BizEggQuotationDay::getDataTime, todayString);
+    bizEggQuotationDayMapper.delete(queryWrapper);
+  }
 }

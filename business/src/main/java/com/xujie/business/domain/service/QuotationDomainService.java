@@ -13,4 +13,6 @@ public interface QuotationDomainService {
   List<BizEggQuotationBO> listUserTodayQuotation();
 
   Page<BizEggQuotationBO> selectPage(BizEggQuotationBO entity, Integer pageNum, Integer pageSize);
+
+  void submitTodayQuotation(BizEggQuotationBO entity);
 }

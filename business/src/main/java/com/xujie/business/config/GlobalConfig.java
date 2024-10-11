@@ -22,7 +22,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -33,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * @date: 2023/10/7
  */
 @Configuration
-@EnableScheduling
 @EnableFileStorage
 @EnableFormValidator
 public class GlobalConfig extends WebMvcConfigurationSupport {

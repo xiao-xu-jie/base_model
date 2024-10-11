@@ -5,4 +5,8 @@ import java.util.List;
 
 public interface QuotationDayService {
   List<BizEggQuotationDay> getQuotationDayListByTime(String startTime, String endTime, Long typeId);
+
+  int addOrUpdateQuotationDayList(List<BizEggQuotationDay> list);
+
+  void deleteByTime(String todayString);
 }

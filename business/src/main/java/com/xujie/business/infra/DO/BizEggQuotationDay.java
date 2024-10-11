@@ -27,6 +27,10 @@ public class BizEggQuotationDay {
   @TableField(value = "quotation_type")
   private QuotationTypeEnum quotationType;
 
+  /** 销售平均价 */
+  @TableField(value = "avg_sale_price")
+  private Double avgSaleNum;
+
   /** 平均价 */
   @TableField(value = "avg_num")
   private Double avgNum;

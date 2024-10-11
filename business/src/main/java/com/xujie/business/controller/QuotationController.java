@@ -1,5 +1,6 @@
 package com.xujie.business.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.business.DTO.req.quotation.BizEggQuotationQueryReqDTO;
 import com.xujie.business.DTO.req.quotation.BizUserSubmitTodayEggQuotationReqDTO;
@@ -51,6 +52,8 @@ public class QuotationController {
   @PostMapping("/submit")
   public Result<Boolean> submitTodayQuotation(
       @RequestBody @Validated BizUserSubmitTodayEggQuotationReqDTO reqDTO) {
+    quotationDomainService.submitTodayQuotation(
+        quotationConvert.convertUserSubmitTodayEggQuotationReqDTO2BO(reqDTO));
     return Result.ok(Boolean.TRUE);
   }
 
@@ -73,6 +76,7 @@ public class QuotationController {
    * @return 报价分页数据
    */
   @PostMapping("/selectPage")
+  @SaIgnore
   public Result<Page<BizEggQuotationQueryResDTO>> selectPage(
       @RequestBody @Validated BizEggQuotationQueryReqDTO reqDTO) {
     Page<BizEggQuotationBO> bizEggQuotationBOPage =
