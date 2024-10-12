@@ -80,11 +80,16 @@
 
     <select id="getByPage" resultMap="BaseResultMap">
         SELECT
-        user_id,
+        biz_egg_quotation.user_id,
         JSON_OBJECT(
         'nickName', biz_user.nick_name,
         'userAvatar',biz_user.user_avatar,
-        'userDesc',biz_user.user_desc
+        'userDesc',biz_user.user_desc,
+        'certType',biz_certification.cert_type,
+        'subscribe', (select count(*)
+        from biz_user_subscribe
+        where biz_user_subscribe.user_id = #{userId,jdbcType=BIGINT}
+        and biz_user_subscribe.sub_user_id = biz_egg_quotation.user_id)
         ) as userJson,
         JSON_ARRAYAGG(
         JSON_OBJECT(
@@ -105,6 +110,7 @@
         FROM
         biz_egg_quotation
         left JOIN biz_user ON biz_user.id = biz_egg_quotation.user_id
+        left join biz_certification on biz_certification.user_id = biz_user.id and biz_certification.cert_status = 1
         ${ew.customSqlSegment}
     </select>
 </mapper>

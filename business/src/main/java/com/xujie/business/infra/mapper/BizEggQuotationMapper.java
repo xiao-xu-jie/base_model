@@ -12,5 +12,7 @@ public interface BizEggQuotationMapper extends BaseMapper<BizEggQuotation> {
   List<BizEggQuotation> getByAll(BizEggQuotation bizEggQuotation);
 
   Page<BizEggQuotation> getByPage(
-      @Param(Constants.WRAPPER) QueryWrapper<BizEggQuotation> wrapper, Page<BizEggQuotation> page);
+      @Param(Constants.WRAPPER) QueryWrapper<BizEggQuotation> wrapper,
+      Page<BizEggQuotation> page,
+      @Param("userId") Long userId);
 }

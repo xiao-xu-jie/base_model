@@ -31,4 +31,6 @@ public interface UserDomainService {
   BizUserBO register(BizUserBO userBO, String code);
 
   BizUserBO getUserProfile(long loginIdAsLong);
+
+  Boolean updateUserInfo(Long loginId, BizUserBO userBO);
 }

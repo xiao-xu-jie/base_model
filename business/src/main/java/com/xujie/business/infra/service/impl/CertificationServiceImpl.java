@@ -31,6 +31,6 @@ public class CertificationServiceImpl implements CertificationService {
 
   @Override
   public void insertCertification(BizCertification certification) {
-    certificationMapper.insert(certification);
+    certificationMapper.insertOrUpdate(certification);
   }
 }

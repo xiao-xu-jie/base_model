@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.business.businessApplication;
+import com.xujie.business.common.event.QuotationPublisher;
 import com.xujie.business.common.utils.DateUtil;
 import com.xujie.business.domain.service.DataAnalysisDomainService;
 import com.xujie.business.infra.DO.BizEggQuotation;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class TestDataAnalysis {
   @Resource private DataAnalysisDomainService dataAnalysisDomainService;
   @Resource private BizEggQuotationMapper bizEggQuotationMapper;
+  @Resource private QuotationPublisher quotationPublisher;
 
   @Test
   public void testGetWeekData() {
@@ -31,7 +33,10 @@ public class TestDataAnalysis {
     wrapper.in("data_date", weekDateList);
     wrapper.groupBy("user_id");
     wrapper.orderBy(true, true, "data_date");
-    Page<BizEggQuotation> byPage = bizEggQuotationMapper.getByPage(wrapper, new Page<>(1, 10));
+    Page<BizEggQuotation> byPage = bizEggQuotationMapper.getByPage(wrapper, new Page<>(1, 10), 1L);
     log.info("{}", JSONUtil.parse(byPage.getRecords()));
   }
+
+  @Test
+  public void testGetMonthData() {}
 }

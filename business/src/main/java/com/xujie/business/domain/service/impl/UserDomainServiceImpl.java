@@ -160,6 +160,14 @@ public class UserDomainServiceImpl implements UserDomainService {
     return setUserInfo(userService.getUserByEntity(BizUser.builder().id(loginIdAsLong).build()));
   }
 
+  @Override
+  public Boolean updateUserInfo(Long loginId, BizUserBO userBO) {
+    BizUser bizUser = userConvert.convertBO2DO(userBO);
+    bizUser.setId(loginId);
+    userService.updateUser(bizUser);
+    return Boolean.TRUE;
+  }
+
   @NotNull
   private BizUserBO setUserInfo(BizUser user) {
     BizUserBO bizUserBO = userConvert.convertDO2BO(user);

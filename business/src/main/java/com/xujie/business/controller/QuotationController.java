@@ -1,5 +1,6 @@
 package com.xujie.business.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.business.DTO.req.quotation.BizEggQuotationQueryReqDTO;
@@ -37,6 +38,7 @@ public class QuotationController {
    * @return 用户今日报价
    */
   @PostMapping("/listUserTodayQuotation")
+  @SaCheckRole("CERTIFIED")
   public Result<List<BizEggQuotationResDTO>> listUserTodayQuotation() {
     return Result.ok(
         quotationConvert.convertEggQuotationBOList2ResDTOList(
@@ -50,6 +52,7 @@ public class QuotationController {
    * @return 是否提交成功
    */
   @PostMapping("/submit")
+  @SaCheckRole("CERTIFIED")
   public Result<Boolean> submitTodayQuotation(
       @RequestBody @Validated BizUserSubmitTodayEggQuotationReqDTO reqDTO) {
     quotationDomainService.submitTodayQuotation(
@@ -64,6 +67,7 @@ public class QuotationController {
    * @return 是否提交成功
    */
   @PostMapping("/update")
+  @SaCheckRole("CERTIFIED")
   public Result<Boolean> updateTodayQuotation(
       @RequestBody @Validated BizUserUpdateTodayEggQuotationReqDTO reqDTO) {
     return Result.ok(Boolean.TRUE);

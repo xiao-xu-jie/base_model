@@ -2,6 +2,7 @@ package com.xujie.business.domain.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.common.event.QuotationPublisher;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.utils.DateUtil;
 import com.xujie.business.convert.QuotationConvert;
@@ -34,6 +35,7 @@ public class QuotationDomainServiceImpl implements QuotationDomainService {
   @Resource private UserDomainService userDomainService;
   @Resource private VipDomainService vipDomainService;
   @Resource private QuotationConvert quotationConvert;
+  @Resource private QuotationPublisher quotationPublisher;
 
   @Resource(name = "asyncExecutor")
   private ThreadPoolTaskExecutor asyncExecutor;
@@ -131,7 +133,13 @@ public class QuotationDomainServiceImpl implements QuotationDomainService {
                 });
     voidCompletableFuture.join();
     try {
+      quotationPublisher.publishEvent(StpUtil.getLoginIdAsLong(), entity);
+    } catch (Exception e) {
+      log.error("[报价][提交报价]发布事件异常", e);
+    }
+    try {
       quotationService.add(quotationConvert.convertEggQuotationBO2DO(entity));
+
     } catch (Exception e) {
       log.error("[报价][提交报价]异常", e);
       throw new CustomException("提交报价失败");

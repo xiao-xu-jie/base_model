@@ -1,5 +1,6 @@
 package com.xujie.business.infra.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -64,7 +65,8 @@ public class QuotationServiceImpl implements QuotationService {
         entity.getQuotationLocation());
     wrapper.groupBy("user_id");
     wrapper.orderByDesc("data_date");
-    return bizEggQuotationMapper.getByPage(wrapper, new Page<>(pageNum, pageSize));
+    return bizEggQuotationMapper.getByPage(
+        wrapper, new Page<>(pageNum, pageSize), StpUtil.getLoginIdAsLong());
   }
 
   @Override

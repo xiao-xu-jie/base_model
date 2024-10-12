@@ -2,10 +2,7 @@ package com.xujie.business.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
-import com.xujie.business.DTO.req.user.UserPhoneLonginReqDTO;
-import com.xujie.business.DTO.req.user.UserRegisterReqDTO;
-import com.xujie.business.DTO.req.user.UserSendCodeReqDTO;
-import com.xujie.business.DTO.req.user.UserWxLoginReqDTO;
+import com.xujie.business.DTO.req.user.*;
 import com.xujie.business.DTO.res.user.UserLoginResDTO;
 import com.xujie.business.common.entity.Result;
 import com.xujie.business.common.utils.SMSUtil;
@@ -100,5 +97,18 @@ public class UserController {
     UserLoginResDTO userLoginResDTO = userConvert.convertBO2LoginResDTO(userProfile);
     userLoginResDTO.setToken(StpUtil.getTokenValue());
     return Result.ok(userLoginResDTO);
+  }
+
+  /**
+   * 更新用户信息
+   *
+   * @param userUpdateReqDTO 用户更新请求
+   * @return 是否更新成功
+   */
+  @PostMapping("/update")
+  public Result<Boolean> updateProfile(@RequestBody @Validated UserUpdateReqDTO userUpdateReqDTO) {
+    userDomainService.updateUserInfo(
+        StpUtil.getLoginIdAsLong(), userConvert.convertUpdateReqDTO2BO(userUpdateReqDTO));
+    return Result.ok(Boolean.TRUE);
   }
 }

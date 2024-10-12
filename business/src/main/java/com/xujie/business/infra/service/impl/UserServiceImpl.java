@@ -7,6 +7,7 @@ import com.xujie.business.infra.mapper.BizUserMapper;
 import com.xujie.business.infra.service.UserService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,18 @@ public class UserServiceImpl implements UserService {
   @Override
   public void saveUser(BizUser user) {
     userMapper.insert(user);
+  }
+
+  @Override
+  public void updateUser(BizUser user) {
+    userMapper.updateById(user);
+  }
+
+  @Override
+  public List<BizUser> getUserListByIds(List<Long> ids) {
+    if (ids.isEmpty()) {
+      return List.of();
+    }
+    return userMapper.selectBatchIds(ids);
   }
 }

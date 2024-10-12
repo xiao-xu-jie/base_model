@@ -74,4 +74,22 @@ public class SMSUtil {
       throw new CustomException("验证码错误");
     }
   }
+
+  public void sendNotify(String phone, String content) {
+    // 发送短信验证码
+    String url = null;
+    url = String.format(SMSConstant.SMS_NOTIFY_API, phone, content);
+
+    String res =
+        webClient
+            .get()
+            .uri(url)
+            .retrieve()
+            .bodyToMono(String.class)
+            .block(Duration.of(3, ChronoUnit.SECONDS));
+    JSONObject jsonObject = new JSONObject(res);
+    if ("0".equals(jsonObject.getStr("code"))) {
+      throw new CustomException("短信发送失败");
+    }
+  }
 }

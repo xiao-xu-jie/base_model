@@ -49,4 +49,18 @@ public class BizEggQuotationBO {
   private String jsonArr;
 
   private String userJson;
+
+  @Override
+  public String toString() {
+    return "报价：{"
+        + "发布地区："
+        + quotationLocation
+        + "最高价："
+        + quotationMaxPrice
+        + ", 参考价："
+        + quotationAvgPrice
+        + ", 最低价："
+        + quotationMinPrice
+        + "}";
+  }
 }
