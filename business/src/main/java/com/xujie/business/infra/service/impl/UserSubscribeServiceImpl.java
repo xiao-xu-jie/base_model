@@ -58,4 +58,11 @@ public class UserSubscribeServiceImpl implements UserSubscribeService {
         Wrappers.<BizUserSubscribe>lambdaQuery().eq(BizUserSubscribe::getUserId, userId);
     return userSubscribeMapper.selectList(eq);
   }
+
+  @Override
+  public List<BizUserSubscribe> getSubscribeMyUsers(Long userId) {
+    LambdaQueryWrapper<BizUserSubscribe> eq =
+        Wrappers.<BizUserSubscribe>lambdaQuery().eq(BizUserSubscribe::getSubUserId, userId);
+    return userSubscribeMapper.selectList(eq);
+  }
 }

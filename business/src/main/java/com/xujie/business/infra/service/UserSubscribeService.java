@@ -11,4 +11,6 @@ public interface UserSubscribeService {
   Boolean isSubscribe(Long userId, Long subUserId);
 
   List<BizUserSubscribe> getSubscribedUsers(Long userId);
+
+  List<BizUserSubscribe> getSubscribeMyUsers(Long userId);
 }

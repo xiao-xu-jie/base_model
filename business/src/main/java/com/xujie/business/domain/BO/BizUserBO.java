@@ -40,6 +40,7 @@ public class BizUserBO {
   private UserStatusEnum userStatus;
 
   private BizVipBO userVip;
+  private Integer subscribeCount;
 
   private BizCertificationBO userCertification;
 

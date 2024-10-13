@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.business.infra.mapper.BizArticleMapper">
+  <resultMap id="BaseResultMap" type="com.xujie.business.infra.DO.BizArticle">
+    <!--@mbg.generated-->
+    <!--@Table biz_article-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="article_show_img" jdbcType="VARCHAR" property="articleShowImg" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="article_desc" jdbcType="VARCHAR" property="articleDesc" />
+    <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent" />
+    <result column="article_source" jdbcType="VARCHAR" property="articleSource" />
+    <result column="article_extra" jdbcType="VARCHAR" property="articleExtra" />
+    <result column="is_show" jdbcType="INTEGER" property="isShow" />
+    <result column="article_rank" jdbcType="INTEGER" property="articleRank" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, article_show_img, article_title, article_desc, article_content, article_source, 
+    article_extra, is_show, article_rank, create_time, update_time, is_delete
+  </sql>
+</mapper>

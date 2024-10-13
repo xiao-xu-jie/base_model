@@ -5,12 +5,10 @@ import com.xujie.business.DTO.req.quotation.BizEggQuotationQueryReqDTO;
 import com.xujie.business.DTO.req.quotation.BizUserSubmitTodayEggQuotationReqDTO;
 import com.xujie.business.DTO.res.quotation.*;
 import com.xujie.business.common.enums.QuotationTypeEnum;
-import com.xujie.business.domain.BO.BizAreaUpDownDataBO;
-import com.xujie.business.domain.BO.BizEggQuotationBO;
-import com.xujie.business.domain.BO.BizEggTypeBO;
-import com.xujie.business.domain.BO.BizWeekDataBO;
+import com.xujie.business.domain.BO.*;
 import com.xujie.business.infra.DO.BizEggQuotation;
 import com.xujie.business.infra.DO.BizEggType;
+import com.xujie.business.infra.DO.BizUserSubscribe;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -56,4 +54,6 @@ public interface QuotationConvert {
 
   BizEggQuotationBO convertUserSubmitTodayEggQuotationReqDTO2BO(
       BizUserSubmitTodayEggQuotationReqDTO reqDTO);
+
+  List<BizUserSubscribeBO> convertUserSubList2BOList(List<BizUserSubscribe> subscribedUsers);
 }

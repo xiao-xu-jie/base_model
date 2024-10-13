@@ -8,9 +8,11 @@ import com.xujie.business.common.utils.SMSUtil;
 import com.xujie.business.convert.UserConvert;
 import com.xujie.business.domain.BO.BizCertificationBO;
 import com.xujie.business.domain.BO.BizUserBO;
+import com.xujie.business.domain.BO.BizUserSubscribeBO;
 import com.xujie.business.domain.BO.BizVipBO;
 import com.xujie.business.domain.service.CertificationDomainService;
 import com.xujie.business.domain.service.UserDomainService;
+import com.xujie.business.domain.service.UserSubscribeDomainService;
 import com.xujie.business.domain.service.VipDomainService;
 import com.xujie.business.infra.DO.BizUser;
 import com.xujie.business.infra.service.UserService;
@@ -18,6 +20,8 @@ import com.xujie.tools.ConditionCheck;
 import com.xujie.wx.entity.WxAppInfo;
 import com.xujie.wx.utils.WxAppUtil;
 import jakarta.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +43,7 @@ public class UserDomainServiceImpl implements UserDomainService {
   @Resource private UserService userService;
   @Resource private VipDomainService vipDomainService;
   @Resource private CertificationDomainService certificationDomainService;
+  @Resource private UserSubscribeDomainService userSubscribeDomainService;
   @Resource private SMSUtil smsUtil;
   @Resource private UserConvert userConvert;
   @Resource private WxAppUtil wxAppUtil;
@@ -171,6 +176,7 @@ public class UserDomainServiceImpl implements UserDomainService {
   @NotNull
   private BizUserBO setUserInfo(BizUser user) {
     BizUserBO bizUserBO = userConvert.convertDO2BO(user);
+
     try {
       // 查询用户VIP信息
       CompletableFuture<BizVipBO> vipByUserIdCompletableFuture =
@@ -189,7 +195,26 @@ public class UserDomainServiceImpl implements UserDomainService {
                 log.info("[用户登录][用户信息]{}", bizUserBO);
                 return bizUserBO;
               });
-      return bizUserBOCompletableFuture.get(3, TimeUnit.SECONDS);
+      CompletableFuture<List<BizUserSubscribeBO>> listCompletableFuture =
+          CompletableFuture.supplyAsync(
+              () -> {
+                List<BizUserSubscribeBO> subscribeList = new ArrayList<>();
+                try {
+                  subscribeList = userSubscribeDomainService.getSubscribeMyList(user.getId());
+                } catch (Exception e) {
+                  log.error("[用户登录][用户订阅]获取用户订阅信息失败", e);
+                }
+                return subscribeList;
+              },
+              asyncExecutor);
+      CompletableFuture<BizUserBO> bizUserBOCompletableFuture1 =
+          bizUserBOCompletableFuture.thenCombine(
+              listCompletableFuture,
+              (bizUserBO1, bizUserSubscribeBOS) -> {
+                bizUserBO1.setSubscribeCount(bizUserSubscribeBOS.size());
+                return bizUserBO1;
+              });
+      return bizUserBOCompletableFuture1.get(3, TimeUnit.SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
       throw new CustomException("获取用户信息失败");

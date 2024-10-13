@@ -40,6 +40,9 @@ public class UserLoginResDTO {
   /** 用户VIP */
   private VipUserResDTO userVip;
 
+  /** 订阅数 */
+  private Integer subscribeCount;
+
   /** 用户认证信息 */
   private UserCertificationResDTO userCertification;
 

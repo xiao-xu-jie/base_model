@@ -1,9 +1,13 @@
 package com.xujie.business.domain.service.impl;
 
+import com.xujie.business.convert.QuotationConvert;
+import com.xujie.business.domain.BO.BizUserSubscribeBO;
 import com.xujie.business.domain.service.UserSubscribeDomainService;
+import com.xujie.business.infra.DO.BizUserSubscribe;
 import com.xujie.business.infra.service.UserSubscribeService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserSubscribeDomainServiceImpl implements UserSubscribeDomainService {
   @Resource private UserSubscribeService userSubscribeService;
+  @Resource private QuotationConvert quotationConvert;
 
   /**
    * 订阅
@@ -51,5 +56,17 @@ public class UserSubscribeDomainServiceImpl implements UserSubscribeDomainServic
   @Override
   public Boolean isSubscribe(Long userId, Long subUserId) {
     return userSubscribeService.isSubscribe(userId, subUserId);
+  }
+
+  @Override
+  public List<BizUserSubscribeBO> getSubscribeList(Long userId) {
+    List<BizUserSubscribe> subscribedUsers = userSubscribeService.getSubscribedUsers(userId);
+    return quotationConvert.convertUserSubList2BOList(subscribedUsers);
+  }
+
+  @Override
+  public List<BizUserSubscribeBO> getSubscribeMyList(Long userId) {
+    List<BizUserSubscribe> subscribeMyUsers = userSubscribeService.getSubscribeMyUsers(userId);
+    return quotationConvert.convertUserSubList2BOList(subscribeMyUsers);
   }
 }
