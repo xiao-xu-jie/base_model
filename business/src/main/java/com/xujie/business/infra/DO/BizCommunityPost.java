@@ -38,6 +38,10 @@ public class BizCommunityPost {
   @TableField(value = "content")
   private String content;
 
+  /** 封面 */
+  @TableField(value = "cover_img")
+  private String coverImg;
+
   /** 图片数组 */
   @TableField(value = "img_array")
   private String imgArray;
@@ -52,9 +56,12 @@ public class BizCommunityPost {
   @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
   private Date updateTime;
 
-  @TableLogic
   @TableField(value = "is_delete")
+  @TableLogic
   private Integer isDelete;
+
+  @TableField(exist = false)
+  private String searchText;
 
   public static final String COL_ID = "id";
 
@@ -67,6 +74,8 @@ public class BizCommunityPost {
   public static final String COL_TITLE = "title";
 
   public static final String COL_CONTENT = "content";
+
+  public static final String COL_COVER_IMG = "cover_img";
 
   public static final String COL_IMG_ARRAY = "img_array";
 

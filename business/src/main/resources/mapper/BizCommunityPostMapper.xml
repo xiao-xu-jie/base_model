@@ -10,6 +10,7 @@
     <result column="post_type_name" jdbcType="VARCHAR" property="postTypeName" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="cover_img" jdbcType="VARCHAR" property="coverImg" />
     <result column="img_array" jdbcType="VARCHAR" property="imgArray" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -18,7 +19,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, user_id, post_type_id, post_type_name, title, content, img_array, `status`, create_time, 
-    update_time, is_delete
+    id, user_id, post_type_id, post_type_name, title, content, cover_img, img_array, 
+    `status`, create_time, update_time, is_delete
   </sql>
 </mapper>

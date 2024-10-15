@@ -14,4 +14,6 @@ public interface ArticleConvert {
 
   List<ArticleShowResDTO> convertBizArticleBOList2ArticleShowResDTOList(
       List<BizArticleBO> bizArticleBOS);
+
+  ArticleShowResDTO convertBizArticleBO2ArticleShowResDTO(BizArticleBO bizArticleBO);
 }
