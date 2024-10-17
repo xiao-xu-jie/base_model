@@ -50,4 +50,14 @@ public class CommunityPostServiceImpl implements CommunityPostService {
             bizCommunityPost.getSearchText());
     return communityPostMapper.selectPage(page, lambdaQueryWrapper);
   }
+
+  @Override
+  public BizCommunityPost getByEntity(BizCommunityPost bizCommunityPost) {
+    return communityPostMapper.selectByAll(bizCommunityPost).stream().findFirst().orElse(null);
+  }
+
+  @Override
+  public void saveCommunityPost(BizCommunityPost bizCommunityPost) {
+    communityPostMapper.insert(bizCommunityPost);
+  }
 }

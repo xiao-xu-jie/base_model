@@ -1,6 +1,7 @@
 package com.xujie.business.convert;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.DTO.req.community.CommunityPostAddReqDTO;
 import com.xujie.business.DTO.req.community.CommunityPostQueryReqDTO;
 import com.xujie.business.DTO.res.community.CommunityPostQueryResDTO;
 import com.xujie.business.DTO.res.community.CommunityPostTypeResDTO;
@@ -33,4 +34,10 @@ public interface CommunityPostConvert {
 
   List<CommunityPostTypeResDTO> convertPostTypeBOList2ResDTOList(
       List<BizCommunityPostTypeBO> bizCommunityPostTypeBOS);
+
+  BizCommunityPostBO convertDO2BO(BizCommunityPost byEntity);
+
+  CommunityPostQueryResDTO convertBO2ResDTO(BizCommunityPostBO byId);
+
+  BizCommunityPostBO convertQueryAddReqDTO2BO(CommunityPostAddReqDTO communityPostAddReqDTO);
 }

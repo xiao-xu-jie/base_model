@@ -2,6 +2,7 @@ package com.xujie.business.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.DTO.req.community.CommunityPostAddReqDTO;
 import com.xujie.business.DTO.req.community.CommunityPostQueryReqDTO;
 import com.xujie.business.DTO.res.community.CommunityPostQueryResDTO;
 import com.xujie.business.DTO.res.community.CommunityPostTypeResDTO;
@@ -56,5 +57,31 @@ public class CommunityPostController {
         communityDomainService.selectPostTypeList();
     return Result.ok(
         communityPostConvert.convertPostTypeBOList2ResDTOList(bizCommunityPostTypeBOS));
+  }
+
+  /**
+   * 根据id获取社区帖子
+   *
+   * @param id 帖子id
+   * @return 社区帖子
+   */
+  @GetMapping("/getById")
+  public Result<CommunityPostQueryResDTO> getById(@RequestParam("id") Long id) {
+    BizCommunityPostBO byId = communityDomainService.getById(id);
+    return Result.ok(communityPostConvert.convertBO2ResDTO(byId));
+  }
+
+  /**
+   * 保存社区帖子
+   *
+   * @param communityPostAddReqDTO 社区帖子
+   * @return 社区帖子
+   */
+  @PostMapping("/save")
+  public Result<Boolean> save(
+      @RequestBody @Validated CommunityPostAddReqDTO communityPostAddReqDTO) {
+    communityDomainService.save(
+        communityPostConvert.convertQueryAddReqDTO2BO(communityPostAddReqDTO));
+    return Result.ok(Boolean.TRUE);
   }
 }

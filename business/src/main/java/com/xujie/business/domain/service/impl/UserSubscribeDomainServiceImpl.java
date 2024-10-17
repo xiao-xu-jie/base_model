@@ -1,9 +1,13 @@
 package com.xujie.business.domain.service.impl;
 
 import com.xujie.business.convert.QuotationConvert;
+import com.xujie.business.convert.UserConvert;
+import com.xujie.business.domain.BO.BizUserBO;
 import com.xujie.business.domain.BO.BizUserSubscribeBO;
 import com.xujie.business.domain.service.UserSubscribeDomainService;
+import com.xujie.business.infra.DO.BizUser;
 import com.xujie.business.infra.DO.BizUserSubscribe;
+import com.xujie.business.infra.service.UserService;
 import com.xujie.business.infra.service.UserSubscribeService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
@@ -21,7 +25,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserSubscribeDomainServiceImpl implements UserSubscribeDomainService {
   @Resource private UserSubscribeService userSubscribeService;
+  @Resource private UserService userService;
   @Resource private QuotationConvert quotationConvert;
+  @Resource private UserConvert userConvert;
 
   /**
    * 订阅
@@ -59,9 +65,14 @@ public class UserSubscribeDomainServiceImpl implements UserSubscribeDomainServic
   }
 
   @Override
-  public List<BizUserSubscribeBO> getSubscribeList(Long userId) {
+  public List<BizUserBO> getSubscribeList(Long userId) {
     List<BizUserSubscribe> subscribedUsers = userSubscribeService.getSubscribedUsers(userId);
-    return quotationConvert.convertUserSubList2BOList(subscribedUsers);
+    List<BizUserSubscribeBO> bizUserSubscribeBOS =
+        quotationConvert.convertUserSubList2BOList(subscribedUsers);
+    List<Long> subUserIds =
+        bizUserSubscribeBOS.stream().map(BizUserSubscribeBO::getSubUserId).toList();
+    List<BizUser> userListByIds = userService.getUserListByIds(subUserIds);
+    return userConvert.convertDOList2BOList(userListByIds);
   }
 
   @Override

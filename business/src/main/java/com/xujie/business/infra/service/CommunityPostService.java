@@ -6,4 +6,8 @@ import com.xujie.business.infra.DO.BizCommunityPost;
 public interface CommunityPostService {
   Page<BizCommunityPost> selectPage(
       BizCommunityPost bizCommunityPost, Integer pageNum, Integer pageSize);
+
+  BizCommunityPost getByEntity(BizCommunityPost bizCommunityPost);
+
+  void saveCommunityPost(BizCommunityPost bizCommunityPost);
 }

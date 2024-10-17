@@ -1,5 +1,6 @@
 package com.xujie.business.domain.service;
 
+import com.xujie.business.domain.BO.BizUserBO;
 import com.xujie.business.domain.BO.BizUserSubscribeBO;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public interface UserSubscribeDomainService {
    * @param userId 用户ID
    * @return 订阅列表
    */
-  List<BizUserSubscribeBO> getSubscribeList(Long userId);
+  List<BizUserBO> getSubscribeList(Long userId);
 
   List<BizUserSubscribeBO> getSubscribeMyList(Long userId);
 }

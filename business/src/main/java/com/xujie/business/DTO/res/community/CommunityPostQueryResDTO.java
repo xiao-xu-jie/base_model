@@ -1,5 +1,6 @@
 package com.xujie.business.DTO.res.community;
 
+import com.xujie.business.domain.BO.BizUserBO;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,11 +28,14 @@ public class CommunityPostQueryResDTO {
 
   private String content;
 
+  /** 描述 */
+  private String postDesc;
+
   private String coverImg;
 
   private String imgArray;
 
-  private String userInfoJson;
+  private BizUserBO userInfo;
 
   private Date createTime;
 }

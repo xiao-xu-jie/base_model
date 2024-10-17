@@ -38,6 +38,10 @@ public class BizCommunityPost {
   @TableField(value = "content")
   private String content;
 
+  /** 描述 */
+  @TableField(value = "post_desc")
+  private String postDesc;
+
   /** 封面 */
   @TableField(value = "cover_img")
   private String coverImg;

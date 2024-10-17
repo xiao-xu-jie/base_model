@@ -10,4 +10,8 @@ public interface CommunityDomainService {
       BizCommunityPostBO bizCommunityPostBO, Integer pageNum, Integer pageSize);
 
   List<BizCommunityPostTypeBO> selectPostTypeList();
+
+  BizCommunityPostBO getById(Long id);
+
+  void save(BizCommunityPostBO bizCommunityPostBO);
 }

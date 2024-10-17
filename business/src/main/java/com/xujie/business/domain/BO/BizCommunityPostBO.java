@@ -27,13 +27,16 @@ public class BizCommunityPostBO {
 
   private String content;
 
+  /** 描述 */
+  private String postDesc;
+
   private String coverImg;
 
   private String imgArray;
 
   private Date createTime;
 
-  private String userInfoJson;
+  private BizUserBO userInfo;
 
   private String searchText;
 }

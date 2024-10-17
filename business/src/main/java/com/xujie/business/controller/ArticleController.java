@@ -37,12 +37,23 @@ public class ArticleController {
     return Result.ok(articleConvert.convertBizArticleBOList2ArticleShowResDTOList(bizArticleBOS));
   }
 
+  /**
+   * 根据ID展示文章
+   *
+   * @param id
+   * @return
+   */
   @GetMapping("/showById")
   public Result<ArticleShowResDTO> showArticleById(@RequestParam("id") Long id) {
     BizArticleBO bizArticleBO = articleDomainService.showArticleById(id);
     return Result.ok(articleConvert.convertBizArticleBO2ArticleShowResDTO(bizArticleBO));
   }
 
+  /**
+   * 文章列表
+   *
+   * @return
+   */
   @GetMapping("/list")
   public Result<List<ArticleShowResDTO>> list() {
     List<BizArticleBO> bizArticleBOS = articleDomainService.showArticle(20);

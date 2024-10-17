@@ -1,14 +1,19 @@
 package com.xujie.business.domain.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.convert.CommunityPostConvert;
 import com.xujie.business.domain.BO.BizCommunityPostBO;
 import com.xujie.business.domain.BO.BizCommunityPostTypeBO;
+import com.xujie.business.domain.BO.BizUserBO;
 import com.xujie.business.domain.service.CommunityDomainService;
+import com.xujie.business.domain.service.UserDomainService;
 import com.xujie.business.infra.DO.BizCommunityPost;
 import com.xujie.business.infra.DO.BizCommunityPostType;
 import com.xujie.business.infra.service.CommunityPostService;
 import com.xujie.business.infra.service.CommunityPostTypeService;
+import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class CommunityDomainServiceImpl implements CommunityDomainService {
   @Resource private CommunityPostService communityPostService;
   @Resource private CommunityPostTypeService communityPostTypeService;
+  @Resource private UserDomainService userDomainService;
   @Resource private CommunityPostConvert communityPostConvert;
 
   @Override
@@ -41,5 +47,22 @@ public class CommunityDomainServiceImpl implements CommunityDomainService {
   public List<BizCommunityPostTypeBO> selectPostTypeList() {
     List<BizCommunityPostType> bizCommunityPostTypes = communityPostTypeService.selectList();
     return communityPostConvert.convertPostTypeDOList2BOList(bizCommunityPostTypes);
+  }
+
+  @Override
+  public BizCommunityPostBO getById(Long id) {
+    BizCommunityPost byEntity =
+        communityPostService.getByEntity(BizCommunityPost.builder().id(id).build());
+    ConditionCheck.nullAndThrow(byEntity, new CustomException("帖子不存在"));
+    BizUserBO userProfile = userDomainService.getUserProfile(byEntity.getUserId());
+    BizCommunityPostBO bizCommunityPostBO = communityPostConvert.convertDO2BO(byEntity);
+    bizCommunityPostBO.setUserInfo(userProfile);
+    return bizCommunityPostBO;
+  }
+
+  @Override
+  public void save(BizCommunityPostBO bizCommunityPostBO) {
+    bizCommunityPostBO.setUserId(StpUtil.getLoginIdAsLong());
+    communityPostService.saveCommunityPost(communityPostConvert.convertBO2DO(bizCommunityPostBO));
   }
 }
