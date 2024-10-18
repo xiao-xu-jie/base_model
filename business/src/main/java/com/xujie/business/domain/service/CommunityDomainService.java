@@ -14,4 +14,10 @@ public interface CommunityDomainService {
   BizCommunityPostBO getById(Long id);
 
   void save(BizCommunityPostBO bizCommunityPostBO);
+
+  List<BizCommunityPostBO> getMyPostByType(Long typeId);
+
+  BizCommunityPostBO getUserPostById(Long id);
+
+  void update(BizCommunityPostBO bizCommunityPostBO);
 }

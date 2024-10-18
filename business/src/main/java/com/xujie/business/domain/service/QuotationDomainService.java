@@ -15,4 +15,8 @@ public interface QuotationDomainService {
   Page<BizEggQuotationBO> selectPage(BizEggQuotationBO entity, Integer pageNum, Integer pageSize);
 
   void submitTodayQuotation(BizEggQuotationBO entity);
+
+  List<BizEggQuotationBO> getUserQuotationByDate(String date);
+
+  void updateTodayQuotation(BizEggQuotationBO entity);
 }

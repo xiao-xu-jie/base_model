@@ -65,4 +65,33 @@ public class CommunityDomainServiceImpl implements CommunityDomainService {
     bizCommunityPostBO.setUserId(StpUtil.getLoginIdAsLong());
     communityPostService.saveCommunityPost(communityPostConvert.convertBO2DO(bizCommunityPostBO));
   }
+
+  @Override
+  public List<BizCommunityPostBO> getMyPostByType(Long typeId) {
+    List<BizCommunityPost> doList =
+        communityPostService.getListByEntity(
+            BizCommunityPost.builder()
+                .postTypeId(typeId)
+                .userId(StpUtil.getLoginIdAsLong())
+                .build());
+    List<BizCommunityPost> list =
+        doList.stream()
+            .sorted((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()))
+            .toList();
+    return communityPostConvert.convertDOList2BOList(list);
+  }
+
+  @Override
+  public BizCommunityPostBO getUserPostById(Long id) {
+    BizCommunityPost byEntity =
+        communityPostService.getByEntity(
+            BizCommunityPost.builder().id(id).userId(StpUtil.getLoginIdAsLong()).build());
+    ConditionCheck.nullAndThrow(byEntity, new CustomException("帖子不存在"));
+    return communityPostConvert.convertDO2BO(byEntity);
+  }
+
+  @Override
+  public void update(BizCommunityPostBO bizCommunityPostBO) {
+    communityPostService.updateCommunityPost(communityPostConvert.convertBO2DO(bizCommunityPostBO));
+  }
 }

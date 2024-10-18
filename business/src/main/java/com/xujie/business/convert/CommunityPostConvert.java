@@ -5,6 +5,8 @@ import com.xujie.business.DTO.req.community.CommunityPostAddReqDTO;
 import com.xujie.business.DTO.req.community.CommunityPostQueryReqDTO;
 import com.xujie.business.DTO.res.community.CommunityPostQueryResDTO;
 import com.xujie.business.DTO.res.community.CommunityPostTypeResDTO;
+import com.xujie.business.DTO.res.community.CommunityPostUpdateReqDTO;
+import com.xujie.business.DTO.res.community.CommunityPostUserResDTO;
 import com.xujie.business.domain.BO.BizCommunityPostBO;
 import com.xujie.business.domain.BO.BizCommunityPostTypeBO;
 import com.xujie.business.infra.DO.BizCommunityPost;
@@ -40,4 +42,13 @@ public interface CommunityPostConvert {
   CommunityPostQueryResDTO convertBO2ResDTO(BizCommunityPostBO byId);
 
   BizCommunityPostBO convertQueryAddReqDTO2BO(CommunityPostAddReqDTO communityPostAddReqDTO);
+
+  List<CommunityPostQueryResDTO> convertBOList2ResDTOList(List<BizCommunityPostBO> myPostByType);
+
+  List<BizCommunityPostBO> convertDOList2BOList(List<BizCommunityPost> doList);
+
+  CommunityPostUserResDTO convertBO2UserResDTO(BizCommunityPostBO bo);
+
+  BizCommunityPostBO convertQueryUpdateReqDTO2BO(
+      CommunityPostUpdateReqDTO communityPostUpdateReqDTO);
 }

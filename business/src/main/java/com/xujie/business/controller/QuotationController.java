@@ -8,6 +8,7 @@ import com.xujie.business.DTO.req.quotation.BizUserSubmitTodayEggQuotationReqDTO
 import com.xujie.business.DTO.req.quotation.BizUserUpdateTodayEggQuotationReqDTO;
 import com.xujie.business.DTO.res.quotation.BizEggQuotationQueryResDTO;
 import com.xujie.business.DTO.res.quotation.BizEggQuotationResDTO;
+import com.xujie.business.DTO.res.quotation.BizUserQueryQuotationResDTO;
 import com.xujie.business.common.entity.Result;
 import com.xujie.business.convert.QuotationConvert;
 import com.xujie.business.domain.BO.BizEggQuotationBO;
@@ -15,10 +16,7 @@ import com.xujie.business.domain.service.QuotationDomainService;
 import jakarta.annotation.Resource;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 报价控制器
@@ -70,6 +68,8 @@ public class QuotationController {
   @SaCheckRole("CERTIFIED")
   public Result<Boolean> updateTodayQuotation(
       @RequestBody @Validated BizUserUpdateTodayEggQuotationReqDTO reqDTO) {
+    quotationDomainService.updateTodayQuotation(
+        quotationConvert.convertEggQuotationUpdateDTO2BO(reqDTO));
     return Result.ok(Boolean.TRUE);
   }
 
@@ -89,5 +89,18 @@ public class QuotationController {
             reqDTO.getPageNum(),
             reqDTO.getPageSize());
     return Result.ok(quotationConvert.convertEggQuotationPageBO2ResDTO(bizEggQuotationBOPage));
+  }
+
+  /**
+   * 获取我的报价列表
+   *
+   * @param date 日期
+   * @return 用户报价
+   */
+  @GetMapping("/getUserQuotationByDate")
+  public Result<List<BizUserQueryQuotationResDTO>> getUserQuotationByDate(
+      @RequestParam("date") String date) {
+    List<BizEggQuotationBO> boList = quotationDomainService.getUserQuotationByDate(date);
+    return Result.ok(quotationConvert.convertBOList2UserQueryQuotationResDTOList(boList));
   }
 }

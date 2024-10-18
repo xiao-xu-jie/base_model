@@ -145,4 +145,34 @@ public class QuotationDomainServiceImpl implements QuotationDomainService {
       throw new CustomException("提交报价失败");
     }
   }
+
+  @Override
+  public List<BizEggQuotationBO> getUserQuotationByDate(String date) {
+    Long userId = StpUtil.getLoginIdAsLong();
+    ConditionCheck.nullAndThrow(userId, new CustomException("用户未登录"));
+    BizEggQuotation build = BizEggQuotation.builder().userId(userId).dataDate(date).build();
+    List<BizEggQuotation> bizEggQuotations = quotationService.listByEntity(build);
+    return quotationConvert.convertEggQuotationDOList2BOList(bizEggQuotations);
+  }
+
+  @Override
+  public void updateTodayQuotation(BizEggQuotationBO entity) {
+    // 判断是否是已经提交的报价
+    BizEggQuotation search =
+        BizEggQuotation.builder()
+            .userId(StpUtil.getLoginIdAsLong())
+            .quotationType(entity.getQuotationType())
+            .eggTypeId(entity.getEggTypeId())
+            .quotationLocation(entity.getQuotationLocation())
+            .dataDate(DateUtil.getTodayString())
+            .build();
+    BizEggQuotation searchRes = quotationService.getByEntity(search);
+
+    if (searchRes != null && !searchRes.getId().equals(entity.getId())) {
+      log.error("[报价][更新报价]用户{}今日已经提交过报价", entity.getUserId());
+      throw new CustomException("今日已经提交过该地区种类的其他报价");
+    }
+
+    quotationService.updateQuotation(quotationConvert.convertEggQuotationBO2DO(entity));
+  }
 }

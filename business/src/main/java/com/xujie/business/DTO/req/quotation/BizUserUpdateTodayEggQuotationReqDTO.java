@@ -2,7 +2,9 @@ package com.xujie.business.DTO.req.quotation;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户更新今日报价请求DTO
@@ -10,9 +12,12 @@ import jakarta.validation.constraints.Pattern;
  * @author Xujie
  * @since 2024/10/6 22:27
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BizUserUpdateTodayEggQuotationReqDTO {
   /** 报价ID */
-  @NotBlank(message = "报价ID不能为空")
+  @NotNull(message = "报价ID不能为空")
   private Long id;
 
   /** 蛋类型ID */
@@ -29,12 +34,10 @@ public class BizUserUpdateTodayEggQuotationReqDTO {
 
   /** 是否显示 */
   @NotNull(message = "报价类型不能为空")
-  @Pattern(regexp = "^[01]$", message = "报价状态非法")
   private Integer quotationStatus;
 
   /** 0-收购价，1-出售价 */
   @NotNull(message = "报价类型不能为空")
-  @Pattern(regexp = "^[01]$", message = "报价类型非法")
   private Integer quotationType;
 
   /** 最高价 */

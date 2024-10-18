@@ -3,6 +3,7 @@ package com.xujie.business.convert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.business.DTO.req.quotation.BizEggQuotationQueryReqDTO;
 import com.xujie.business.DTO.req.quotation.BizUserSubmitTodayEggQuotationReqDTO;
+import com.xujie.business.DTO.req.quotation.BizUserUpdateTodayEggQuotationReqDTO;
 import com.xujie.business.DTO.res.quotation.*;
 import com.xujie.business.common.enums.QuotationTypeEnum;
 import com.xujie.business.domain.BO.*;
@@ -56,4 +57,9 @@ public interface QuotationConvert {
       BizUserSubmitTodayEggQuotationReqDTO reqDTO);
 
   List<BizUserSubscribeBO> convertUserSubList2BOList(List<BizUserSubscribe> subscribedUsers);
+
+  List<BizUserQueryQuotationResDTO> convertBOList2UserQueryQuotationResDTOList(
+      List<BizEggQuotationBO> boList);
+
+  BizEggQuotationBO convertEggQuotationUpdateDTO2BO(BizUserUpdateTodayEggQuotationReqDTO reqDTO);
 }

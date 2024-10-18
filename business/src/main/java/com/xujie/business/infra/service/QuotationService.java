@@ -40,4 +40,6 @@ public interface QuotationService {
    * @return 插入结果
    */
   int add(BizEggQuotation entity);
+
+  void updateQuotation(BizEggQuotation bizEggQuotation);
 }

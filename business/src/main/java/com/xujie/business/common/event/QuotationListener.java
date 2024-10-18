@@ -45,7 +45,10 @@ public class QuotationListener implements ApplicationListener<QuotationSubmitEve
       log.info("[用户订阅发布短信]：订阅用户：{}", subscribedUsers);
       // 查询所有订阅该用户的手机号
       List<Long> ids =
-          subscribedUsers.stream().map(BizUserSubscribe::getUserId).filter(this::isEnough).toList();
+          subscribedUsers.stream()
+              .map(BizUserSubscribe::getSubUserId)
+              .filter(this::isEnough)
+              .toList();
       String[] phones =
           userService.getUserListByIds(ids).stream().map(BizUser::getPhone).toArray(String[]::new);
 
@@ -82,7 +85,7 @@ public class QuotationListener implements ApplicationListener<QuotationSubmitEve
     first.ifPresent(
         item -> {
           if (item.getNotifyCount() > 0) {
-            isEnough.set(item.getNotifyCount() > 0);
+            isEnough.set(true);
             item.setNotifyCount(item.getNotifyCount() - 1);
             BizUserVip build = BizUserVip.builder().notifyCount(item.getNotifyCount()).build();
             bizUserVipMapper.updateByUserId(build, item.getUserId());

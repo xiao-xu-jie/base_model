@@ -2,6 +2,7 @@ package com.xujie.business.infra.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.business.common.utils.DateUtil;
@@ -72,5 +73,13 @@ public class QuotationServiceImpl implements QuotationService {
   @Override
   public int add(BizEggQuotation entity) {
     return bizEggQuotationMapper.insert(entity);
+  }
+
+  @Override
+  public void updateQuotation(BizEggQuotation bizEggQuotation) {
+    LambdaQueryWrapper<BizEggQuotation> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(BizEggQuotation::getId, bizEggQuotation.getId());
+    wrapper.eq(BizEggQuotation::getUserId, StpUtil.getLoginIdAsLong());
+    bizEggQuotationMapper.update(bizEggQuotation, wrapper);
   }
 }

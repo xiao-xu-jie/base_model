@@ -27,7 +27,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -114,7 +113,7 @@ public class UserDomainServiceImpl implements UserDomainService {
   @Override
   public Boolean sendCode(String phone) {
     BizUser userByEntity = userService.getUserByEntity(BizUser.builder().phone(phone).build());
-    ConditionCheck.nullAndThrow(userByEntity, new CustomException("用户不存在"));
+    ConditionCheck.trueAndThrow(userByEntity != null, new CustomException("手机号已经绑定用户"));
     String code = RandomUtil.randomNumbers(4);
     log.info("[用户发送验证码]{} == 验证码：{}", phone, code);
     try {
@@ -173,7 +172,6 @@ public class UserDomainServiceImpl implements UserDomainService {
     return Boolean.TRUE;
   }
 
-  @NotNull
   private BizUserBO setUserInfo(BizUser user) {
     BizUserBO bizUserBO = userConvert.convertDO2BO(user);
 
