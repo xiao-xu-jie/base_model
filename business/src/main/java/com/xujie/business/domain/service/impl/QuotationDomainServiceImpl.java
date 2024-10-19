@@ -9,14 +9,16 @@ import com.xujie.business.convert.QuotationConvert;
 import com.xujie.business.domain.BO.BizEggQuotationBO;
 import com.xujie.business.domain.BO.BizEggTypeBO;
 import com.xujie.business.domain.service.QuotationDomainService;
-import com.xujie.business.domain.service.UserDomainService;
 import com.xujie.business.domain.service.VipDomainService;
 import com.xujie.business.infra.DO.BizEggQuotation;
 import com.xujie.business.infra.DO.BizEggType;
+import com.xujie.business.infra.DO.BizUser;
 import com.xujie.business.infra.service.QuotationService;
+import com.xujie.business.infra.service.UserService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuotationDomainServiceImpl implements QuotationDomainService {
   @Resource private QuotationService quotationService;
-  @Resource private UserDomainService userDomainService;
+  @Resource private UserService userService;
   @Resource private VipDomainService vipDomainService;
   @Resource private QuotationConvert quotationConvert;
   @Resource private QuotationPublisher quotationPublisher;
@@ -174,5 +176,12 @@ public class QuotationDomainServiceImpl implements QuotationDomainService {
     }
 
     quotationService.updateQuotation(quotationConvert.convertEggQuotationBO2DO(entity));
+  }
+
+  @Override
+  public String getUserPhone(Long id) {
+    return Optional.of(userService.getUserByEntity(BizUser.builder().id(id).build()))
+        .map(BizUser::getPhone)
+        .orElseThrow(() -> new CustomException("用户未设置手机号"));
   }
 }

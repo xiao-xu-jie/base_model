@@ -103,4 +103,15 @@ public class QuotationController {
     List<BizEggQuotationBO> boList = quotationDomainService.getUserQuotationByDate(date);
     return Result.ok(quotationConvert.convertBOList2UserQueryQuotationResDTOList(boList));
   }
+
+  /**
+   * 获取用户联系手机号
+   *
+   * @param id 用户ID
+   * @return 用户联系手机号
+   */
+  @GetMapping("/getUserPhone")
+  public Result<String> getUserPhone(@RequestParam("id") Long id) {
+    return Result.ok(quotationDomainService.getUserPhone(id));
+  }
 }

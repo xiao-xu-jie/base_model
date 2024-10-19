@@ -19,4 +19,6 @@ public interface QuotationDomainService {
   List<BizEggQuotationBO> getUserQuotationByDate(String date);
 
   void updateTodayQuotation(BizEggQuotationBO entity);
+
+  String getUserPhone(Long id);
 }
