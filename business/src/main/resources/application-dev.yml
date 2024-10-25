@@ -29,8 +29,8 @@ spring:
     password: 419a4576
   data:
     redis:
-      host: 110.40.42.211
-      port: 6379
+      host: 222.186.56.121
+      port: 6380
       password: xujie520
       database: 0
       lettuce:
@@ -40,6 +40,15 @@ spring:
           max-idle: 10
           min-idle: 1
       timeout: 3000ms
+      cluster:
+        nodes:
+          - 222.186.56.121:6380
+          - 222.186.56.121:6381
+          - 222.186.56.121:6382
+          - 222.186.56.121:6383
+          - 222.186.56.121:6384
+          - 222.186.56.121:6385
+        max-redirects: 5
 mybatis-plus:
   configuration:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
