@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -34,6 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 @EnableScheduling
 @EnableFormValidator
+@EnableAspectJAutoProxy
 public class GlobalConfig extends WebMvcConfigurationSupport {
 
   @Resource Environment env;

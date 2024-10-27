@@ -6,6 +6,7 @@ import com.xujie.business.DTO.res.QueryResDTO;
 import com.xujie.business.DTO.res.SubmitOrderResDTO;
 import com.xujie.business.common.adapters.HttpAdapter;
 import com.xujie.business.common.adapters.PlatFormAdapter;
+import com.xujie.business.common.annotations.MyCache;
 import com.xujie.business.common.constants.PlantApiConstant;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.infra.DO.BizGood;
@@ -18,8 +19,8 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -49,10 +50,11 @@ public class PlatForm29AdapterImpl
   @Resource private CategoryGoodService categoryGoodService;
   @Resource private WebClient webClient;
 
-  @Cacheable(
-      value = "class",
-      key = "#p0.user+':'+#p0.pass+':'+#p0.good_id",
-      unless = "#result == null")
+  //  @Cacheable(
+  //      value = "class",
+  //      key = "{#p0.user}+':'+#p0.pass+':'+#p0.good_id",
+  //      unless = "#result == null")
+  @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
   @Override
   public List<ClassQueryResDTO> queryUserClass(ClassQueryReqDTO classQueryReqDTO) {
 
@@ -104,6 +106,7 @@ public class PlatForm29AdapterImpl
     }
     ConditionCheck.trueAndThrow(
         post.getData() != null && post.getData().isEmpty(), new CustomException(post.getMsg()));
+    ConditionCheck.trueAndThrow(post.getData() == null, new CustomException(post.getMsg()));
     return Optional.of(post).map(QueryResDTO::getData).orElse(null);
   }
 

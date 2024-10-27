@@ -1,5 +1,6 @@
 package com.xujie.business.common.adapters.impl;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.xujie.business.DTO.req.WxOrderCreateReqDTO;
 import com.xujie.business.DTO.res.QueryResDTO;
 import com.xujie.business.common.adapters.HttpAdapter;
@@ -20,9 +21,25 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class HttpWebclientAdapterImpl implements HttpAdapter {
   @Resource private WebClient webClient;
 
+  //  private final String REDIS_PREFIX_KEY = "http:webclient:";
+  //  private final String LOCK_PREFIX_KEY = "lock:";
+  //  @Resource private RedissonClient redissonClient;
+
   @Override
   @SuppressWarnings("unchecked")
   public QueryResDTO post(String url, MultiValueMap<String, String> q) {
+    //    String hashKey = getHashKey(url, q);
+    //    Optional<Object> cacheObject = RedisUtils.getCacheObject(REDIS_PREFIX_KEY + hashKey);
+    //    if (cacheObject.isPresent()) {
+    //      return JSON.parseObject(cacheObject.get().toString(), QueryResDTO.class);
+    //    } else {
+    //      RLock lock = redissonClient.getLock(LOCK_PREFIX_KEY + hashKey);
+    //      lock.lock();
+    //      try {
+    //        cacheObject = RedisUtils.getCacheObject(REDIS_PREFIX_KEY + hashKey);
+    //        if (cacheObject.isPresent()) {
+    //          return JSON.parseObject(cacheObject.get().toString(), QueryResDTO.class);
+    //        }
     QueryResDTO block =
         webClient
             .post()
@@ -32,6 +49,17 @@ public class HttpWebclientAdapterImpl implements HttpAdapter {
             .retrieve()
             .bodyToMono(QueryResDTO.class)
             .block();
+    //        if (block != null && block.getData() != null) {
+    //          RedisUtils.setCacheObject(
+    //              REDIS_PREFIX_KEY + hashKey, JSONUtil.toJsonStr(block), 7, TimeUnit.DAYS);
+    //        }
+    //        return block;
+    //      } catch (Exception e) {
+    //        e.printStackTrace();
+    //        throw new RuntimeException(e);
+    //      } finally {
+    //        lock.unlock();
+    //      }
     return block;
   }
 
@@ -46,5 +74,9 @@ public class HttpWebclientAdapterImpl implements HttpAdapter {
         .retrieve()
         .bodyToMono(Result.class)
         .block(Duration.ofSeconds(10));
+  }
+
+  private String getHashKey(String url, MultiValueMap<String, String> q) {
+    return DigestUtil.md5Hex(url + q.toString());
   }
 }

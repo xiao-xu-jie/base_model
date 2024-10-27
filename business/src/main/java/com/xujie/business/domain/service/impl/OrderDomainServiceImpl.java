@@ -3,6 +3,7 @@ package com.xujie.business.domain.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xujie.business.DTO.req.WxOrderCreateReqDTO;
 import com.xujie.business.common.adapters.impl.HttpWebclientAdapterImpl;
+import com.xujie.business.common.annotations.MyCache;
 import com.xujie.business.common.entity.Result;
 import com.xujie.business.common.enums.OrderStatusEnum;
 import com.xujie.business.common.exception.CustomException;
@@ -16,9 +17,9 @@ import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,8 +36,8 @@ public class OrderDomainServiceImpl implements OrderDomainService {
   @Resource private BizOrderMapper bizOrderMapper;
   @Resource private SiteConfig siteConfig;
 
-  @Cacheable(value = "order", key = "#p0+':'+#p1+':'+#p2+':'+#p3", unless = "#result == null")
   @Override
+  @MyCache(key = "order:xxt", expire = 15, timeUnit = TimeUnit.MINUTES)
   public Long createOrder(Long goodId, String user, String pass, String classJson, Integer num) {
     log.info("goodId: {}, user: {}, pass: {}, classJson: {}", goodId, user, pass, classJson);
     List<BizGood> entity =

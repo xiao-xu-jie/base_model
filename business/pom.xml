@@ -185,7 +185,17 @@
             <artifactId>wechatpay-java</artifactId>
             <version>0.2.12</version>
         </dependency>
-
+        <!-- aop 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- Redission -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.33.0</version>
+        </dependency>
     </dependencies>
     <!-- 阿里云的Maven镜像源 -->
     <repositories>
