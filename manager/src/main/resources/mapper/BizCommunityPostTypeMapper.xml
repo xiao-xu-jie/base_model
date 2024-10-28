@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.manager.infra.mapper.BizCommunityPostTypeMapper">
+  <resultMap id="BaseResultMap" type="com.xujie.manager.infra.DO.BizCommunityPostType">
+    <!--@mbg.generated-->
+    <!--@Table biz_community_post_type-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="post_type_name" jdbcType="VARCHAR" property="postTypeName" />
+    <result column="post_type_desc" jdbcType="VARCHAR" property="postTypeDesc" />
+    <result column="post_type_icon" jdbcType="VARCHAR" property="postTypeIcon" />
+    <result column="post_type_img" jdbcType="VARCHAR" property="postTypeImg" />
+    <result column="post_type_status" jdbcType="INTEGER" property="postTypeStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, post_type_name, post_type_desc, post_type_icon, post_type_img, post_type_status, 
+    create_time, update_time, is_delete
+  </sql>
+</mapper>

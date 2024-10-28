@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xujie.manager.infra.mapper.BizEggQuotationDayMapper">
+  <resultMap id="BaseResultMap" type="com.xujie.manager.infra.DO.BizEggQuotationDay">
+    <!--@mbg.generated-->
+    <!--@Table biz_egg_quotation_day-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="type_id" jdbcType="BIGINT" property="typeId" />
+    <result column="quotation_type" jdbcType="INTEGER" property="quotationType" />
+    <result column="avg_sale_price" jdbcType="DOUBLE" property="avgSalePrice" />
+    <result column="avg_num" jdbcType="DOUBLE" property="avgNum" />
+    <result column="max_num" jdbcType="DOUBLE" property="maxNum" />
+    <result column="min_num" jdbcType="DOUBLE" property="minNum" />
+    <result column="people_number" jdbcType="INTEGER" property="peopleNumber" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="data_time" jdbcType="VARCHAR" property="dataTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, type_id, quotation_type, avg_sale_price, avg_num, max_num, min_num, people_number, 
+    `status`, data_time, create_time, update_time, is_delete
+  </sql>
+</mapper>
