@@ -9,14 +9,13 @@ import { getAllRole } from "@/api/roles";
 export interface FormProps {
   formInline: {
     id: string;
-    avatar: string;
-    name: string;
-    username: string;
-    password: string;
-    sex: string;
+    userAvatar: string;
+    wxOpenId: string;
+    nickName: string;
     phone: string;
-    email: string;
-    roles: string[];
+    userLocation: string;
+    userDesc: string;
+    userStatus: string;
   };
 }
 
@@ -26,20 +25,18 @@ const loading = ref(false);
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     id: "",
-    avatar: "",
-    name: "",
-    username: "",
-    password: "",
-    sex: "",
+    userAvatar: "",
+    wxOpenId: "",
+    nickName: "",
     phone: "",
-    email: "",
-    roles: []
+    userLocation: "",
+    userDesc: "",
+    userStatus: "1"
   })
 });
 
 onMounted(() => {
   console.log("mounted");
-  getRoles();
 });
 // vue 规定所有的 prop 都遵循着单向绑定原则，直接修改 prop 时，Vue 会抛出警告。此处的写法仅仅是为了消除警告。
 // 因为对一个 reactive 对象执行 ref，返回 Ref 对象的 value 值仍为传入的 reactive 对象，
@@ -47,25 +44,12 @@ onMounted(() => {
 // 但该写法仅适用于 props.formInline 是一个对象类型的情况，原始类型需抛出事件
 // 推荐阅读：https://cn.vuejs.org/guide/components/props.html#one-way-data-flow
 const newFormInline = ref(props.formInline);
-const getRoles = async () => {
-  loading.value = true;
-  let res = newFormInline.value.id
-    ? await getUserRoles(newFormInline.value)
-    : null;
-  newFormInline.value.roles = res?.data ?? [];
-  res = await getAllRole();
-  roles.value = res.data.map(item => ({
-    value: item.id,
-    label: item.name
-  }));
-  loading.value = false;
-  console.log("roles===>>>: ", roles.value);
-};
+
 const roles = ref([]);
 const header = { Authorization: "Bearer " + getToken().accessToken };
 const handleAvatarSuccess = (res: any) => {
   console.log("res===>>>: ", res);
-  newFormInline.value.avatar = res.data;
+  newFormInline.value.userAvatar = res.data;
 };
 </script>
 
@@ -89,8 +73,8 @@ const handleAvatarSuccess = (res: any) => {
         :on-success="handleAvatarSuccess"
       >
         <img
-          v-if="newFormInline.avatar"
-          :src="newFormInline.avatar"
+          v-if="newFormInline.userAvatar"
+          :src="newFormInline.userAvatar"
           class="avatar"
         />
         <el-icon v-else class="avatar-uploader-icon">
@@ -98,63 +82,37 @@ const handleAvatarSuccess = (res: any) => {
         </el-icon>
       </el-upload>
     </el-form-item>
-    <el-form-item label="姓名">
+    <el-form-item label="名称">
       <el-input
-        v-model="newFormInline.name"
+        v-model="newFormInline.nickName"
         class="!w-[220px]"
-        placeholder="请输入姓名"
+        placeholder="请输入名称"
       />
     </el-form-item>
-    <el-form-item label="用户名">
-      <el-input
-        v-model="newFormInline.username"
-        :disabled="!!newFormInline.id"
-        class="!w-[220px]"
-        placeholder="请输入用户名"
-      />
-    </el-form-item>
+
     <el-form-item label="手机号">
       <el-input
         v-model="newFormInline.phone"
         class="!w-[220px]"
+        disabled
         placeholder="请输入手机号"
       />
     </el-form-item>
-    <el-form-item label="邮箱">
+    <el-form-item label="地址">
       <el-input
-        v-model="newFormInline.email"
+        v-model="newFormInline.userLocation"
         class="!w-[220px]"
-        placeholder="请输入邮箱"
+        placeholder="请地址"
       />
     </el-form-item>
-    <el-form-item label="密码">
-      <el-input
-        v-model="newFormInline.password"
-        class="!w-[220px]"
-        placeholder="请输入密码"
-      />
-    </el-form-item>
-    <el-form-item label="性别">
-      <el-radio-group v-model="newFormInline.sex">
-        <el-radio :value="1" label="男" />
-        <el-radio :value="0" label="女" />
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="角色">
+    <el-form-item label="用户状态">
       <el-select
-        v-model="newFormInline.roles"
-        multiple
-        collapse-tags
-        collapse-tags-tooltip
-        placeholder="请选择角色"
-        style="width: 240px"
+        v-model="newFormInline.userStatus"
+        class="!w-[220px]"
+        placeholder="请选择"
       >
-        <el-option
-          v-for="item in roles"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
+        <el-option label="正常" :value="1" />
+        <el-option label="禁用" :value="0" />
       </el-select>
     </el-form-item>
   </el-form>

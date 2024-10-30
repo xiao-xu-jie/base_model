@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.manager.domain.BO.BizUserBO;
 import com.xujie.manager.domain.convert.BizUserConvert;
 import com.xujie.manager.domain.service.BizUserDomainService;
+import com.xujie.manager.infra.DO.BizCertification;
 import com.xujie.manager.infra.DO.BizUser;
+import com.xujie.manager.infra.service.BizUserCertService;
 import com.xujie.manager.infra.service.BizUserService;
 import jakarta.annotation.Resource;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BizUserDomainServiceImpl implements BizUserDomainService {
   @Resource private BizUserService bizUserService;
+  @Resource private BizUserCertService bizUserCertService;
   @Resource private BizUserConvert bizUserConvert;
 
   @Override
@@ -31,7 +35,35 @@ public class BizUserDomainServiceImpl implements BizUserDomainService {
   public Page<BizUserBO> getPageList(BizUserBO bizUserBO, Integer pageNum, Integer pageSize) {
     Page<BizUser> pageList =
         bizUserService.getPageList(bizUserConvert.convertBO2DO(bizUserBO), pageNum, pageSize);
-    return bizUserConvert.convertPageDO2BO(pageList);
+    List<BizUser> records = pageList.getRecords();
+    Page<BizUserBO> bizUserBOPage = bizUserConvert.convertPageDO2BO(pageList);
+    if (records.isEmpty()) {
+      return bizUserBOPage;
+    }
+    List<BizCertification> certListByUserIds =
+        bizUserCertService.getCertListByUserIds(records.stream().map(BizUser::getId).toList());
+
+    bizUserBOPage
+        .getRecords()
+        .forEach(
+            item -> {
+              certListByUserIds.stream()
+                  .filter(cert -> cert.getUserId().equals(item.getId()))
+                  .findFirst()
+                  .ifPresent(cert -> setCertStatus(item, cert));
+            });
+    return bizUserBOPage;
+  }
+
+  private void setCertStatus(BizUserBO bizUserBO, BizCertification cert) {
+    switch (cert.getCertStatus()) {
+      case 0, 1, 2:
+        bizUserBO.setCertificationStatus(cert.getCertStatus());
+        bizUserBO.setCertName(cert.getCertType());
+        break;
+      default:
+        break;
+    }
   }
 
   @Override

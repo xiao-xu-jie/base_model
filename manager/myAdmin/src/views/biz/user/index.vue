@@ -2,7 +2,7 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addUser, deleteUser, getUserList, updateUserRoles } from "@/api/user";
+import { addUser, deleteUser, getUserList, updateUser } from "@/api/biz/user";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -67,14 +67,11 @@ function onFullscreenIconClick(title, item) {
     props: {
       formInline: {
         id: item?.id ?? "",
-        avatar: item?.avatar ?? "",
-        name: item?.name ?? "",
-        username: item?.username ?? "",
+        userAvatar: item?.userAvatar ?? "",
+        nickName: item?.nickName ?? "",
         phone: item?.phone ?? "",
-        email: item?.email ?? "",
-        password: item?.password ?? "",
-        sex: item?.sex ?? "",
-        roles: item?.roles ?? []
+        userLocation: item?.userLocation ?? "",
+        userStatus: item?.userStatus ?? 1
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -88,7 +85,7 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateUserRoles(options.props.formInline)
+            ? await updateUser(options.props.formInline)
             : await addUser(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
@@ -113,7 +110,7 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
-  username: null
+  nickName: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
@@ -155,37 +152,38 @@ const columns: TableColumnList = [
   },
   {
     label: "头像",
-    prop: "avatar",
-    slot: "avatar",
+    prop: "userAvatar",
+    slot: "userAvatar",
     width: 90
   },
   {
     label: "名称",
-    prop: "name",
+    prop: "nickName",
     width: 130
-  },
-  {
-    label: "用户名",
-    prop: "username",
-    width: 130
-  },
-  {
-    label: "性别",
-    prop: "sex",
-    slot: "sex"
   },
   {
     label: "手机号",
     prop: "phone"
   },
   {
-    label: "邮箱",
-    prop: "email"
+    label: "地址",
+    prop: "userDesc"
+  },
+  {
+    label: "认证状态",
+    prop: "certificationStatus",
+    slot: "certificationStatus"
   },
   {
     label: "是否绑定微信",
-    prop: "openId",
-    slot: "openId"
+    prop: "wxOpenId",
+    slot: "wxOpenId"
+  },
+  {
+    label: "用户状态",
+    prop: "userStatus",
+    slot: "userStatus",
+    width: 130
   },
   {
     label: "创建时间",
@@ -241,9 +239,9 @@ function handleClick(row) {
         class="search-form"
         :model="searchForm"
       >
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名" prop="nickName">
           <el-input
-            v-model="searchForm.username"
+            v-model="searchForm.nickName"
             clearable
             placeholder="请输入用户名"
           />
@@ -262,15 +260,6 @@ function handleClick(row) {
       </el-form>
     </div>
     <PureTableBar :columns="columns" title="用户管理" @refresh="loadData">
-      <template #buttons>
-        <el-button
-          type="primary"
-          :icon="useRenderIcon(AddFill)"
-          @click="onFullscreenIconClick('新增', {})"
-        >
-          新增用户
-        </el-button>
-      </template>
       <template v-slot="{ size, dynamicColumns }">
         <div
           v-if="selectedNum > 0"
@@ -313,17 +302,36 @@ function handleClick(row) {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
-          <template #avatar="{ row }">
-            <el-avatar :src="row.avatar" size="small" />
+          <template #userAvatar="{ row }">
+            <el-avatar :src="row.userAvatar" size="small" />
           </template>
           <template #sex="{ row }">
             <el-tag :type="row.sex == 1 ? 'success' : 'primary'">
               {{ row.sex == 1 ? "男" : "女" }}
             </el-tag>
           </template>
-          <template #openId="{ row }">
-            <el-tag :type="row.openId ? 'success' : 'danger'">
-              {{ row.openId ? "是" : "否" }}
+          <template #wxOpenId="{ row }">
+            <el-tag :type="!!row?.wxOpenId ? 'success' : 'danger'">
+              {{ !!row?.wxOpenId ? "是" : "否" }}
+            </el-tag>
+          </template>
+          <template #userStatus="{ row }">
+            <el-tag :type="row.userStatus == 1 ? 'success' : 'danger'">
+              {{ row.userStatus == 1 ? "正常" : "禁用" }}
+            </el-tag>
+          </template>
+          <template #certificationStatus="{ row }">
+            <el-tag v-if="!row?.certificationStatus" type="info">
+              未认证
+            </el-tag>
+            <el-tag v-else-if="row.certificationStatus == 0" type="warning">
+              审核中
+            </el-tag>
+            <el-tag v-else-if="row.certificationStatus == 1" type="success">
+              {{ row.certName }}
+            </el-tag>
+            <el-tag v-else-if="row.certificationStatus == 2" type="danger">
+              审核拒绝
             </el-tag>
           </template>
           <template #operation="{ row }">

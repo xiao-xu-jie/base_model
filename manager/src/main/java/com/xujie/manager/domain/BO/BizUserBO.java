@@ -46,6 +46,9 @@ public class BizUserBO extends BaseBO {
   /** 用户状态-0,1 */
   private Integer userStatus;
 
+  private Integer certificationStatus;
+  private String certName;
+
   private Date createTime;
 
   private Date updateTime;

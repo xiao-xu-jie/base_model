@@ -46,6 +46,11 @@ public class BizUserQueryResDTO extends BaseDTO {
   /** 用户状态-0,1 */
   private Integer userStatus;
 
+  /** 认证状态 */
+  private Integer certificationStatus;
+
+  private String certName;
+
   private Date createTime;
 
   private Date updateTime;
