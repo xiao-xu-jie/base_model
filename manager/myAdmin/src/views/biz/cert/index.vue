@@ -2,7 +2,7 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addUser, deleteUser, getUserList, updateUser } from "@/api/biz/user";
+import { addCert, deleteCert, getCertList, updateCert } from "@/api/biz/cert";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -32,7 +32,7 @@ async function onbatchDel(id = null) {
     ids = [id];
   }
   console.log("curSelected===>>>: ", ids[0]);
-  const res = await deleteUser(ids);
+  const res = await deleteCert(ids);
   if (res.success) {
     message(res.message, { type: "success" });
     tableRef.value.getTableRef().clearSelection();
@@ -61,17 +61,13 @@ const pagination = ref({
 
 function onFullscreenIconClick(title, item) {
   addDialog({
-    title: `${title}用户`,
+    title: `审核认证`,
     fullscreenIcon: true,
     sureBtnLoading: true,
     props: {
       formInline: {
         id: item?.id ?? "",
-        userAvatar: item?.userAvatar ?? "",
-        nickName: item?.nickName ?? "",
-        phone: item?.phone ?? "",
-        userLocation: item?.userLocation ?? "",
-        userStatus: item?.userStatus ?? 1
+        certStatus: item?.certStatus ?? ""
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -85,8 +81,8 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateUser(options.props.formInline)
-            : await addUser(options.props.formInline);
+            ? await updateCert(options.props.formInline)
+            : await addCert(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -111,13 +107,14 @@ const resetForm = () => {
 };
 const searchForm = ref({
   nickName: null,
-  phone: null
+  phoneNumber: null,
+  certStatus: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
   let res;
   try {
-    res = await getUserList({
+    res = await getCertList({
       ...searchForm.value,
       pageNum: flag == 1 ? pagination.value.currentPage : 1,
       pageSize: pagination.value.pageSize
@@ -152,44 +149,36 @@ const columns: TableColumnList = [
     width: 90
   },
   {
-    label: "头像",
-    prop: "userAvatar",
-    slot: "userAvatar",
-    width: 90
-  },
-  {
-    label: "名称",
+    label: "用户名称",
     prop: "nickName",
     width: 130
   },
   {
-    label: "手机号",
-    prop: "phone"
+    label: "认证手机号",
+    prop: "phoneNumber"
   },
   {
-    label: "地址",
-    prop: "userLocation"
+    label: "认证类型",
+    prop: "certType"
   },
   {
-    label: "认证状态",
-    prop: "certificationStatus",
-    slot: "certificationStatus"
+    label: "认证姓名",
+    prop: "realName"
   },
   {
-    label: "是否绑定微信",
-    prop: "wxOpenId",
-    slot: "wxOpenId"
+    label: "证件号码",
+    prop: "idCardNo"
   },
   {
-    label: "用户状态",
-    prop: "userStatus",
-    slot: "userStatus",
+    label: "证件图片",
+    prop: "imgs",
+    slot: "imgs",
     width: 130
   },
   {
-    label: "最近一次报价",
-    prop: "lastQuotationTime",
-    sortable: true
+    label: "认证状态",
+    prop: "certStatus",
+    slot: "certStatus"
   },
   {
     label: "创建时间",
@@ -254,10 +243,22 @@ function handleClick(row) {
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input
-            v-model="searchForm.phone"
+            v-model="searchForm.phoneNumber"
             clearable
             placeholder="请输入手机号"
           />
+        </el-form-item>
+        <el-form-item label="认证状态" prop="certStatus">
+          <el-select
+            v-model="searchForm.certStatus"
+            class="!w-[220px]"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option label="审核通过" :value="1" />
+            <el-option label="审核中" :value="0" />
+            <el-option label="审核拒绝" :value="2" />
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -315,35 +316,19 @@ function handleClick(row) {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
-          <template #userAvatar="{ row }">
-            <el-avatar :src="row.userAvatar" size="small" />
+          <template #imgs="{ row }">
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="row.imgs"
+              fit="cover"
+            />
           </template>
-          <template #sex="{ row }">
-            <el-tag :type="row.sex == 1 ? 'success' : 'primary'">
-              {{ row.sex == 1 ? "男" : "女" }}
+          <template #certStatus="{ row }">
+            <el-tag v-if="row.certStatus == 0" type="warning"> 审核中 </el-tag>
+            <el-tag v-else-if="row.certStatus == 1" type="success">
+              审核通过
             </el-tag>
-          </template>
-          <template #wxOpenId="{ row }">
-            <el-tag :type="!!row?.wxOpenId ? 'success' : 'danger'">
-              {{ !!row?.wxOpenId ? "是" : "否" }}
-            </el-tag>
-          </template>
-          <template #userStatus="{ row }">
-            <el-tag :type="row.userStatus == 1 ? 'success' : 'danger'">
-              {{ row.userStatus == 1 ? "正常" : "禁用" }}
-            </el-tag>
-          </template>
-          <template #certificationStatus="{ row }">
-            <el-tag v-if="!row?.certificationStatus" type="info">
-              未认证
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 0" type="warning">
-              审核中
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 1" type="success">
-              {{ row.certName }}
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 2" type="danger">
+            <el-tag v-else-if="row.certStatus == 2" type="danger">
               审核拒绝
             </el-tag>
           </template>
@@ -354,16 +339,8 @@ function handleClick(row) {
               size="small"
               @click="onFullscreenIconClick('编辑', row)"
             >
-              编辑
+              审核
             </el-button>
-            <el-popconfirm
-              title="是否确认删除用户?"
-              @confirm="onbatchDel(row.id)"
-            >
-              <template #reference>
-                <el-button type="danger" text class="mr-1"> 删除</el-button>
-              </template>
-            </el-popconfirm>
           </template>
         </pure-table>
       </template>

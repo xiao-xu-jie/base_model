@@ -2,12 +2,18 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addUser, deleteUser, getUserList, updateUser } from "@/api/biz/user";
+import {
+  addCommunity,
+  deleteCommunity,
+  getCommunityList,
+  updateCommunity
+} from "@/api/biz/community";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
 import forms from "./form.vue";
 import AddFill from "@iconify-icons/ri/add-fill";
+import { EditorBase } from "./components";
 
 const formRef = ref();
 const tableRef = ref();
@@ -32,7 +38,7 @@ async function onbatchDel(id = null) {
     ids = [id];
   }
   console.log("curSelected===>>>: ", ids[0]);
-  const res = await deleteUser(ids);
+  const res = await deleteCommunity(ids);
   if (res.success) {
     message(res.message, { type: "success" });
     tableRef.value.getTableRef().clearSelection();
@@ -67,11 +73,10 @@ function onFullscreenIconClick(title, item) {
     props: {
       formInline: {
         id: item?.id ?? "",
-        userAvatar: item?.userAvatar ?? "",
-        nickName: item?.nickName ?? "",
-        phone: item?.phone ?? "",
-        userLocation: item?.userLocation ?? "",
-        userStatus: item?.userStatus ?? 1
+        postTypeName: item?.postTypeName ?? "",
+        postTypeDesc: item?.postTypeDesc ?? "",
+        postTypeImg: item?.postTypeImg ?? "",
+        postTypeStatus: item?.postTypeStatus ?? 1
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -85,8 +90,8 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateUser(options.props.formInline)
-            : await addUser(options.props.formInline);
+            ? await updateCommunity(options.props.formInline)
+            : await addCommunity(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -110,14 +115,13 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
-  nickName: null,
-  phone: null
+  postTypeName: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
   let res;
   try {
-    res = await getUserList({
+    res = await getCommunityList({
       ...searchForm.value,
       pageNum: flag == 1 ? pagination.value.currentPage : 1,
       pageSize: pagination.value.pageSize
@@ -152,44 +156,33 @@ const columns: TableColumnList = [
     width: 90
   },
   {
-    label: "头像",
-    prop: "userAvatar",
-    slot: "userAvatar",
-    width: 90
-  },
-  {
-    label: "名称",
-    prop: "nickName",
+    label: "分类名称",
+    prop: "postTypeName",
     width: 130
   },
   {
-    label: "手机号",
-    prop: "phone"
+    label: "标题",
+    prop: "title"
   },
   {
-    label: "地址",
-    prop: "userLocation"
+    label: "描述信息",
+    prop: "postDesc",
+    slot: "postDesc"
   },
   {
-    label: "认证状态",
-    prop: "certificationStatus",
-    slot: "certificationStatus"
+    label: "内容",
+    prop: "content",
+    slot: "content"
   },
   {
-    label: "是否绑定微信",
-    prop: "wxOpenId",
-    slot: "wxOpenId"
+    label: "封面图片",
+    prop: "coverImg",
+    slot: "coverImg"
   },
   {
-    label: "用户状态",
-    prop: "userStatus",
-    slot: "userStatus",
-    width: 130
-  },
-  {
-    label: "最近一次报价",
-    prop: "lastQuotationTime",
-    sortable: true
+    label: "显示状态",
+    prop: "status",
+    slot: "status"
   },
   {
     label: "创建时间",
@@ -234,6 +227,39 @@ function handleClick(row) {
     row
   );
 }
+
+const showContent = (id, content) => {
+  addDialog({
+    title: "内容编辑",
+    sureBtnLoading: true,
+    props: {
+      formInline: {
+        id: id ?? "",
+        content: content ?? ""
+      }
+    },
+    contentRenderer: () => createVNode(EditorBase, { id, content }),
+    beforeSure: async (done, { options, closeLoading }) => {
+      let res;
+      try {
+        res = await updateCommunity(options.props.formInline);
+      } catch (e) {
+        console.log("e===>>>: ", e);
+      } finally {
+        closeLoading();
+      }
+      if (res.success) {
+        message(res.message, { type: "success" });
+        loadData(1);
+        done();
+      } else {
+        message(res.message, { type: "error" });
+      }
+      // closeLoading() // 关闭确定按钮动画，不关闭弹框
+      // done() // 关闭确定按钮动画并关闭弹框
+    }
+  });
+};
 </script>
 
 <template>
@@ -245,18 +271,11 @@ function handleClick(row) {
         class="search-form"
         :model="searchForm"
       >
-        <el-form-item label="用户名" prop="nickName">
+        <el-form-item label="类型名称" prop="postTypeName">
           <el-input
-            v-model="searchForm.nickName"
+            v-model="searchForm.postTypeName"
             clearable
-            placeholder="请输入用户名"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="searchForm.phone"
-            clearable
-            placeholder="请输入手机号"
+            placeholder="请输入类型名称"
           />
         </el-form-item>
         <el-form-item>
@@ -315,37 +334,28 @@ function handleClick(row) {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
-          <template #userAvatar="{ row }">
-            <el-avatar :src="row.userAvatar" size="small" />
+          <template #coverImg="{ row }">
+            <el-image
+              style="width: 50px; height: 50px"
+              :src="row.coverImg"
+              fit="cover"
+            />
           </template>
-          <template #sex="{ row }">
-            <el-tag :type="row.sex == 1 ? 'success' : 'primary'">
-              {{ row.sex == 1 ? "男" : "女" }}
-            </el-tag>
-          </template>
-          <template #wxOpenId="{ row }">
-            <el-tag :type="!!row?.wxOpenId ? 'success' : 'danger'">
-              {{ !!row?.wxOpenId ? "是" : "否" }}
-            </el-tag>
-          </template>
-          <template #userStatus="{ row }">
-            <el-tag :type="row.userStatus == 1 ? 'success' : 'danger'">
-              {{ row.userStatus == 1 ? "正常" : "禁用" }}
+          <template #postTypeStatus="{ row }">
+            <el-tag :type="row.status == 1 ? 'success' : 'danger'">
+              {{ row.status == 1 ? "显示" : "隐藏" }}
             </el-tag>
           </template>
-          <template #certificationStatus="{ row }">
-            <el-tag v-if="!row?.certificationStatus" type="info">
-              未认证
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 0" type="warning">
-              审核中
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 1" type="success">
-              {{ row.certName }}
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 2" type="danger">
-              审核拒绝
-            </el-tag>
+          <template #postDesc="{ row }">
+            {{ !!row?.postDesc ? row.postDesc : "暂无描述" }}
+          </template>
+          <template #content="{ row }">
+            <el-button
+              type="text"
+              size="small"
+              @click="showContent(row.id, row.content)"
+              >查看详情
+            </el-button>
           </template>
           <template #operation="{ row }">
             <el-button

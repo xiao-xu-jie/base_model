@@ -2,7 +2,12 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addUser, deleteUser, getUserList, updateUser } from "@/api/biz/user";
+import {
+  addCommunityType,
+  deleteCommunityType,
+  getCommunityTypeList,
+  updateCommunityType
+} from "@/api/biz/communityType";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -32,7 +37,7 @@ async function onbatchDel(id = null) {
     ids = [id];
   }
   console.log("curSelected===>>>: ", ids[0]);
-  const res = await deleteUser(ids);
+  const res = await deleteCommunityType(ids);
   if (res.success) {
     message(res.message, { type: "success" });
     tableRef.value.getTableRef().clearSelection();
@@ -67,11 +72,10 @@ function onFullscreenIconClick(title, item) {
     props: {
       formInline: {
         id: item?.id ?? "",
-        userAvatar: item?.userAvatar ?? "",
-        nickName: item?.nickName ?? "",
-        phone: item?.phone ?? "",
-        userLocation: item?.userLocation ?? "",
-        userStatus: item?.userStatus ?? 1
+        postTypeName: item?.postTypeName ?? "",
+        postTypeDesc: item?.postTypeDesc ?? "",
+        postTypeImg: item?.postTypeImg ?? "",
+        postTypeStatus: item?.postTypeStatus ?? 1
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -85,8 +89,8 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateUser(options.props.formInline)
-            : await addUser(options.props.formInline);
+            ? await updateCommunityType(options.props.formInline)
+            : await addCommunityType(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -110,14 +114,13 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
-  nickName: null,
-  phone: null
+  postTypeName: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
   let res;
   try {
-    res = await getUserList({
+    res = await getCommunityTypeList({
       ...searchForm.value,
       pageNum: flag == 1 ? pagination.value.currentPage : 1,
       pageSize: pagination.value.pageSize
@@ -152,44 +155,23 @@ const columns: TableColumnList = [
     width: 90
   },
   {
-    label: "头像",
-    prop: "userAvatar",
-    slot: "userAvatar",
-    width: 90
-  },
-  {
-    label: "名称",
-    prop: "nickName",
+    label: "分类名称",
+    prop: "postTypeName",
     width: 130
   },
   {
-    label: "手机号",
-    prop: "phone"
+    label: "分类描述",
+    prop: "postTypeDesc"
   },
   {
-    label: "地址",
-    prop: "userLocation"
+    label: "分类图片",
+    prop: "postTypeImg",
+    slot: "postTypeImg"
   },
   {
-    label: "认证状态",
-    prop: "certificationStatus",
-    slot: "certificationStatus"
-  },
-  {
-    label: "是否绑定微信",
-    prop: "wxOpenId",
-    slot: "wxOpenId"
-  },
-  {
-    label: "用户状态",
-    prop: "userStatus",
-    slot: "userStatus",
-    width: 130
-  },
-  {
-    label: "最近一次报价",
-    prop: "lastQuotationTime",
-    sortable: true
+    label: "显示状态",
+    prop: "postTypeStatus",
+    slot: "postTypeStatus"
   },
   {
     label: "创建时间",
@@ -245,18 +227,11 @@ function handleClick(row) {
         class="search-form"
         :model="searchForm"
       >
-        <el-form-item label="用户名" prop="nickName">
+        <el-form-item label="类型名称" prop="postTypeName">
           <el-input
-            v-model="searchForm.nickName"
+            v-model="searchForm.postTypeName"
             clearable
-            placeholder="请输入用户名"
-          />
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input
-            v-model="searchForm.phone"
-            clearable
-            placeholder="请输入手机号"
+            placeholder="请输入类型名称"
           />
         </el-form-item>
         <el-form-item>
@@ -315,36 +290,16 @@ function handleClick(row) {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
-          <template #userAvatar="{ row }">
-            <el-avatar :src="row.userAvatar" size="small" />
+          <template #postTypeImg="{ row }">
+            <el-image
+              style="width: 50px; height: 50px"
+              :src="row.postTypeImg"
+              fit="cover"
+            />
           </template>
-          <template #sex="{ row }">
-            <el-tag :type="row.sex == 1 ? 'success' : 'primary'">
-              {{ row.sex == 1 ? "男" : "女" }}
-            </el-tag>
-          </template>
-          <template #wxOpenId="{ row }">
-            <el-tag :type="!!row?.wxOpenId ? 'success' : 'danger'">
-              {{ !!row?.wxOpenId ? "是" : "否" }}
-            </el-tag>
-          </template>
-          <template #userStatus="{ row }">
-            <el-tag :type="row.userStatus == 1 ? 'success' : 'danger'">
-              {{ row.userStatus == 1 ? "正常" : "禁用" }}
-            </el-tag>
-          </template>
-          <template #certificationStatus="{ row }">
-            <el-tag v-if="!row?.certificationStatus" type="info">
-              未认证
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 0" type="warning">
-              审核中
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 1" type="success">
-              {{ row.certName }}
-            </el-tag>
-            <el-tag v-else-if="row.certificationStatus == 2" type="danger">
-              审核拒绝
+          <template #postTypeStatus="{ row }">
+            <el-tag :type="row.postTypeStatus == 1 ? 'success' : 'danger'">
+              {{ row.postTypeStatus == 1 ? "显示" : "隐藏" }}
             </el-tag>
           </template>
           <template #operation="{ row }">

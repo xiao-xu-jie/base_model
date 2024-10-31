@@ -1,7 +1,10 @@
 package com.xujie.manager.infra.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.xujie.manager.common.exception.CustomException;
 import com.xujie.manager.common.utils.QueryWrapperUtil;
 import com.xujie.manager.infra.DO.BizUser;
@@ -11,6 +14,7 @@ import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -59,5 +63,15 @@ public class BizUserServiceImpl implements BizUserService {
   @Override
   public boolean deleteBatch(Long[] ids) {
     return bizUserMapper.deleteByIds(Arrays.asList(ids)) > 0;
+  }
+
+  @Override
+  public List<BizUser> getUserListByUserIds(List<Long> ids) {
+    if (ObjectUtils.isEmpty(ids)) {
+      return Lists.newArrayList();
+    }
+    LambdaQueryWrapper<BizUser> queryWrapper = Wrappers.lambdaQuery();
+    queryWrapper.in(BizUser::getId, ids);
+    return bizUserMapper.selectList(queryWrapper);
   }
 }

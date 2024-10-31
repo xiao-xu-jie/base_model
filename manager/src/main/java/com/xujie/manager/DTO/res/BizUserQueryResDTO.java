@@ -51,6 +51,8 @@ public class BizUserQueryResDTO extends BaseDTO {
 
   private String certName;
 
+  private String lastQuotationTime;
+
   private Date createTime;
 
   private Date updateTime;

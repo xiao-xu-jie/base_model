@@ -48,6 +48,7 @@ public class BizUserBO extends BaseBO {
 
   private Integer certificationStatus;
   private String certName;
+  private String lastQuotationTime;
 
   private Date createTime;
 
