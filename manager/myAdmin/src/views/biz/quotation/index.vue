@@ -2,12 +2,16 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addCert, deleteCert, getCertList, updateCert } from "@/api/biz/cert";
+import {
+  addQuotation,
+  deleteQuotation,
+  getQuotationList,
+  updateQuotation
+} from "@/api/biz/quotation";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
 import forms from "./form.vue";
-import AddFill from "@iconify-icons/ri/add-fill";
 
 const formRef = ref();
 const tableRef = ref();
@@ -32,7 +36,7 @@ async function onbatchDel(id = null) {
     ids = [id];
   }
   console.log("curSelected===>>>: ", ids[0]);
-  const res = await deleteCert(ids);
+  const res = await deleteQuotation(ids);
   if (res.success) {
     message(res.message, { type: "success" });
     tableRef.value.getTableRef().clearSelection();
@@ -45,7 +49,7 @@ async function onbatchDel(id = null) {
 /** 取消选择 */
 function onSelectionCancel() {
   selectedNum.value = 0;
-  // 用于多选表格，清空认证的选择
+  // 用于多选表格，清空用户的选择
   tableRef.value.getTableRef().clearSelection();
 }
 
@@ -61,13 +65,16 @@ const pagination = ref({
 
 function onFullscreenIconClick(title, item) {
   addDialog({
-    title: `审核认证`,
+    title: `${title}报价`,
     fullscreenIcon: true,
     sureBtnLoading: true,
     props: {
       formInline: {
         id: item?.id ?? "",
-        certStatus: item?.certStatus ?? ""
+        title: item?.title ?? "",
+        postDesc: item?.postDesc ?? "",
+        coverImg: item?.coverImg ?? "",
+        status: item?.status ?? 1
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -81,8 +88,8 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateCert(options.props.formInline)
-            : await addCert(options.props.formInline);
+            ? await updateQuotation(options.props.formInline)
+            : await addQuotation(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -106,15 +113,16 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
+  eggTypeName: null,
+  quotationLocation: null,
   nickName: null,
-  phoneNumber: null,
-  certStatus: null
+  dataDate: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
   let res;
   try {
-    res = await getCertList({
+    res = await getQuotationList({
       ...searchForm.value,
       pageNum: flag == 1 ? pagination.value.currentPage : 1,
       pageSize: pagination.value.pageSize
@@ -149,40 +157,41 @@ const columns: TableColumnList = [
     width: 90
   },
   {
-    label: "认证名称",
+    label: "用户名称",
     prop: "nickName",
     width: 130
   },
   {
-    label: "认证手机号",
-    prop: "phoneNumber"
+    label: "报价类型",
+    prop: "eggTypeName"
   },
   {
-    label: "认证类型",
-    prop: "certType"
+    label: "报价地区",
+    prop: "quotationLocation"
   },
   {
-    label: "认证姓名",
-    prop: "realName"
+    label: "最高价",
+    prop: "quotationMaxPrice",
+    slot: "quotationMaxPrice"
   },
   {
-    label: "证件号码",
-    prop: "idCardNo"
+    label: "参考价",
+    prop: "quotationAvgPrice",
+    slot: "quotationAvgPrice"
   },
   {
-    label: "证件图片",
-    prop: "imgs",
-    slot: "imgs",
-    width: 130
+    label: "最低价",
+    prop: "quotationMinPrice",
+    slot: "quotationMinPrice"
   },
   {
-    label: "认证状态",
-    prop: "certStatus",
-    slot: "certStatus"
+    label: "显示状态",
+    prop: "quotationStatus",
+    slot: "quotationStatus"
   },
   {
-    label: "创建时间",
-    prop: "createTime"
+    label: "报价时间",
+    prop: "dataDate"
   },
   {
     label: "操作",
@@ -223,6 +232,36 @@ function handleClick(row) {
     row
   );
 }
+
+const showContent = (id, content) => {
+  let text = null;
+};
+const value = ref("");
+const shortcuts = [
+  {
+    text: "今天",
+    value: new Date()
+  },
+  {
+    text: "昨天",
+    value: () => {
+      const date = new Date();
+      date.setTime(date.getTime() - 3600 * 1000 * 24);
+      return date;
+    }
+  },
+  {
+    text: "一周前",
+    value: () => {
+      const date = new Date();
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+      return date;
+    }
+  }
+];
+const disabledDate = (time: Date) => {
+  return time.getTime() > Date.now();
+};
 </script>
 
 <template>
@@ -234,31 +273,41 @@ function handleClick(row) {
         class="search-form"
         :model="searchForm"
       >
-        <el-form-item label="认证名" prop="nickName">
+        <el-form-item label="报价类型" prop="eggTypeName">
+          <el-input
+            v-model="searchForm.eggTypeName"
+            clearable
+            placeholder="请输入报价类型"
+          />
+        </el-form-item>
+        <el-form-item label="用户名称" prop="nickName">
           <el-input
             v-model="searchForm.nickName"
             clearable
-            placeholder="请输入认证名"
+            placeholder="请输入用户名称"
           />
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
+        <el-form-item label="地区" prop="quotationLocation">
           <el-input
-            v-model="searchForm.phoneNumber"
+            v-model="searchForm.quotationLocation"
             clearable
-            placeholder="请输入手机号"
+            placeholder="请输入地区"
           />
         </el-form-item>
-        <el-form-item label="认证状态" prop="certStatus">
-          <el-select
-            v-model="searchForm.certStatus"
-            class="!w-[220px]"
-            clearable
+        <el-form-item label="日期" prop="dataDate">
+          <el-date-picker
+            v-model="searchForm.dataDate"
+            type="date"
+            class="!w-[160px]"
             placeholder="请选择"
-          >
-            <el-option label="审核通过" :value="1" />
-            <el-option label="审核中" :value="0" />
-            <el-option label="审核拒绝" :value="2" />
-          </el-select>
+            :disabled-date="disabledDate"
+            :shortcuts="shortcuts"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+            :popper-options="{
+              placement: 'bottom-start'
+            }"
+          />
         </el-form-item>
         <el-form-item>
           <el-button
@@ -273,7 +322,7 @@ function handleClick(row) {
         </el-form-item>
       </el-form>
     </div>
-    <PureTableBar :columns="columns" title="认证管理" @refresh="loadData">
+    <PureTableBar :columns="columns" title="报价管理" @refresh="loadData">
       <template v-slot="{ size, dynamicColumns }">
         <div
           v-if="selectedNum > 0"
@@ -316,20 +365,16 @@ function handleClick(row) {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
-          <template #imgs="{ row }">
+          <template #coverImg="{ row }">
             <el-image
-              style="width: 100px; height: 100px"
-              :src="row.imgs"
+              style="width: 50px; height: 50px"
+              :src="row.coverImg"
               fit="cover"
             />
           </template>
-          <template #certStatus="{ row }">
-            <el-tag v-if="row.certStatus == 0" type="warning"> 审核中 </el-tag>
-            <el-tag v-else-if="row.certStatus == 1" type="success">
-              审核通过
-            </el-tag>
-            <el-tag v-else-if="row.certStatus == 2" type="danger">
-              审核拒绝
+          <template #quotationStatus="{ row }">
+            <el-tag :type="row.quotationStatus == 1 ? 'success' : 'danger'">
+              {{ row.quotationStatus == 1 ? "显示" : "隐藏" }}
             </el-tag>
           </template>
           <template #operation="{ row }">
@@ -339,8 +384,16 @@ function handleClick(row) {
               size="small"
               @click="onFullscreenIconClick('编辑', row)"
             >
-              审核
+              编辑
             </el-button>
+            <el-popconfirm
+              title="是否确认删除用户?"
+              @confirm="onbatchDel(row.id)"
+            >
+              <template #reference>
+                <el-button type="danger" text class="mr-1"> 删除</el-button>
+              </template>
+            </el-popconfirm>
           </template>
         </pure-table>
       </template>

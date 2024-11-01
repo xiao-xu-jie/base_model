@@ -106,7 +106,8 @@ public class QueryWrapperUtil {
                 if (fieldName.contains("name")
                     || fieldName.contains("title")
                     || fieldName.contains("desc")
-                    || fieldName.contains("content")) {
+                    || fieldName.contains("content")
+                    || fieldName.contains("location")) {
                   queryWrapper.like(fieldName, value);
                 } else {
                   queryWrapper.eq(fieldName, value);

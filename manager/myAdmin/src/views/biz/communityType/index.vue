@@ -50,7 +50,7 @@ async function onbatchDel(id = null) {
 /** 取消选择 */
 function onSelectionCancel() {
   selectedNum.value = 0;
-  // 用于多选表格，清空用户的选择
+  // 用于多选表格，清空分类的选择
   tableRef.value.getTableRef().clearSelection();
 }
 
@@ -66,7 +66,7 @@ const pagination = ref({
 
 function onFullscreenIconClick(title, item) {
   addDialog({
-    title: `${title}用户`,
+    title: `${title}分类`,
     fullscreenIcon: true,
     sureBtnLoading: true,
     props: {
@@ -247,7 +247,16 @@ function handleClick(row) {
         </el-form-item>
       </el-form>
     </div>
-    <PureTableBar :columns="columns" title="用户管理" @refresh="loadData">
+    <PureTableBar :columns="columns" title="分类管理" @refresh="loadData">
+      <template #buttons>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="onFullscreenIconClick('新增', {})"
+        >
+          新增分类
+        </el-button>
+      </template>
       <template v-slot="{ size, dynamicColumns }">
         <div
           v-if="selectedNum > 0"
@@ -312,7 +321,7 @@ function handleClick(row) {
               编辑
             </el-button>
             <el-popconfirm
-              title="是否确认删除用户?"
+              title="是否确认删除分类?"
               @confirm="onbatchDel(row.id)"
             >
               <template #reference>

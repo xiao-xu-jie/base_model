@@ -1,4 +1,4 @@
-package com.xujie.manager.controller;
+package com.xujie.manager.controller.admin;
 
 import com.xujie.manager.DTO.req.BizCommunityPostAddReqDTO;
 import com.xujie.manager.DTO.req.BizCommunityPostQueryReqDTO;
