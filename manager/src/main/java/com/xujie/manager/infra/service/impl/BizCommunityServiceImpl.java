@@ -56,6 +56,7 @@ public class BizCommunityServiceImpl implements BizCommunityService {
     Page<BizCommunityPost> page = new Page<>(pageNum, pageSize);
     QueryWrapper<BizCommunityPost> bizCommunityPostQueryWrapper =
         QueryWrapperUtil.buildQueryWrapper(baseDO);
+    bizCommunityPostQueryWrapper.orderByDesc("create_time", "update_time");
     return bizCommunityPostMapper.selectPage(page, bizCommunityPostQueryWrapper);
   }
 

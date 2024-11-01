@@ -103,7 +103,10 @@ public class QueryWrapperUtil {
           switch (typeName) {
             case "java.lang.String":
               if (value instanceof String str && StringUtils.isNotBlank(str)) {
-                if (fieldName.contains("name")) {
+                if (fieldName.contains("name")
+                    || fieldName.contains("title")
+                    || fieldName.contains("desc")
+                    || fieldName.contains("content")) {
                   queryWrapper.like(fieldName, value);
                 } else {
                   queryWrapper.eq(fieldName, value);

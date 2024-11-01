@@ -10,10 +10,10 @@ import { ElMessage } from "element-plus";
 export interface FormProps {
   formInline: {
     id: string;
-    postTypeName: string;
-    postTypeDesc: string;
-    postTypeImg: string;
-    postTypeStatus: string;
+    title: string;
+    postDesc: string;
+    coverImg: string;
+    status: string;
   };
 }
 
@@ -23,10 +23,10 @@ const loading = ref(false);
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     id: "",
-    postTypeName: "",
-    postTypeDesc: "",
-    postTypeImg: "",
-    postTypeStatus: "1"
+    title: "",
+    postDesc: "",
+    coverImg: "",
+    status: "1"
   })
 });
 
@@ -45,7 +45,7 @@ const header = { Authorization: "Bearer " + getToken().accessToken };
 const handleAvatarSuccess = (res: any) => {
   console.log("res===>>>: ", res);
   ElMessage.success("上传成功");
-  newFormInline.value.postTypeImg = res.data;
+  newFormInline.value.coverImg = res.data;
 };
 </script>
 
@@ -60,7 +60,7 @@ const handleAvatarSuccess = (res: any) => {
     <el-form-item v-if="newFormInline.id" label="ID">
       <el-input v-model="newFormInline.id" disabled class="!w-[220px]" />
     </el-form-item>
-    <el-form-item label="类型图片">
+    <el-form-item label="封面图片">
       <el-upload
         class="avatar-uploader"
         action="/api/common/upload"
@@ -69,8 +69,8 @@ const handleAvatarSuccess = (res: any) => {
         :on-success="handleAvatarSuccess"
       >
         <img
-          v-if="newFormInline.postTypeImg"
-          :src="newFormInline.postTypeImg"
+          v-if="newFormInline.coverImg"
+          :src="newFormInline.coverImg"
           class="avatar"
         />
         <el-icon v-else class="avatar-uploader-icon">
@@ -78,24 +78,24 @@ const handleAvatarSuccess = (res: any) => {
         </el-icon>
       </el-upload>
     </el-form-item>
-    <el-form-item label="类型名称">
+    <el-form-item label="标题">
       <el-input
-        v-model="newFormInline.postTypeName"
+        v-model="newFormInline.title"
         class="!w-[220px]"
-        placeholder="请输入类型名称"
+        placeholder="请输入标题"
       />
     </el-form-item>
 
-    <el-form-item label="分类描述">
+    <el-form-item label="描述">
       <el-input
-        v-model="newFormInline.postTypeDesc"
+        v-model="newFormInline.postDesc"
         class="!w-[220px]"
-        placeholder="请输入分类描述"
+        placeholder="请输入描述"
       />
     </el-form-item>
-    <el-form-item label="用户状态">
+    <el-form-item label="状态">
       <el-select
-        v-model="newFormInline.postTypeStatus"
+        v-model="newFormInline.status"
         class="!w-[220px]"
         placeholder="请选择"
       >

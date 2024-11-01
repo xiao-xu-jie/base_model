@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import "@wangeditor/editor/dist/css/style.css";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { onBeforeUnmount, ref, shallowRef, onMounted, defineProps } from "vue";
+import {
+  onBeforeUnmount,
+  ref,
+  shallowRef,
+  onMounted,
+  defineProps,
+  defineEmits
+} from "vue";
 
+const emit = defineEmits(["change"]);
 const props = defineProps({
   content: {
     type: String,
@@ -32,7 +40,7 @@ onMounted(() => {
 });
 
 const toolbarConfig: any = { excludeKeys: "fullScreen" };
-const editorConfig = { placeholder: "请输入内容..." };
+const editorConfig = { placeholder: "请输入内容...", MENU_CONF: {} };
 
 const handleCreated = editor => {
   // 记录 editor 实例，重要！
@@ -47,7 +55,24 @@ onBeforeUnmount(() => {
   editor.destroy();
 });
 const onChange = e => {
-  console.log("html: ", e.getHtml());
+  // console.log("html: ", e.getHtml());
+  emit("change", e.getHtml());
+};
+editorConfig.MENU_CONF["uploadImage"] = {
+  // 服务端上传地址，根据实际业务改写
+  server: "/api/common/upload",
+  // form-data 的 fieldName，根据实际业务改写
+  fieldName: "file",
+  // 选择文件时的类型限制，根据实际业务改写
+  allowedFileTypes: ["image/png", "image/jpg", "image/jpeg"],
+  // 自定义插入图片
+  customInsert(res: any, insertFn) {
+    // res.data.url是后端返回的图片地址，根据实际业务改写
+    if (res.data) {
+      // insertFn插入图片进编辑器
+      insertFn(res.data);
+    }
+  }
 };
 </script>
 

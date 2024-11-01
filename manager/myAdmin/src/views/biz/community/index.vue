@@ -67,16 +67,16 @@ const pagination = ref({
 
 function onFullscreenIconClick(title, item) {
   addDialog({
-    title: `${title}用户`,
+    title: `${title}帖子`,
     fullscreenIcon: true,
     sureBtnLoading: true,
     props: {
       formInline: {
         id: item?.id ?? "",
-        postTypeName: item?.postTypeName ?? "",
-        postTypeDesc: item?.postTypeDesc ?? "",
-        postTypeImg: item?.postTypeImg ?? "",
-        postTypeStatus: item?.postTypeStatus ?? 1
+        title: item?.title ?? "",
+        postDesc: item?.postDesc ?? "",
+        coverImg: item?.coverImg ?? "",
+        status: item?.status ?? 1
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -115,7 +115,9 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
-  postTypeName: null
+  postTypeName: null,
+  title: null,
+  content: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
@@ -229,6 +231,7 @@ function handleClick(row) {
 }
 
 const showContent = (id, content) => {
+  let text = null;
   addDialog({
     title: "内容编辑",
     sureBtnLoading: true,
@@ -238,9 +241,17 @@ const showContent = (id, content) => {
         content: content ?? ""
       }
     },
-    contentRenderer: () => createVNode(EditorBase, { id, content }),
+    contentRenderer: () =>
+      createVNode(EditorBase, {
+        id,
+        content,
+        onChange: e => {
+          text = e;
+        }
+      }),
     beforeSure: async (done, { options, closeLoading }) => {
       let res;
+      options.props.formInline.content = text;
       try {
         res = await updateCommunity(options.props.formInline);
       } catch (e) {
@@ -278,6 +289,20 @@ const showContent = (id, content) => {
             placeholder="请输入类型名称"
           />
         </el-form-item>
+        <el-form-item label="标题" prop="title">
+          <el-input
+            v-model="searchForm.title"
+            clearable
+            placeholder="请输入标题"
+          />
+        </el-form-item>
+        <el-form-item label="内容" prop="content">
+          <el-input
+            v-model="searchForm.content"
+            clearable
+            placeholder="请输入标题"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button
             :icon="useRenderIcon('ri:search-line')"
@@ -291,7 +316,7 @@ const showContent = (id, content) => {
         </el-form-item>
       </el-form>
     </div>
-    <PureTableBar :columns="columns" title="用户管理" @refresh="loadData">
+    <PureTableBar :columns="columns" title="帖子管理" @refresh="loadData">
       <template v-slot="{ size, dynamicColumns }">
         <div
           v-if="selectedNum > 0"
@@ -341,7 +366,7 @@ const showContent = (id, content) => {
               fit="cover"
             />
           </template>
-          <template #postTypeStatus="{ row }">
+          <template #status="{ row }">
             <el-tag :type="row.status == 1 ? 'success' : 'danger'">
               {{ row.status == 1 ? "显示" : "隐藏" }}
             </el-tag>
