@@ -9,6 +9,10 @@ export const getUserList = (params?: object) => {
 export const getAllUser = () => {
   return http.request<any>("get", "/api/bizUser/list");
 };
+/** 获取所有VIP */
+export const getAllVip = () => {
+  return http.request<any>("get", "/api/bizUser/getVipList");
+};
 /** 新增用户用户 */
 export const addUser = (data?: object) => {
   return http.request<any>("post", "/api/bizUser/add", { data });
@@ -17,6 +21,10 @@ export const addUser = (data?: object) => {
 /** 更新用户用户 */
 export const updateUser = (data?: object) => {
   return http.request<any>("put", "/api/bizUser/update", { data });
+};
+/** 更新用户用户会员 */
+export const updateUserVip = (data?: object) => {
+  return http.request<any>("put", "/api/bizUser/updateUserVip", { data });
 };
 /** 删除用户 */
 export const deleteUser = (data?: object) => {

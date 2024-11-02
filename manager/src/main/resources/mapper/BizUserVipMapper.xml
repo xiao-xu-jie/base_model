@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xujie.manager.infra.mapper.BizUserVipMapper">
-  <resultMap id="BaseResultMap" type="com.xujie.manager.infra.DO.BizUserVip">
-    <!--@mbg.generated-->
-    <!--@Table biz_user_vip-->
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="vip_id" jdbcType="BIGINT" property="vipId" />
-    <result column="vip_name" jdbcType="VARCHAR" property="vipName" />
-    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
-    <result column="is_expire" jdbcType="INTEGER" property="isExpire" />
-    <result column="post_count" jdbcType="INTEGER" property="postCount" />
-    <result column="notify_count" jdbcType="INTEGER" property="notifyCount" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    user_id, vip_id, vip_name, expire_time, is_expire, post_count, notify_count
-  </sql>
+    <resultMap id="BaseResultMap" type="com.xujie.manager.infra.DO.BizUserVip">
+        <!--@mbg.generated-->
+        <!--@Table biz_user_vip-->
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="vip_id" jdbcType="BIGINT" property="vipId"/>
+        <result column="vip_name" jdbcType="VARCHAR" property="vipName"/>
+        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
+        <result column="is_expire" jdbcType="INTEGER" property="isExpire"/>
+        <result column="post_count" jdbcType="INTEGER" property="postCount"/>
+        <result column="notify_count" jdbcType="INTEGER" property="notifyCount"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        user_id, vip_id, vip_name, expire_time, is_expire, post_count, notify_count
+    </sql>
+
+    <select id="getUserVipList" resultMap="BaseResultMap">
+        select biz_user_vip.*,biz_vip.vip_icon as vipIcon
+        from
+        biz_user_vip
+        left join biz_vip on biz_user_vip.vip_id = biz_vip.id
+        ${ew.customSqlSegment}
+    </select>
 </mapper>

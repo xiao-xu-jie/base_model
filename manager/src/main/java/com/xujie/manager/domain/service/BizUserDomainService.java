@@ -9,4 +9,6 @@ import com.xujie.manager.domain.BO.BizUserBO;
  * @author xujie
  * @since 2024-10-28 09:14:51
  */
-public interface BizUserDomainService extends BaseDomainService<BizUserBO> {}
+public interface BizUserDomainService extends BaseDomainService<BizUserBO> {
+  void updateUserVip(Long id, Long vipId);
+}

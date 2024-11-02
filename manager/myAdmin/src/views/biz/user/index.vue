@@ -2,11 +2,18 @@
 import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
-import { addUser, deleteUser, getUserList, updateUser } from "@/api/biz/user";
+import {
+  addUser,
+  deleteUser,
+  getUserList,
+  updateUser,
+  updateUserVip
+} from "@/api/biz/user";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
 import forms from "./form.vue";
+import vipForm from "./vipForm.vue";
 import AddFill from "@iconify-icons/ri/add-fill";
 
 const formRef = ref();
@@ -105,6 +112,44 @@ function onFullscreenIconClick(title, item) {
   });
 }
 
+function onFullscreenIconClick2(title, item) {
+  addDialog({
+    title: `${title}`,
+    fullscreenIcon: true,
+    sureBtnLoading: true,
+    props: {
+      formInline: {
+        id: item?.id ?? "",
+        vipId: item?.vipId ?? ""
+      }
+    },
+    fullscreenCallBack: ({ options, index }) =>
+      message(options.fullscreen ? "全屏" : "非全屏", { type: "success" }),
+    contentRenderer: () =>
+      createVNode(vipForm, {
+        formInline: item
+      }),
+    beforeSure: async (done, { options, closeLoading }) => {
+      let res;
+      try {
+        res = await updateUserVip(options.props.formInline);
+      } catch (e) {
+        console.log("e===>>>: ", e);
+      } finally {
+        closeLoading();
+      }
+      if (res.success) {
+        message(res.message, { type: "success" });
+        loadData(1);
+        done();
+      } else {
+        message(res.message, { type: "error" });
+      }
+      // closeLoading() // 关闭确定按钮动画，不关闭弹框
+      // done() // 关闭确定按钮动画并关闭弹框
+    }
+  });
+}
 const resetForm = () => {
   if (!formRef.value) return;
   formRef.value.resetFields();
@@ -169,6 +214,11 @@ const columns: TableColumnList = [
   {
     label: "地址",
     prop: "userLocation"
+  },
+  {
+    label: "用户会员",
+    prop: "vipName",
+    slot: "userVip"
   },
   {
     label: "认证状态",
@@ -333,6 +383,14 @@ function handleClick(row) {
               {{ row.userStatus == 1 ? "正常" : "禁用" }}
             </el-tag>
           </template>
+          <template #userVip="{ row }">
+            <el-tag
+              style="color: #ffffff"
+              :color="!!row?.vipName ? row.vipIcon : '#bdc3c7'"
+            >
+              {{ !!row?.vipName ? row?.vipName : "无会员" }}
+            </el-tag>
+          </template>
           <template #certificationStatus="{ row }">
             <el-tag v-if="!row?.certificationStatus" type="info">
               未认证
@@ -356,14 +414,14 @@ function handleClick(row) {
             >
               编辑
             </el-button>
-            <el-popconfirm
-              title="是否确认删除用户?"
-              @confirm="onbatchDel(row.id)"
+            <el-button
+              link
+              type="success"
+              size="small"
+              @click="onFullscreenIconClick2('设置会员', row)"
             >
-              <template #reference>
-                <el-button type="danger" text class="mr-1"> 删除</el-button>
-              </template>
-            </el-popconfirm>
+              设置会员
+            </el-button>
           </template>
         </pure-table>
       </template>

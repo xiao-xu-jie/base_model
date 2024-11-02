@@ -34,6 +34,15 @@ public class BizUserQueryResDTO extends BaseDTO {
   /** 用户名 */
   private String nickName;
 
+  /** 会员 */
+  private String vipName;
+
+  /** 会员ID */
+  private Long vipId;
+
+  /** 会员图标 */
+  private String vipIcon;
+
   /** 头像 */
   private String userAvatar;
 

@@ -1,15 +1,16 @@
 package com.xujie.manager.domain.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.manager.common.exception.CustomException;
 import com.xujie.manager.domain.BO.BizUserBO;
 import com.xujie.manager.domain.convert.BizUserConvert;
 import com.xujie.manager.domain.service.BizUserDomainService;
-import com.xujie.manager.infra.DO.BizCertification;
-import com.xujie.manager.infra.DO.BizEggQuotation;
-import com.xujie.manager.infra.DO.BizUser;
+import com.xujie.manager.infra.DO.*;
+import com.xujie.manager.infra.mapper.BizVipMapper;
 import com.xujie.manager.infra.service.BizQuotationService;
 import com.xujie.manager.infra.service.BizUserCertService;
 import com.xujie.manager.infra.service.BizUserService;
+import com.xujie.manager.infra.service.BizUserVipService;
 import jakarta.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.DateTime;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,8 @@ public class BizUserDomainServiceImpl implements BizUserDomainService {
   @Resource private BizUserService bizUserService;
   @Resource private BizUserCertService bizUserCertService;
   @Resource private BizQuotationService bizQuotationService;
+  @Resource private BizUserVipService bizUserVipService;
+  @Resource private BizVipMapper bizVipMapper;
   @Resource private BizUserConvert bizUserConvert;
 
   @Resource(name = "asyncExecutor")
@@ -93,6 +98,31 @@ public class BizUserDomainServiceImpl implements BizUserDomainService {
               });
           return records;
         });
+    // 异步查询用户会员信息
+    pageListFuture.thenApply(
+        bizUserBOPage -> {
+          List<BizUserBO> records = bizUserBOPage.getRecords();
+          if (records.isEmpty()) {
+            return null;
+          }
+          List<Long> userIds = records.stream().map(BizUserBO::getId).toList();
+          // 获取会员信息
+          List<BizUserVip> listByUserIds = bizUserVipService.getListByUserIds(userIds);
+          // 设置会员信息
+          records.forEach(
+              item -> {
+                listByUserIds.stream()
+                    .filter(vip -> vip.getUserId().equals(item.getId()))
+                    .findFirst()
+                    .ifPresent(
+                        vip -> {
+                          item.setVipName(vip.getVipName());
+                          item.setVipIcon(vip.getVipIcon());
+                          item.setVipId(vip.getVipId());
+                        });
+              });
+          return bizUserBOPage;
+        });
     CompletableFuture.allOf(pageCompletableFuture, pageListFuture).join();
     return pageListFuture.get(2, TimeUnit.SECONDS);
   }
@@ -129,5 +159,28 @@ public class BizUserDomainServiceImpl implements BizUserDomainService {
   @Override
   public void update(BizUserBO bizUserBO) {
     bizUserService.updateOne(bizUserBO.getId(), bizUserConvert.convertBO2DO(bizUserBO));
+  }
+
+  @Override
+  public void updateUserVip(Long id, Long vipId) {
+    // 删除用户当前会员信息
+    bizUserVipService.deleteUserVip(id);
+    if (vipId == -1) {
+      return;
+    }
+    // 添加用户新会员信息
+    BizVip bizVip = bizVipMapper.selectById(vipId);
+    if (ObjectUtils.isEmpty(bizVip)) {
+      throw new CustomException("会员信息不存在");
+    }
+    BizUserVip userVip = new BizUserVip();
+    userVip.setUserId(id);
+    userVip.setVipId(vipId);
+    userVip.setNotifyCount(bizVip.getVipNotifyCount());
+    userVip.setPostCount(bizVip.getVipPostCount());
+    userVip.setVipName(bizVip.getVipName());
+    userVip.setVipIcon(bizVip.getVipIcon());
+    userVip.setExpireTime(DateTime.now().plusDays(30).toDate());
+    bizUserVipService.addOne(userVip);
   }
 }

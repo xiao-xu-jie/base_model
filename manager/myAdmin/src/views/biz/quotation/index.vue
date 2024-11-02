@@ -116,7 +116,8 @@ const searchForm = ref({
   eggTypeName: null,
   quotationLocation: null,
   nickName: null,
-  dataDate: null
+  dataDate: null,
+  phone: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
@@ -285,6 +286,13 @@ const disabledDate = (time: Date) => {
             v-model="searchForm.nickName"
             clearable
             placeholder="请输入用户名称"
+          />
+        </el-form-item>
+        <el-form-item label="用户手机号" prop="phone">
+          <el-input
+            v-model="searchForm.phone"
+            clearable
+            placeholder="请输入用户手机号"
           />
         </el-form-item>
         <el-form-item label="地区" prop="quotationLocation">

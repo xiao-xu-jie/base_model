@@ -34,6 +34,15 @@ public class BizUserBO extends BaseBO {
   /** 用户名 */
   private String nickName;
 
+  /** 会员 */
+  private String vipName;
+
+  /** 会员图标 */
+  private String vipIcon;
+
+  /** 会员ID */
+  private Long vipId;
+
   /** 头像 */
   private String userAvatar;
 
