@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, markRaw } from "vue";
+import { ref, markRaw, onMounted } from "vue";
 import ReCol from "@/components/ReCol";
 import { useDark, randomGradient } from "./utils";
 import WelcomeTable from "./components/table/index.vue";
@@ -8,11 +8,13 @@ import { useRenderFlicker } from "@/components/ReFlicker";
 import { ChartBar, ChartLine, ChartRound } from "./components/charts";
 import Segmented, { type OptionsType } from "@/components/ReSegmented";
 import { chartData, barChartData, progressData, latestNewsData } from "./data";
+import { getIndexData } from "@/api/welcome";
 
 defineOptions({
   name: "Welcome"
 });
 
+const headData = ref(chartData);
 const { isDark } = useDark();
 
 let curWeek = ref(1); // 0上周、1本周
@@ -24,13 +26,29 @@ const optionsBasis: Array<OptionsType> = [
     label: "本周"
   }
 ];
+onMounted(() => {
+  console.log("mounted");
+  getIndexData().then(res => {
+    console.log("res===>>>: ", res);
+    headData.value[0].data = res.data.userTotal;
+    headData.value[0].value = res.data.userTotal[6];
+    let percent =
+      (res.data.userTotal[6] - res.data.userTotal[5]) /
+      (res.data.userTotal[5] == 0
+        ? res.data.userTotal[6]
+        : res.data.userTotal[5]);
+    headData.value[0].percent =
+      percent > 0 ? `+${percent * 100}%` : `${percent * 100}%`;
+    console.log("headData===>>>: ", headData.value[0]);
+  });
+});
 </script>
 
 <template>
   <div>
     <el-row :gutter="24" justify="space-around">
       <re-col
-        v-for="(item, index) in chartData"
+        v-for="(item, index) in headData"
         :key="index"
         v-motion
         class="mb-[18px]"

@@ -149,7 +149,7 @@ const columns: TableColumnList = [
     width: 90
   },
   {
-    label: "认证名称",
+    label: "用户名称",
     prop: "nickName",
     width: 130
   },
@@ -234,11 +234,11 @@ function handleClick(row) {
         class="search-form"
         :model="searchForm"
       >
-        <el-form-item label="认证名" prop="nickName">
+        <el-form-item label="用户名" prop="nickName">
           <el-input
             v-model="searchForm.nickName"
             clearable
-            placeholder="请输入认证名"
+            placeholder="请输入用户名"
           />
         </el-form-item>
         <el-form-item label="手机号" prop="phone">

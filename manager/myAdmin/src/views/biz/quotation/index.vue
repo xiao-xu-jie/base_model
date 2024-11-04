@@ -71,10 +71,11 @@ function onFullscreenIconClick(title, item) {
     props: {
       formInline: {
         id: item?.id ?? "",
-        title: item?.title ?? "",
-        postDesc: item?.postDesc ?? "",
-        coverImg: item?.coverImg ?? "",
-        status: item?.status ?? 1
+        quotationMaxPrice: item?.quotationMaxPrice ?? "",
+        quotationAvgPrice: item?.quotationAvgPrice ?? "",
+        quotationMinPrice: item?.quotationMinPrice ?? "",
+        quotationStatus: item?.quotationStatus ?? 1,
+        dataDate: item?.dataDate ?? ""
       }
     },
     fullscreenCallBack: ({ options, index }) =>

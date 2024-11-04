@@ -10,10 +10,11 @@ import { ElMessage } from "element-plus";
 export interface FormProps {
   formInline: {
     id: string;
-    title: string;
-    postDesc: string;
-    coverImg: string;
-    status: string;
+    quotationMaxPrice: number;
+    quotationAvgPrice: number;
+    quotationMinPrice: number;
+    quotationStatus: string;
+    dataDate: string;
   };
 }
 
@@ -23,10 +24,11 @@ const loading = ref(false);
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     id: "",
-    title: "",
-    postDesc: "",
-    coverImg: "",
-    status: "1"
+    quotationMaxPrice: 0,
+    quotationAvgPrice: 0,
+    quotationMinPrice: 0,
+    quotationStatus: "1",
+    dataDate: ""
   })
 });
 
@@ -42,10 +44,30 @@ const newFormInline = ref(props.formInline);
 
 const roles = ref([]);
 const header = { Authorization: "Bearer " + getToken().accessToken };
-const handleAvatarSuccess = (res: any) => {
-  console.log("res===>>>: ", res);
-  ElMessage.success("上传成功");
-  newFormInline.value.coverImg = res.data;
+const shortcuts = [
+  {
+    text: "今天",
+    value: new Date()
+  },
+  {
+    text: "昨天",
+    value: () => {
+      const date = new Date();
+      date.setTime(date.getTime() - 3600 * 1000 * 24);
+      return date;
+    }
+  },
+  {
+    text: "一周前",
+    value: () => {
+      const date = new Date();
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+      return date;
+    }
+  }
+];
+const disabledDate = (time: Date) => {
+  return time.getTime() > Date.now();
 };
 </script>
 
@@ -60,42 +82,46 @@ const handleAvatarSuccess = (res: any) => {
     <el-form-item v-if="newFormInline.id" label="ID">
       <el-input v-model="newFormInline.id" disabled class="!w-[220px]" />
     </el-form-item>
-    <el-form-item label="封面图片">
-      <el-upload
-        class="avatar-uploader"
-        action="/api/common/upload"
-        :show-file-list="false"
-        :headers="header"
-        :on-success="handleAvatarSuccess"
-      >
-        <img
-          v-if="newFormInline.coverImg"
-          :src="newFormInline.coverImg"
-          class="avatar"
-        />
-        <el-icon v-else class="avatar-uploader-icon">
-          <Plus />
-        </el-icon>
-      </el-upload>
-    </el-form-item>
-    <el-form-item label="标题">
+    <el-form-item label="最高价">
       <el-input
-        v-model="newFormInline.title"
+        v-model.number="newFormInline.quotationMaxPrice"
         class="!w-[220px]"
-        placeholder="请输入标题"
+        placeholder="请输入最高价"
       />
     </el-form-item>
 
-    <el-form-item label="描述">
+    <el-form-item label="参考价">
       <el-input
-        v-model="newFormInline.postDesc"
+        v-model.number="newFormInline.quotationAvgPrice"
         class="!w-[220px]"
-        placeholder="请输入描述"
+        placeholder="请输入参考价"
+      />
+    </el-form-item>
+    <el-form-item label="最低价">
+      <el-input
+        v-model.number="newFormInline.quotationMinPrice"
+        class="!w-[220px]"
+        placeholder="请输入最低价"
+      />
+    </el-form-item>
+    <el-form-item label="日期" prop="dataDate">
+      <el-date-picker
+        v-model="newFormInline.dataDate"
+        type="date"
+        class="!w-[160px]"
+        placeholder="请选择"
+        :disabled-date="disabledDate"
+        :shortcuts="shortcuts"
+        format="YYYY-MM-DD"
+        value-format="YYYY-MM-DD"
+        :popper-options="{
+          placement: 'bottom-start'
+        }"
       />
     </el-form-item>
     <el-form-item label="状态">
       <el-select
-        v-model="newFormInline.status"
+        v-model="newFormInline.quotationStatus"
         class="!w-[220px]"
         placeholder="请选择"
       >

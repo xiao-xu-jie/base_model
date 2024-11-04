@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  * @author Xujie
  * @since 2024/9/13 18:00
- **/
+ */
 @Slf4j
 @MapperScan("com.xujie.manager.infra.mapper")
 @EnableCaching
@@ -22,9 +22,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAspectJAutoProxy
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class ManagerApplication {
-    public static void main(String[] args) {
-        log.info("ManagerApplication start...");
-        SpringApplication.run(ManagerApplication.class, args);
-        log.info("ManagerApplication start success...");
-    }
+  public static void main(String[] args) {
+    log.info("ManagerApplication start...");
+    SpringApplication.run(ManagerApplication.class, args);
+    log.info("ManagerApplication start success...");
+  }
 }
