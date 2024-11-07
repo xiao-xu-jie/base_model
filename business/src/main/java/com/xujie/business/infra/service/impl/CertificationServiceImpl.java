@@ -1,5 +1,6 @@
 package com.xujie.business.infra.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xujie.business.infra.DO.BizCertification;
 import com.xujie.business.infra.mapper.BizCertificationMapper;
 import com.xujie.business.infra.service.CertificationService;
@@ -26,7 +27,9 @@ public class CertificationServiceImpl implements CertificationService {
    */
   @Override
   public BizCertification getCertificationByEntity(BizCertification certification) {
-    return certificationMapper.getByAll(certification).stream().findFirst().orElse(null);
+    LambdaQueryWrapper<BizCertification> queryWrapper = new LambdaQueryWrapper<>();
+    queryWrapper.eq(BizCertification::getUserId, certification.getUserId());
+    return certificationMapper.selectOne(queryWrapper);
   }
 
   @Override

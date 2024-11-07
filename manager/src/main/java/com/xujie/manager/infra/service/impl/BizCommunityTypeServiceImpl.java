@@ -1,9 +1,13 @@
 package com.xujie.manager.infra.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xujie.manager.common.exception.CustomException;
 import com.xujie.manager.common.utils.QueryWrapperUtil;
+import com.xujie.manager.infra.DO.BizCommunityPost;
 import com.xujie.manager.infra.DO.BizCommunityPostType;
+import com.xujie.manager.infra.mapper.BizCommunityPostMapper;
 import com.xujie.manager.infra.mapper.BizCommunityPostTypeMapper;
 import com.xujie.manager.infra.service.BizCommunityTypeService;
 import jakarta.annotation.Resource;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BizCommunityTypeServiceImpl implements BizCommunityTypeService {
   @Resource private BizCommunityPostTypeMapper bizCommunityPostTypeMapper;
+  @Resource private BizCommunityPostMapper bizCommunityPostMapper;
 
   @Override
   public Long addOne(BizCommunityPostType baseDO) {
@@ -40,6 +45,11 @@ public class BizCommunityTypeServiceImpl implements BizCommunityTypeService {
 
   @Override
   public boolean deleteOne(Long id) {
+    LambdaQueryWrapper<BizCommunityPost> wrapper = new LambdaQueryWrapper<>();
+    wrapper.eq(BizCommunityPost::getPostTypeId, id);
+    if (bizCommunityPostMapper.selectCount(wrapper) > 0) {
+      throw new CustomException("该分类下有帖子，无法删除");
+    }
     return bizCommunityPostTypeMapper.deleteById(id) > 0;
   }
 
@@ -59,6 +69,11 @@ public class BizCommunityTypeServiceImpl implements BizCommunityTypeService {
 
   @Override
   public boolean deleteBatch(Long[] ids) {
+    LambdaQueryWrapper<BizCommunityPost> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(BizCommunityPost::getPostTypeId, ids);
+    if (bizCommunityPostMapper.selectCount(wrapper) > 0) {
+      throw new CustomException("该分类下有帖子，无法删除");
+    }
     return bizCommunityPostTypeMapper.deleteByIds(Arrays.asList(ids)) > 0;
   }
 }

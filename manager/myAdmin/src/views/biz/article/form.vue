@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { getUserRoles } from "@/api/user";
 import { Plus } from "@element-plus/icons-vue";
 import { getToken } from "@/utils/auth";
 import { getAllRole } from "@/api/roles";
-import { getAllVip } from "@/api/biz/user";
+import { ElMessage } from "element-plus";
 
 // 声明 props 类型
 export interface FormProps {
   formInline: {
     id: string;
-    vipId: string;
+    title: string;
+    postDesc: string;
+    coverImg: string;
+    status: string;
   };
 }
 
@@ -20,15 +23,15 @@ const loading = ref(false);
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     id: "",
-    vipId: ""
+    title: "",
+    postDesc: "",
+    coverImg: "",
+    status: "1"
   })
 });
-const vipList = ref([]);
+
 onMounted(() => {
-  getAllVip().then(res => {
-    vipList.value = [{ id: "-1", vipName: "无会员" }, ...res.data];
-    onChangeVip(props.formInline.vipId);
-  });
+  console.log("mounted");
 });
 // vue 规定所有的 prop 都遵循着单向绑定原则，直接修改 prop 时，Vue 会抛出警告。此处的写法仅仅是为了消除警告。
 // 因为对一个 reactive 对象执行 ref，返回 Ref 对象的 value 值仍为传入的 reactive 对象，
@@ -39,15 +42,10 @@ const newFormInline = ref(props.formInline);
 
 const roles = ref([]);
 const header = { Authorization: "Bearer " + getToken().accessToken };
-const vipNotifyCount = ref(0);
-const onChangeVip = e => {
-  if (e == -1) {
-    vipNotifyCount.value = 0;
-    return;
-  }
-  const vip = vipList.value.find(item => item.id === e);
-  console.log("vip===>>>: ", vip);
-  vipNotifyCount.value = vip.vipNotifyCount;
+const handleAvatarSuccess = (res: any) => {
+  console.log("res===>>>: ", res);
+  ElMessage.success("上传成功");
+  newFormInline.value.coverImg = res.data;
 };
 </script>
 
@@ -62,23 +60,48 @@ const onChangeVip = e => {
     <el-form-item v-if="newFormInline.id" label="ID">
       <el-input v-model="newFormInline.id" disabled class="!w-[220px]" />
     </el-form-item>
-    <el-form-item label="用户会员">
+    <el-form-item label="封面图片">
+      <el-upload
+        class="avatar-uploader"
+        action="/api/common/upload"
+        :show-file-list="false"
+        :headers="header"
+        :on-success="handleAvatarSuccess"
+      >
+        <img
+          v-if="newFormInline.coverImg"
+          :src="newFormInline.coverImg"
+          class="avatar"
+        />
+        <el-icon v-else class="avatar-uploader-icon">
+          <Plus />
+        </el-icon>
+      </el-upload>
+    </el-form-item>
+    <el-form-item label="标题">
+      <el-input
+        v-model="newFormInline.title"
+        class="!w-[220px]"
+        placeholder="请输入标题"
+      />
+    </el-form-item>
+
+    <el-form-item label="描述">
+      <el-input
+        v-model="newFormInline.postDesc"
+        class="!w-[220px]"
+        placeholder="请输入描述"
+      />
+    </el-form-item>
+    <el-form-item label="状态">
       <el-select
-        v-model="newFormInline.vipId"
+        v-model="newFormInline.status"
         class="!w-[220px]"
         placeholder="请选择"
-        @change="onChangeVip"
       >
-        <el-option
-          v-for="item in vipList"
-          :key="item.id"
-          :label="item.vipName"
-          :value="item.id"
-        />
+        <el-option label="显示" :value="1" />
+        <el-option label="隐藏" :value="0" />
       </el-select>
-    </el-form-item>
-    <el-form-item v-if="newFormInline.vipId" label="订阅通知次数">
-      <el-input v-model="vipNotifyCount" disabled class="!w-[220px]" />
     </el-form-item>
   </el-form>
 </template>
