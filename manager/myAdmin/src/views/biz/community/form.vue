@@ -89,6 +89,7 @@ const handleAvatarSuccess = (res: any) => {
     <el-form-item label="描述">
       <el-input
         v-model="newFormInline.postDesc"
+        type="textarea"
         class="!w-[220px]"
         placeholder="请输入描述"
       />

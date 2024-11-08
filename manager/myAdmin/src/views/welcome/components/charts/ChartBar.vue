@@ -10,6 +10,10 @@ const props = defineProps({
   questionData: {
     type: Array as PropType<Array<number>>,
     default: () => []
+  },
+  dateList: {
+    type: Array as PropType<Array<string>>,
+    default: () => []
   }
 });
 
@@ -41,7 +45,7 @@ watch(
         right: 0
       },
       legend: {
-        data: ["需求人数", "提问数量"],
+        data: ["销售价", "收购价"],
         textStyle: {
           color: "#606266",
           fontSize: "0.875rem"
@@ -51,7 +55,7 @@ watch(
       xAxis: [
         {
           type: "category",
-          data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+          data: props.dateList,
           axisLabel: {
             fontSize: "0.875rem"
           },
@@ -74,24 +78,24 @@ watch(
       ],
       series: [
         {
-          name: "需求人数",
-          type: "bar",
-          barWidth: 10,
+          name: "销售价",
+          type: "line",
           itemStyle: {
             color: "#41b6ff",
             borderRadius: [10, 10, 0, 0]
           },
-          data: props.requireData
+          data: props.requireData,
+          connectNulls: true
         },
         {
-          name: "提问数量",
-          type: "bar",
-          barWidth: 10,
+          name: "收购价",
+          type: "line",
           itemStyle: {
             color: "#e86033ce",
             borderRadius: [10, 10, 0, 0]
           },
-          data: props.questionData
+          data: props.questionData,
+          connectNulls: true
         }
       ]
     });

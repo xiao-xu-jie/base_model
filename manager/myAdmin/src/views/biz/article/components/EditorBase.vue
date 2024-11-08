@@ -14,7 +14,7 @@ const emit = defineEmits(["change"]);
 const props = defineProps({
   content: {
     type: String,
-    default: "111"
+    default: "默认内容"
   },
   id: {
     type: String,

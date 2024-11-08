@@ -234,6 +234,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layout>JAR</layout>
+                    <mainClass>com.xujie.business.businessApplication</mainClass>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

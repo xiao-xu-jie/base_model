@@ -1,4 +1,4 @@
-package com.xujie.manager.controller;
+package com.xujie.manager.controller.admin;
 
 import com.xujie.manager.DTO.req.BizSliderAddReqDTO;
 import com.xujie.manager.DTO.req.BizSliderQueryReqDTO;

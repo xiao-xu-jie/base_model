@@ -3,11 +3,11 @@ import { createVNode, onMounted, ref } from "vue";
 import { message } from "@/utils/message";
 import { addDialog } from "@/components/ReDialog";
 import {
-  addCommunity,
-  deleteCommunity,
-  getCommunityList,
-  updateCommunity
-} from "@/api/biz/community";
+  addArticle,
+  deleteArticle,
+  getArticleList,
+  updateArticle
+} from "@/api/biz/article";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -38,7 +38,7 @@ async function onbatchDel(id = null) {
     ids = [id];
   }
   console.log("curSelected===>>>: ", ids[0]);
-  const res = await deleteCommunity(ids);
+  const res = await deleteArticle(ids);
   if (res.success) {
     message(res.message, { type: "success" });
     tableRef.value.getTableRef().clearSelection();
@@ -67,16 +67,18 @@ const pagination = ref({
 
 function onFullscreenIconClick(title, item) {
   addDialog({
-    title: `${title}帖子`,
+    title: `${title}公告`,
     fullscreenIcon: true,
     sureBtnLoading: true,
     props: {
       formInline: {
         id: item?.id ?? "",
-        title: item?.title ?? "",
-        postDesc: item?.postDesc ?? "",
-        coverImg: item?.coverImg ?? "",
-        status: item?.status ?? 1
+        articleTitle: item?.articleTitle ?? "",
+        articleDesc: item?.articleDesc ?? "",
+        articleShowImg: item?.articleShowImg ?? "",
+        articleSource: item?.articleSource ?? "",
+        articleExtra: item?.articleExtra ?? "",
+        isShow: item?.isShow ?? 1
       }
     },
     fullscreenCallBack: ({ options, index }) =>
@@ -90,8 +92,8 @@ function onFullscreenIconClick(title, item) {
       try {
         res =
           title === "编辑"
-            ? await updateCommunity(options.props.formInline)
-            : await addCommunity(options.props.formInline);
+            ? await updateArticle(options.props.formInline)
+            : await addArticle(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -115,15 +117,15 @@ const resetForm = () => {
   formRef.value.resetFields();
 };
 const searchForm = ref({
-  postTypeName: null,
-  title: null,
-  content: null
+  articleTitle: null,
+  articleDesc: null,
+  articleSource: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
   let res;
   try {
-    res = await getCommunityList({
+    res = await getArticleList({
       ...searchForm.value,
       pageNum: flag == 1 ? pagination.value.currentPage : 1,
       pageSize: pagination.value.pageSize
@@ -158,33 +160,36 @@ const columns: TableColumnList = [
     width: 90
   },
   {
-    label: "分类名称",
-    prop: "postTypeName",
-    width: 130
-  },
-  {
     label: "标题",
-    prop: "title"
+    prop: "articleTitle"
   },
   {
     label: "描述信息",
-    prop: "postDesc",
-    slot: "postDesc"
+    prop: "articleDesc",
+    slot: "articleDesc"
   },
   {
     label: "内容",
-    prop: "content",
-    slot: "content"
+    prop: "articleContent",
+    slot: "articleContent"
   },
   {
     label: "封面图片",
-    prop: "coverImg",
-    slot: "coverImg"
+    prop: "articleShowImg",
+    slot: "articleShowImg"
+  },
+  {
+    label: "发布人",
+    prop: "articleSource"
+  },
+  {
+    label: "附加信息",
+    prop: "articleExtra"
   },
   {
     label: "显示状态",
-    prop: "status",
-    slot: "status"
+    prop: "isShow",
+    slot: "isShow"
   },
   {
     label: "创建时间",
@@ -251,9 +256,9 @@ const showContent = (id, content) => {
       }),
     beforeSure: async (done, { options, closeLoading }) => {
       let res;
-      options.props.formInline.content = text;
+      options.props.formInline.articleContent = text;
       try {
-        res = await updateCommunity(options.props.formInline);
+        res = await updateArticle(options.props.formInline);
       } catch (e) {
         console.log("e===>>>: ", e);
       } finally {
@@ -282,25 +287,25 @@ const showContent = (id, content) => {
         class="search-form"
         :model="searchForm"
       >
-        <el-form-item label="类型名称" prop="postTypeName">
+        <el-form-item label="发布人员" prop="articleSource">
           <el-input
-            v-model="searchForm.postTypeName"
+            v-model="searchForm.articleSource"
             clearable
-            placeholder="请输入类型名称"
+            placeholder="请输入发布人员"
           />
         </el-form-item>
-        <el-form-item label="标题" prop="title">
+        <el-form-item label="标题" prop="articleTitle">
           <el-input
-            v-model="searchForm.title"
+            v-model="searchForm.articleTitle"
             clearable
             placeholder="请输入标题"
           />
         </el-form-item>
-        <el-form-item label="内容" prop="content">
+        <el-form-item label="描述" prop="articleDesc">
           <el-input
-            v-model="searchForm.content"
+            v-model="searchForm.articleDesc"
             clearable
-            placeholder="请输入标题"
+            placeholder="请输入描述"
           />
         </el-form-item>
         <el-form-item>
@@ -316,7 +321,16 @@ const showContent = (id, content) => {
         </el-form-item>
       </el-form>
     </div>
-    <PureTableBar :columns="columns" title="帖子管理" @refresh="loadData">
+    <PureTableBar :columns="columns" title="公告管理" @refresh="loadData">
+      <template #buttons>
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="onFullscreenIconClick('新增', {})"
+        >
+          新增公告
+        </el-button>
+      </template>
       <template v-slot="{ size, dynamicColumns }">
         <div
           v-if="selectedNum > 0"
@@ -359,26 +373,26 @@ const showContent = (id, content) => {
           @page-size-change="onSizeChange"
           @page-current-change="onCurrentChange"
         >
-          <template #coverImg="{ row }">
+          <template #articleShowImg="{ row }">
             <el-image
               style="width: 50px; height: 50px"
-              :src="row.coverImg"
+              :src="row.articleShowImg"
               fit="cover"
             />
           </template>
-          <template #status="{ row }">
-            <el-tag :type="row.status == 1 ? 'success' : 'danger'">
-              {{ row.status == 1 ? "显示" : "隐藏" }}
+          <template #isShow="{ row }">
+            <el-tag :type="row.isShow == 1 ? 'success' : 'danger'">
+              {{ row.isShow == 1 ? "显示" : "隐藏" }}
             </el-tag>
           </template>
-          <template #postDesc="{ row }">
-            {{ !!row?.postDesc ? row.postDesc : "暂无描述" }}
+          <template #articleDesc="{ row }">
+            {{ !!row?.articleDesc ? row.articleDesc : "暂无描述" }}
           </template>
-          <template #content="{ row }">
+          <template #articleContent="{ row }">
             <el-button
               type="text"
               size="small"
-              @click="showContent(row.id, row.content)"
+              @click="showContent(row.id, row.articleContent)"
               >查看详情
             </el-button>
           </template>

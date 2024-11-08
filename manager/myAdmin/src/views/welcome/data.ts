@@ -13,7 +13,7 @@ const chartData = [
     color: "#41b6ff",
     duration: 2200,
     name: "用户人数",
-    value: 36000,
+    value: 0,
     percent: "+88%",
     data: [] // 平滑折线图数据
   },
@@ -23,8 +23,8 @@ const chartData = [
     color: "#e85f33",
     duration: 1600,
     name: "报价数量",
-    value: 16580,
-    percent: "+70%",
+    value: 0,
+    percent: "",
     data: [2216, 1148, 1255, 788, 4821, 1973, 4379]
   },
   {
@@ -35,14 +35,14 @@ const chartData = [
     name: "待审核认证数量",
     value: 16499,
     percent: "",
-    data: [null]
+    data: [2216, 1148, 1255, 788, 4821, 1973, 4379]
   },
   {
     icon: Smile,
     bgColor: "#f6f4fe",
     color: "#7846e5",
     duration: 100,
-    name: "用户满意度",
+    name: "今日浏览数",
     value: 100,
     percent: "+100%",
     data: []

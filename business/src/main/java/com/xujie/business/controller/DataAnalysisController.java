@@ -1,8 +1,10 @@
 package com.xujie.business.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
+import cn.hutool.json.JSONUtil;
 import com.xujie.business.DTO.res.quotation.BizAreaUpDownDataResDTO;
 import com.xujie.business.DTO.res.quotation.BizEggWeekDataResDTO;
+import com.xujie.business.application.redis.utils.RedisUtils;
 import com.xujie.business.common.entity.Result;
 import com.xujie.business.common.utils.DateUtil;
 import com.xujie.business.convert.QuotationConvert;
@@ -39,6 +41,7 @@ public class DataAnalysisController {
     BizEggWeekDataResDTO bizEggWeekDataResDTO =
         quotationConvert.convertWeekDataBO2DTO(dataAnalysisDomainService.getWeekData(typeId));
     bizEggWeekDataResDTO.setDateList(DateUtil.getWeekDateList());
+    RedisUtils.setCacheObject("weekData", JSONUtil.toJsonStr(bizEggWeekDataResDTO));
     return Result.ok(bizEggWeekDataResDTO);
   }
 

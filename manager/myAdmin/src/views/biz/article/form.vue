@@ -10,10 +10,12 @@ import { ElMessage } from "element-plus";
 export interface FormProps {
   formInline: {
     id: string;
-    title: string;
-    postDesc: string;
-    coverImg: string;
-    status: string;
+    articleTitle: string;
+    articleDesc: string;
+    articleShowImg: string;
+    articleSource: string;
+    articleExtra: string;
+    isShow: string;
   };
 }
 
@@ -23,10 +25,12 @@ const loading = ref(false);
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     id: "",
-    title: "",
-    postDesc: "",
-    coverImg: "",
-    status: "1"
+    articleTitle: "",
+    articleDesc: "",
+    articleShowImg: "",
+    articleSource: "",
+    articleExtra: "",
+    isShow: "1"
   })
 });
 
@@ -45,7 +49,7 @@ const header = { Authorization: "Bearer " + getToken().accessToken };
 const handleAvatarSuccess = (res: any) => {
   console.log("res===>>>: ", res);
   ElMessage.success("上传成功");
-  newFormInline.value.coverImg = res.data;
+  newFormInline.value.articleShowImg = res.data;
 };
 </script>
 
@@ -69,8 +73,8 @@ const handleAvatarSuccess = (res: any) => {
         :on-success="handleAvatarSuccess"
       >
         <img
-          v-if="newFormInline.coverImg"
-          :src="newFormInline.coverImg"
+          v-if="newFormInline.articleShowImg"
+          :src="newFormInline.articleShowImg"
           class="avatar"
         />
         <el-icon v-else class="avatar-uploader-icon">
@@ -80,7 +84,7 @@ const handleAvatarSuccess = (res: any) => {
     </el-form-item>
     <el-form-item label="标题">
       <el-input
-        v-model="newFormInline.title"
+        v-model="newFormInline.articleTitle"
         class="!w-[220px]"
         placeholder="请输入标题"
       />
@@ -88,14 +92,29 @@ const handleAvatarSuccess = (res: any) => {
 
     <el-form-item label="描述">
       <el-input
-        v-model="newFormInline.postDesc"
+        v-model="newFormInline.articleDesc"
+        type="textarea"
         class="!w-[220px]"
         placeholder="请输入描述"
       />
     </el-form-item>
+    <el-form-item label="发布人员">
+      <el-input
+        v-model="newFormInline.articleSource"
+        class="!w-[220px]"
+        placeholder="请输入发布人员"
+      />
+    </el-form-item>
+    <el-form-item label="附加信息">
+      <el-input
+        v-model="newFormInline.articleExtra"
+        class="!w-[220px]"
+        placeholder="请输入附加信息"
+      />
+    </el-form-item>
     <el-form-item label="状态">
       <el-select
-        v-model="newFormInline.status"
+        v-model="newFormInline.isShow"
         class="!w-[220px]"
         placeholder="请选择"
       >

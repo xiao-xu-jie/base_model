@@ -15,15 +15,22 @@ defineOptions({
 });
 
 const headData = ref(chartData);
+const weekData = ref(barChartData);
+const dateList = ref([]);
+const salesData = ref([]);
+const purchaseData = ref([]);
 const { isDark } = useDark();
 
-let curWeek = ref(1); // 0上周、1本周
+let curWeek = ref(0);
 const optionsBasis: Array<OptionsType> = [
   {
-    label: "上周"
+    label: "鸭蛋"
   },
   {
-    label: "本周"
+    label: "鸡蛋"
+  },
+  {
+    label: "鹌鹑蛋"
   }
 ];
 onMounted(() => {
@@ -39,7 +46,23 @@ onMounted(() => {
         : res.data.userTotal[5]);
     headData.value[0].percent =
       percent > 0 ? `+${percent * 100}%` : `${percent * 100}%`;
-    console.log("headData===>>>: ", headData.value[0]);
+    headData.value[1].value = res.data.quotationTotal;
+    headData.value[2].value = res.data.certTotal;
+    console.log("headData===>>>: ", headData.value[1]);
+    // week
+    dateList.value = res.data.weekData.dateList;
+    dateList.value.forEach((item, index) => {
+      let dt = res.data.weekData.salesList.find(item =>
+        item.dataTime.includes(dateList.value[index])
+      );
+      salesData.value.push(dt ? dt.avgSaleNum : null);
+      dt = res.data.weekData.buyList.find(item =>
+        item.dataTime.includes(dateList.value[index])
+      );
+      purchaseData.value.push(dt ? dt.avgNum : null);
+    });
+
+    console.log("salesData===>>>: ", salesData.value);
   });
 });
 </script>
@@ -126,13 +149,14 @@ onMounted(() => {
       >
         <el-card class="bar-card" shadow="never">
           <div class="flex justify-between">
-            <span class="text-md font-medium">分析概览</span>
+            <span class="text-md font-medium">价格走势</span>
             <Segmented v-model="curWeek" :options="optionsBasis" />
           </div>
           <div class="flex justify-between items-start mt-3">
             <ChartBar
-              :requireData="barChartData[curWeek].requireData"
-              :questionData="barChartData[curWeek].questionData"
+              :date-list="dateList"
+              :requireData="salesData"
+              :questionData="purchaseData"
             />
           </div>
         </el-card>

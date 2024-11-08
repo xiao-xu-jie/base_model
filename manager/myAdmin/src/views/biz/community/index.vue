@@ -300,7 +300,7 @@ const showContent = (id, content) => {
           <el-input
             v-model="searchForm.content"
             clearable
-            placeholder="请输入标题"
+            placeholder="请输入内容"
           />
         </el-form-item>
         <el-form-item>
