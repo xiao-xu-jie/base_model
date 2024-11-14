@@ -50,10 +50,6 @@ public class PlatForm29AdapterImpl
   @Resource private CategoryGoodService categoryGoodService;
   @Resource private WebClient webClient;
 
-  //  @Cacheable(
-  //      value = "class",
-  //      key = "{#p0.user}+':'+#p0.pass+':'+#p0.good_id",
-  //      unless = "#result == null")
   @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
   @Override
   public List<ClassQueryResDTO> queryUserClass(ClassQueryReqDTO classQueryReqDTO) {
@@ -113,7 +109,7 @@ public class PlatForm29AdapterImpl
   @Override
   public SubmitOrderResDTO submitOrder(MultiValueMap<String, String> map) {
     String url = map.get("url").get(0) + PlantApiConstant.SUBMIT_CLASS_SUFFIX;
-    SubmitOrderResDTO post = new SubmitOrderResDTO();
+    SubmitOrderResDTO post = null;
     try {
       post =
           webClient
@@ -124,10 +120,11 @@ public class PlatForm29AdapterImpl
               .retrieve()
               .bodyToMono(SubmitOrderResDTO.class)
               .block(Duration.of(10, ChronoUnit.SECONDS));
-
-      if (post.getCode() != null && post.getCode() != 0) {
-        throw new CustomException(post.getMsg());
-      }
+      Integer code =
+          Optional.ofNullable(post)
+              .map(SubmitOrderResDTO::getCode)
+              .orElseThrow(() -> new CustomException("请求失败，未获取到Code"));
+      ConditionCheck.trueAndThrow(code != 0, new CustomException(post.getMsg()));
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     } finally {
