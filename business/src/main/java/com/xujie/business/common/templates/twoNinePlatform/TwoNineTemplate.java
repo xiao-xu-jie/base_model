@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.templates.PlatformTemplate;
+import com.xujie.business.common.templates.twoNinePlatform.DTO.request.QueryUserClassRequest;
 import com.xujie.business.common.templates.twoNinePlatform.DTO.request.SubmitOrderRequest;
 import com.xujie.business.common.templates.twoNinePlatform.DTO.response.SubmitOrderResponse;
 import com.xujie.business.common.utils.WebclientUtil;
@@ -20,7 +21,8 @@ import org.springframework.util.MultiValueMap;
  */
 @Slf4j
 @Component
-public class TwoNineTemplate extends PlatformTemplate<SubmitOrderRequest, SubmitOrderResponse> {
+public class TwoNineTemplate
+    extends PlatformTemplate<SubmitOrderRequest, SubmitOrderResponse, QueryUserClassRequest> {
   @Override
   protected boolean beforeCheck(SubmitOrderRequest response) {
     return true;
@@ -30,14 +32,22 @@ public class TwoNineTemplate extends PlatformTemplate<SubmitOrderRequest, Submit
   protected boolean afterSubmitCheck(SubmitOrderResponse response) {
     Integer code = Optional.ofNullable(response).map(SubmitOrderResponse::getCode).orElse(1);
     if (log.isInfoEnabled()) {
-      log.debug("[TwoNineTemplate]提交订单返回信息：{}", JSONUtil.parse(response).toString());
+
+      log.debug("[TwoNineTemplate]提交订单返回信息：{}", JSONUtil.parse(response).toJSONString(4));
     }
     return code == 0;
   }
 
   @Override
   protected boolean afterQueryCheck(String response) {
-    return false;
+    try {
+      JSONObject json = new JSONObject(response);
+      Integer code = json.getInt("code", -1);
+      return code == 0 || code == 1;
+    } catch (Exception e) {
+      log.error("[afterQueryCheck]查询后检测失败：{}", e.getMessage());
+    }
+    return true;
   }
 
   @Override
@@ -49,7 +59,9 @@ public class TwoNineTemplate extends PlatformTemplate<SubmitOrderRequest, Submit
   }
 
   @Override
-  protected <T> void handleQueryFail(T info) {}
+  protected void handleQueryFail(String info) {
+    throw new CustomException("查询失败，可能是系统繁忙，请稍后再试");
+  }
 
   @Override
   protected void handleSuccess(SubmitOrderRequest info) {
@@ -74,8 +86,10 @@ public class TwoNineTemplate extends PlatformTemplate<SubmitOrderRequest, Submit
   }
 
   @Override
-  protected <T> String query(T order) {
-    return "";
+  protected <T> String query(QueryUserClassRequest order) {
+
+    return WebclientUtil.post(
+        order.getUrl(), order.getData(), MediaType.APPLICATION_FORM_URLENCODED, String.class, 10);
   }
 
   public static void main(String[] args) {

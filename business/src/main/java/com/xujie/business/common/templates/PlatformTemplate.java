@@ -1,12 +1,20 @@
 package com.xujie.business.common.templates;
 
-public abstract class PlatformTemplate<Q, QR> {
-  public <T> void QueryUserClassInfo(T info) {
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public abstract class PlatformTemplate<Q, QR, CQ> {
+  public <T> String queryUserClassInfo(CQ info) {
     String response = query(info);
-    if (!afterQueryCheck(response)) {
-      handleQueryFail(info);
-      return;
+    if (log.isInfoEnabled()) {
+
+      log.debug("[TwoNineTemplate]查询课程返回信息：{}", JSONUtil.parseObj(response).toJSONString(4));
     }
+    if (!afterQueryCheck(response)) {
+      handleQueryFail(response);
+    }
+    return response;
   }
 
   public void SubmitOrder(Q info) {
@@ -30,11 +38,11 @@ public abstract class PlatformTemplate<Q, QR> {
 
   protected abstract void handleSubmitFail(Q info);
 
-  protected abstract <T> void handleQueryFail(T info);
+  protected abstract void handleQueryFail(String info);
 
   protected abstract void handleSuccess(Q info);
 
   protected abstract QR submit(Q order);
 
-  protected abstract <T> String query(T order);
+  protected abstract <T> String query(CQ order);
 }

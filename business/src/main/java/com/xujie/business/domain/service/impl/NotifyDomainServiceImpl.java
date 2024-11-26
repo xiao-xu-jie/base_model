@@ -11,6 +11,7 @@ import com.xujie.business.common.enums.OrderStatusEnum;
 import com.xujie.business.common.enums.SubmitStatusEnum;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.common.templates.PlatformTemplate;
+import com.xujie.business.common.templates.twoNinePlatform.DTO.request.QueryUserClassRequest;
 import com.xujie.business.common.templates.twoNinePlatform.DTO.request.SubmitOrderRequest;
 import com.xujie.business.common.templates.twoNinePlatform.DTO.response.SubmitOrderResponse;
 import com.xujie.business.domain.service.NotifyDomainService;
@@ -42,7 +43,10 @@ public class NotifyDomainServiceImpl implements NotifyDomainService {
   @Resource private OrderService orderService;
   @Resource private CategoryGoodService categoryGoodService;
   @Resource private SourceStationService sourceStationService;
-  @Resource private PlatformTemplate<SubmitOrderRequest, SubmitOrderResponse> platformTemplate;
+
+  @Resource
+  private PlatformTemplate<SubmitOrderRequest, SubmitOrderResponse, QueryUserClassRequest>
+      platformTemplate;
 
   @Override
   @Async
