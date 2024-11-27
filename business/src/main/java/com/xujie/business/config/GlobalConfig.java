@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xujie.business.auth.AuthInterceptor;
+import com.xujie.business.auth.LogInterceptor;
 import com.xujie.business.common.exception.AuthException;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -99,6 +100,7 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
         .addPathPatterns("/**")
         .excludePathPatterns(
             Objects.requireNonNull(env.getProperty("sa-token.exclude-paths")).split(","));
+    registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**");
   }
 
   //    @Bean

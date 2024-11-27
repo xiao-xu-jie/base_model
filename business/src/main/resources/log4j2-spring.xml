@@ -2,12 +2,14 @@
 <configuration status="INFO" monitorInterval="5">
     <!-- 定义日志格式 -->
     <Properties>
-        <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} %X{PFTID} [%thread] %-5level %logger{36} - %msg%n"/>
+        <property name="LOG_PATTERN"
+                  value="[%X{traceId}] %date{HH:mm:ss.SSS} %X{PFTID} [%thread] %-5level %logger{36} - %msg%n"/>
         <property name="FILE_PATH" value="./logs/business"/>
         <property name="FILE_NAME" value="business.log"/>
     </Properties>
 
     <appenders>
+
         <!-- 控制台输出，只显示业务包相关的日志 -->
         <console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_PATTERN}"/>
