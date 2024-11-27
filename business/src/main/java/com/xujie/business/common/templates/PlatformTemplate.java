@@ -1,10 +1,13 @@
 package com.xujie.business.common.templates;
 
 import cn.hutool.json.JSONUtil;
+import com.xujie.business.common.annotations.MyCache;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class PlatformTemplate<Q, QR, CQ> {
+  @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
   public <T> String queryUserClassInfo(CQ info) {
     String response = query(info);
     if (log.isInfoEnabled()) {

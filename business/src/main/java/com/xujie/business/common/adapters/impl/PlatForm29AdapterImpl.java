@@ -6,7 +6,6 @@ import com.xujie.business.DTO.res.QueryResDTO;
 import com.xujie.business.DTO.res.SubmitOrderResDTO;
 import com.xujie.business.common.adapters.HttpAdapter;
 import com.xujie.business.common.adapters.PlatFormAdapter;
-import com.xujie.business.common.annotations.MyCache;
 import com.xujie.business.common.constants.PlantApiConstant;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.infra.DO.BizGood;
@@ -19,7 +18,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -50,7 +48,7 @@ public class PlatForm29AdapterImpl
   @Resource private CategoryGoodService categoryGoodService;
   @Resource private WebClient webClient;
 
-  @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
+  //  @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
   @Override
   public List<ClassQueryResDTO> queryUserClass(ClassQueryReqDTO classQueryReqDTO) {
 

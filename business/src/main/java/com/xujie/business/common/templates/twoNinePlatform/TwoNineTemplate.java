@@ -89,7 +89,7 @@ public class TwoNineTemplate
   protected <T> String query(QueryUserClassRequest order) {
 
     return WebclientUtil.post(
-        order.getUrl(), order.getData(), MediaType.APPLICATION_FORM_URLENCODED, String.class, 10);
+        order.getUrl(), order.getData(), MediaType.APPLICATION_FORM_URLENCODED, String.class, 100);
   }
 
   public static void main(String[] args) {

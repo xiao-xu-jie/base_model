@@ -43,6 +43,7 @@ public class ClassController {
     //    List<ClassQueryResDTO> resDTOList = platForm29Adapter.queryUserClass(classQueryReq);
     QueryResDTO queryResDTO =
         classDomainService.queryClassInfo(classConvert.convertToBO(classQueryReq));
+
     return Result.ok(queryResDTO.getData());
   }
 }
