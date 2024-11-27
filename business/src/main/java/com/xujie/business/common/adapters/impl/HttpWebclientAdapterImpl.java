@@ -68,7 +68,7 @@ public class HttpWebclientAdapterImpl implements HttpAdapter {
   public Result<String> createOrder(WxOrderCreateReqDTO wxOrderCreateReqDTO) {
     return webClient
         .post()
-        .uri("http://110.40.42.211:9928/pay/order/create")
+        .uri("http://222.186.56.121:9111/pay/order/create")
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(wxOrderCreateReqDTO))
         .retrieve()
