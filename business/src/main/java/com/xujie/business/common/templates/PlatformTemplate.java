@@ -2,6 +2,7 @@ package com.xujie.business.common.templates;
 
 import cn.hutool.json.JSONUtil;
 import com.xujie.business.common.annotations.MyCache;
+import com.xujie.business.common.exception.CustomException;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,7 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class PlatformTemplate<Q, QR, CQ> {
   @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
   public <T> String queryUserClassInfo(CQ info) {
-    String response = query(info);
+    String response = null;
+    try {
+      response = query(info);
+    } catch (Exception e) {
+      log.error("[TwoNineTemplate]查询课程失败：{}", e.getMessage());
+      throw new CustomException("查课失败，请检查密码或者稍后再试");
+    }
     if (log.isInfoEnabled()) {
 
       log.debug("[TwoNineTemplate]查询课程返回信息：{}", JSONUtil.parseObj(response).toJSONString(4));
