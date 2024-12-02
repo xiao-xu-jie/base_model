@@ -53,6 +53,7 @@ public class TwoNineTemplate
   @Override
   protected void handleSubmitFail(SubmitOrderRequest info) {
     if (log.isInfoEnabled()) {
+
       log.debug("[TwoNineTemplate]提交订单失败，订单信息：{}", JSONUtil.parse(info).toString());
       throw new CustomException("[29平台]29平台提交订单失败");
     }
@@ -60,7 +61,8 @@ public class TwoNineTemplate
 
   @Override
   protected void handleQueryFail(String info) {
-    throw new CustomException("查询失败，可能是系统繁忙，请稍后再试");
+    JSONObject json = new JSONObject(info);
+    throw new CustomException(json.getStr("msg", "查询失败，可能是系统繁忙，请稍后再试"));
   }
 
   @Override
