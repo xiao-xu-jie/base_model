@@ -11,7 +11,6 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -23,12 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @SaIgnore
 @RestController
-@RequestMapping("/notify")
 public class NotifyController {
   @Resource private NotifyDomainService notifyDomainService;
   @Resource private SiteConfig siteConfig;
 
-  @PostMapping
+  @PostMapping("/notify")
   public Result<Boolean> notify(@RequestBody Map<String, String> map) {
     String key = map.get("key");
     String orderNo = map.get("orderId");

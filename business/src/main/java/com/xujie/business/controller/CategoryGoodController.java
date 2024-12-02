@@ -34,7 +34,6 @@ public class CategoryGoodController {
   public Result<List<CategoryGoodQueryResDTO>> list(
       @ModelAttribute CategoryGoodQueryReqDTO categoryGoodQueryReqDTO) {
     List<CategoryGoodBO> categoryListByEntity = baseService.getCategoryListByEntity(null);
-
     return Result.ok(categoryGoodConvert.convertCGBO2DTO(categoryListByEntity));
   }
 }

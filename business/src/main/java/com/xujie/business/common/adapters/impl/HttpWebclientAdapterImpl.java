@@ -28,18 +28,6 @@ public class HttpWebclientAdapterImpl implements HttpAdapter {
   @Override
   @SuppressWarnings("unchecked")
   public QueryResDTO post(String url, MultiValueMap<String, String> q) {
-    //    String hashKey = getHashKey(url, q);
-    //    Optional<Object> cacheObject = RedisUtils.getCacheObject(REDIS_PREFIX_KEY + hashKey);
-    //    if (cacheObject.isPresent()) {
-    //      return JSON.parseObject(cacheObject.get().toString(), QueryResDTO.class);
-    //    } else {
-    //      RLock lock = redissonClient.getLock(LOCK_PREFIX_KEY + hashKey);
-    //      lock.lock();
-    //      try {
-    //        cacheObject = RedisUtils.getCacheObject(REDIS_PREFIX_KEY + hashKey);
-    //        if (cacheObject.isPresent()) {
-    //          return JSON.parseObject(cacheObject.get().toString(), QueryResDTO.class);
-    //        }
     QueryResDTO block =
         webClient
             .post()
@@ -49,17 +37,6 @@ public class HttpWebclientAdapterImpl implements HttpAdapter {
             .retrieve()
             .bodyToMono(QueryResDTO.class)
             .block();
-    //        if (block != null && block.getData() != null) {
-    //          RedisUtils.setCacheObject(
-    //              REDIS_PREFIX_KEY + hashKey, JSONUtil.toJsonStr(block), 7, TimeUnit.DAYS);
-    //        }
-    //        return block;
-    //      } catch (Exception e) {
-    //        e.printStackTrace();
-    //        throw new RuntimeException(e);
-    //      } finally {
-    //        lock.unlock();
-    //      }
     return block;
   }
 

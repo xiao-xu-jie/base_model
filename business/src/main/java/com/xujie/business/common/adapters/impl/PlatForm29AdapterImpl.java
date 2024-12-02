@@ -6,7 +6,6 @@ import com.xujie.business.DTO.res.QueryResDTO;
 import com.xujie.business.DTO.res.SubmitOrderResDTO;
 import com.xujie.business.common.adapters.HttpAdapter;
 import com.xujie.business.common.adapters.PlatFormAdapter;
-import com.xujie.business.common.annotations.MyCache;
 import com.xujie.business.common.constants.PlantApiConstant;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.infra.DO.BizGood;
@@ -19,7 +18,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -50,11 +48,7 @@ public class PlatForm29AdapterImpl
   @Resource private CategoryGoodService categoryGoodService;
   @Resource private WebClient webClient;
 
-  //  @Cacheable(
-  //      value = "class",
-  //      key = "{#p0.user}+':'+#p0.pass+':'+#p0.good_id",
-  //      unless = "#result == null")
-  @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
+  //  @MyCache(key = "query:class", expire = 7, timeUnit = TimeUnit.DAYS)
   @Override
   public List<ClassQueryResDTO> queryUserClass(ClassQueryReqDTO classQueryReqDTO) {
 
@@ -113,7 +107,7 @@ public class PlatForm29AdapterImpl
   @Override
   public SubmitOrderResDTO submitOrder(MultiValueMap<String, String> map) {
     String url = map.get("url").get(0) + PlantApiConstant.SUBMIT_CLASS_SUFFIX;
-    SubmitOrderResDTO post = new SubmitOrderResDTO();
+    SubmitOrderResDTO post = null;
     try {
       post =
           webClient
@@ -124,10 +118,11 @@ public class PlatForm29AdapterImpl
               .retrieve()
               .bodyToMono(SubmitOrderResDTO.class)
               .block(Duration.of(10, ChronoUnit.SECONDS));
-
-      if (post.getCode() != null && post.getCode() != 0) {
-        throw new CustomException(post.getMsg());
-      }
+      Integer code =
+          Optional.ofNullable(post)
+              .map(SubmitOrderResDTO::getCode)
+              .orElseThrow(() -> new CustomException("请求失败，未获取到Code"));
+      ConditionCheck.trueAndThrow(code != 0, new CustomException(post.getMsg()));
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     } finally {
