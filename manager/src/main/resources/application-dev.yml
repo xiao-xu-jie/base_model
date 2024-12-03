@@ -22,15 +22,9 @@ spring:
           log-slow-sql: true
           slow-sql-millis: 2000
 
-  rabbitmq:
-    host: 110.40.42.211
-    port: 5672
-    virtual-host: /
-    username: admin
-    password: 419a4576
   data:
     redis:
-      host: 110.40.42.211
+      host: 127.0.0.1
       port: 6379
       password: xujie520
       database: 0

@@ -1,5 +1,6 @@
 package com.xujie.manager.infra.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.manager.infra.DO.BizOrder;
@@ -9,6 +10,7 @@ import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +53,16 @@ public class BizOrderServiceImpl implements BizOrderService {
   @Override
   public Page<BizOrder> getPageList(BizOrder baseDO, Integer pageNum, Integer pageSize) {
     LambdaQueryWrapper<BizOrder> queryWrapper = new LambdaQueryWrapper<>();
-    queryWrapper.eq(baseDO.getId() != null, BizOrder::getId, baseDO.getId());
-    queryWrapper.eq(baseDO.getOrderNo() != null, BizOrder::getOrderNo, baseDO.getOrderNo());
+    queryWrapper.eq(ObjectUtils.isNotEmpty(baseDO.getId()), BizOrder::getId, baseDO.getId());
+    queryWrapper.eq(
+        ObjectUtils.isNotEmpty(baseDO.getOrderNo()), BizOrder::getOrderNo, baseDO.getOrderNo());
+    queryWrapper.like(
+        StringUtils.isNotBlank(baseDO.getGoodName()), BizOrder::getGoodName, baseDO.getGoodName());
+    if (ObjectUtils.isNotEmpty(baseDO.getCreateTime())) {
+      queryWrapper.ge(BizOrder::getCreateTime, DateUtil.beginOfDay(baseDO.getCreateTime()));
+      queryWrapper.le(BizOrder::getCreateTime, DateUtil.endOfDay(baseDO.getCreateTime()));
+    }
+
     queryWrapper.eq(
         StringUtils.isNotBlank(baseDO.getPhone()), BizOrder::getPhone, baseDO.getPhone());
     queryWrapper.orderByDesc(BizOrder::getPayTime, BizOrder::getCreateTime);

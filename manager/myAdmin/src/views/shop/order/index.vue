@@ -119,7 +119,10 @@ const resetForm = () => {
 };
 const searchForm = ref({
   phone: null,
-  orderNo: null
+  orderNo: null,
+  goodName: null,
+  goodId: null,
+  createTime: null
 });
 const loadData = async (flag = 1) => {
   loading.value = true;
@@ -239,6 +242,32 @@ function handleClick(row) {
     row
   );
 }
+
+const disabledDate = (time: Date) => {
+  return time.getTime() > Date.now();
+};
+const shortcuts = [
+  {
+    text: "今天",
+    value: new Date()
+  },
+  {
+    text: "昨天",
+    value: () => {
+      const date = new Date();
+      date.setTime(date.getTime() - 3600 * 1000 * 24);
+      return date;
+    }
+  },
+  {
+    text: "一周前",
+    value: () => {
+      const date = new Date();
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+      return date;
+    }
+  }
+];
 </script>
 
 <template>
@@ -250,11 +279,25 @@ function handleClick(row) {
         class="search-form dark:text-white"
         :model="searchForm"
       >
+        <el-form-item label="商品ID" prop="goodId">
+          <el-input
+            v-model="searchForm.goodId"
+            clearable
+            placeholder="请输入商品ID"
+          />
+        </el-form-item>
         <el-form-item label="订单号" prop="orderNo">
           <el-input
             v-model="searchForm.orderNo"
             clearable
             placeholder="请输入用户订单号"
+          />
+        </el-form-item>
+        <el-form-item label="商品名称" prop="goodName">
+          <el-input
+            v-model="searchForm.goodName"
+            clearable
+            placeholder="请输入商品名称"
           />
         </el-form-item>
         <el-form-item label="用户手机号" prop="phone">
@@ -264,7 +307,20 @@ function handleClick(row) {
             placeholder="请输入用户手机号"
           />
         </el-form-item>
-
+        <el-form-item label="订单时间" prop="createTime">
+          <el-date-picker
+            v-model="searchForm.createTime"
+            type="date"
+            class="!w-[160px]"
+            placeholder="请选择"
+            :disabled-date="disabledDate"
+            :shortcuts="shortcuts"
+            :value-format="'YYYY-MM-DD'"
+            :popper-options="{
+              placement: 'bottom-start'
+            }"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button
             :icon="useRenderIcon('ri:search-line')"

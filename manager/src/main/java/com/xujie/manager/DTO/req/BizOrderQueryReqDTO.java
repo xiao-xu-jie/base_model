@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * (BizOrder)查询请求DTO
@@ -55,6 +56,7 @@ public class BizOrderQueryReqDTO extends BaseDTO {
   private OrderStatusEnum orderStatus;
 
   /** 创建时间 */
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date createTime;
 
   /** 支付时间 */
