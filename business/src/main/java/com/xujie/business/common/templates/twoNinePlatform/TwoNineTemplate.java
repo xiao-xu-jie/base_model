@@ -43,9 +43,10 @@ public class TwoNineTemplate
     try {
       JSONObject json = new JSONObject(response);
       Integer code = json.getInt("code", -1);
+      log.error("[afterQueryCheck]查课检测信息：{}", json);
       return code == 0 || code == 1;
     } catch (Exception e) {
-      log.error("[afterQueryCheck]查询后检测失败：{}", e.getMessage());
+      log.error("[afterQueryCheck]查询检测异常：{}", e.getMessage());
     }
     return true;
   }
