@@ -4,6 +4,7 @@ import cn.hutool.json.JSONObject;
 import com.xujie.business.application.pay.AbstractHuPiJiaoPayService;
 import com.xujie.business.application.pay.entity.OrderRequest;
 import com.xujie.business.application.pay.entity.RefundRequest;
+import com.xujie.business.common.constants.HuPiJiaoPayConstant;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.config.HuPiJiaoPayConfig;
 import jakarta.annotation.Resource;
@@ -30,6 +31,8 @@ public class HuPiJiaoPayService extends AbstractHuPiJiaoPayService {
         requestBody.put("appid", config.getAppid());
         requestBody.put("version", "1.1");
         requestBody.put("nonce_str", getNonceStr());
+        requestBody.put(HuPiJiaoPayConstant.NOTIFY_URL, config.getNotifyUrl());
+        requestBody.put(HuPiJiaoPayConstant.RETURN_URL, config.getReturnUrl());
         requestBody.put("time", getSecondTimestamp(new Date()));
         String hash = getHash(requestBody, config.getAppSecret());
         requestBody.put("hash", hash);

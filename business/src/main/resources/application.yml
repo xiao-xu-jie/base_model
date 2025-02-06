@@ -2,14 +2,20 @@ server:
   port: 8899
 spring:
   profiles:
-    active: ${env-flag:dev}
+    active: dev
+  cloud:
+    nacos:
+      config:
+        file-extension: yml   #指定配置文件扩展名为yml
+        password: xujie520.
+        server-addr: 183.131.51.137:8848
+        username: nacos
+        namespace: chaoxing
+  config:
+    import:
+      - nacos:application-dev.yml
+
 logging:
   config: classpath:log4j2-spring-info.xml
   level:
-    root: DEBUG
-pay:
-  hupijiao:
-    url: https://api.xunhupay.com/payment/do.html
-    refundUrl: https://api.xunhupay.com/payment/refund.html
-    Appid: 201906169494
-    AppSecret: f401f210a2dd6d101255d16d86abe948
+    com.xujie.business.common.templates: debug

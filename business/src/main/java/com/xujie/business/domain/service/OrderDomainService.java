@@ -1,8 +1,10 @@
 package com.xujie.business.domain.service;
 
+import cn.hutool.json.JSONObject;
+
 public interface OrderDomainService {
 
-  Long createOrder(Long goodId, String user, String pass, String classJson, Integer num);
+    JSONObject createOrder(Long goodId, String user, String pass, String classJson, Integer num);
 
-  Boolean getOrderStatus(Long orderNo);
+    Boolean getOrderStatus(Long orderNo);
 }
