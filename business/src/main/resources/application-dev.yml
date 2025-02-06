@@ -4,7 +4,7 @@ spring:
     #    url: jdbc:mysql://110.40.42.211:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
     #    username: chaoxingv2
     #    password: EL3txhRAcn2f4c8G
-    url: jdbc:mysql://127.0.0.1:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     #    publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ0Ov8FF97EkC0OeLLqsQHd3WTQcfvL51YQ3q5b2jsgUGdqEJjQ3CxwiFn8w7kwxFmR9mC1JtQrbgClH1w3sLg0CAwEAAQ==
@@ -24,16 +24,16 @@ spring:
         stat:
           log-slow-sql: true
           slow-sql-millis: 2000
-  rabbitmq:
-    host: 110.40.42.211
-    port: 5672
-    virtual-host: /
-    username: admin
-    password: 419a4576
+  #  rabbitmq:
+  #    host: 110.40.42.211
+  #    port: 5672
+  #    virtual-host: /
+  #    username: admin
+  #    password: 419a4576
   data:
     redis:
-      host: 222.186.56.121
-      port: 6380
+      host: 127.0.0.1
+      port: 6379
       password: xujie520
       database: 0
       lettuce:
@@ -43,9 +43,9 @@ spring:
           max-idle: 10
           min-idle: 1
       timeout: 3000ms
-      cluster:
-        nodes: 222.186.56.121:6380,222.186.56.121:6381,222.186.56.121:6382,222.186.56.121:6383,222.186.56.121:6384,222.186.56.121:6385
-        max-redirects: 5
+#      cluster:
+#        nodes: 222.186.56.121:6379
+#        max-redirects: 5
 mybatis-plus:
   configuration:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler

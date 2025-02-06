@@ -1,7 +1,15 @@
 server:
-  port: 8888
+  port: 8899
 spring:
   profiles:
     active: ${env-flag:dev}
 logging:
-  config: classpath:log4j2-spring.xml
+  config: classpath:log4j2-spring-info.xml
+  level:
+    root: DEBUG
+pay:
+  hupijiao:
+    url: https://api.xunhupay.com/payment/do.html
+    refundUrl: https://api.xunhupay.com/payment/refund.html
+    Appid: 201906169494
+    AppSecret: f401f210a2dd6d101255d16d86abe948
