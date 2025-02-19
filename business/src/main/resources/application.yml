@@ -13,7 +13,7 @@ spring:
         namespace: chaoxing
   config:
     import:
-      - nacos:application-dev.yml
+      - nacos:application-${spring.profiles.active}.yml
 
 logging:
   config: classpath:log4j2-spring-info.xml
