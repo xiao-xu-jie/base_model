@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderInfoResDTO {
-    private String urlQrcode;
-    private String url;
+  private String urlQrcode;
+  private String url;
+  private String orderNo;
 }

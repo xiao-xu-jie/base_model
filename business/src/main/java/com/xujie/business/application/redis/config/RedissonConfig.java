@@ -16,17 +16,18 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RedissonConfig {
-//    @Value("${spring.data.redis.cluster.nodes}")
-//    private List<String> nodes;
+  //    @Value("${spring.data.redis.cluster.nodes}")
+  //    private List<String> nodes;
 
-    @Value("${spring.data.redis.host}")
-    private String host;
+  @Value("${spring.data.redis.host}")
+  private String host;
 
-    @Bean
-    public RedissonClient redissonClient() {
-        Config config = new Config();
-        SingleServerConfig singleServerConfig = config.useSingleServer();
-        singleServerConfig.setAddress("redis://" + host + ":" + 6379);
-        return Redisson.create(config);
-    }
+  @Bean
+  public RedissonClient redissonClient() {
+    Config config = new Config();
+    SingleServerConfig singleServerConfig = config.useSingleServer();
+    singleServerConfig.setAddress("redis://" + host + ":" + 6379);
+    //    singleServerConfig.setPassword("123456");
+    return Redisson.create(config);
+  }
 }
