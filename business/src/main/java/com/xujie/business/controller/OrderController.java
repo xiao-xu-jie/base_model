@@ -46,7 +46,7 @@ public class OrderController {
         OrderInfoResDTO.builder()
             .url(response.getJSONArray("url").get(0).toString())
             .urlQrcode(response.getJSONArray("url_qrcode").get(0).toString())
-            .orderNo(response.getStr("orderNo"))
+            .orderNo(response.getJSONArray("orderNo").get(0).toString())
             .build());
   }
 
