@@ -4,7 +4,6 @@ import cn.hutool.json.JSONObject;
 import com.xujie.business.application.pay.AbstractHuPiJiaoPayService;
 import com.xujie.business.application.pay.entity.OrderRequest;
 import com.xujie.business.application.pay.entity.RefundRequest;
-import com.xujie.business.common.constants.HuPiJiaoPayConstant;
 import com.xujie.business.common.exception.CustomException;
 import com.xujie.business.config.HuPiJiaoPayConfig;
 import jakarta.annotation.Resource;
@@ -15,11 +14,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Date;
 import java.util.Map;
 
+import static com.xujie.business.common.constants.HuPiJiaoPayConstant.*;
+
 @Slf4j
 @Service
 public class HuPiJiaoPayService extends AbstractHuPiJiaoPayService {
     @Resource
     private WebClient webClient;
+
     @Resource(name = "huPiJiaoPayConfig")
     private HuPiJiaoPayConfig config;
 
@@ -31,8 +33,11 @@ public class HuPiJiaoPayService extends AbstractHuPiJiaoPayService {
         requestBody.put("appid", config.getAppid());
         requestBody.put("version", "1.1");
         requestBody.put("nonce_str", getNonceStr());
-        requestBody.put(HuPiJiaoPayConstant.NOTIFY_URL, config.getNotifyUrl());
-        requestBody.put(HuPiJiaoPayConstant.RETURN_URL, config.getReturnUrl());
+        requestBody.put("type", TYPE);
+        requestBody.put("wap_name", "小徐网络");
+        requestBody.put("wap_url", "xxt.xxce.cn");
+        requestBody.put(NOTIFY_URL, config.getNotifyUrl());
+        requestBody.put(RETURN_URL, config.getReturnUrl());
         requestBody.put("time", getSecondTimestamp(new Date()));
         String hash = getHash(requestBody, config.getAppSecret());
         requestBody.put("hash", hash);
@@ -77,6 +82,4 @@ public class HuPiJiaoPayService extends AbstractHuPiJiaoPayService {
         }
         return getJsonObject(post);
     }
-
-
 }

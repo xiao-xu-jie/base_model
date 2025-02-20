@@ -12,7 +12,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 
@@ -30,23 +29,25 @@ public abstract class AbstractHuPiJiaoPayService implements PayService {
         return jsonObject;
     }
 
-
     protected String getHash(Map<String, Object> requestBody, String appSecret) {
         StringBuilder sb = new StringBuilder();
         requestBody.entrySet().stream()
-                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .sorted(Map.Entry.comparingByKey())
                 .forEach(s -> sb.append(s).append("&"));
         sb.deleteCharAt(sb.length() - 1);
         sb.append(appSecret);
         return SecureUtil.md5(sb.toString());
     }
 
-    protected String post(String url, Map<String, Object> body, WebClient webClient, Integer timeout) {
+    protected String post(
+            String url, Map<String, Object> body, WebClient webClient, Integer timeout) {
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-        body.forEach((k, v) -> {
-            data.add(k, v.toString());
-        });
-        return webClient.post()
+        body.forEach(
+                (k, v) -> {
+                    data.add(k, v.toString());
+                });
+        return webClient
+                .post()
                 .uri(url)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(data))
@@ -56,7 +57,7 @@ public abstract class AbstractHuPiJiaoPayService implements PayService {
     }
 
     /**
-     * 获取精确到秒的时间戳   原理 获取毫秒时间戳，因为 1秒 = 100毫秒 去除后三位 就是秒的时间戳
+     * 获取精确到秒的时间戳 原理 获取毫秒时间戳，因为 1秒 = 100毫秒 去除后三位 就是秒的时间戳
      *
      * @return
      */
