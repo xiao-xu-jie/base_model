@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 货源站点服务实现类
+ *
  * @author Xujie
  * @since 2024/9/27 14:18
  **/
@@ -20,8 +21,14 @@ import java.util.List;
 public class SourceStationServiceImpl implements SourceStationService {
     @Resource
     private BizSourceStationMapper bizSourceStationMapper;
+
     @Override
     public List<BizSourceStation> getSourceStationListByEntity(BizSourceStation bizSourceStation) {
         return bizSourceStationMapper.getByAll(bizSourceStation);
+    }
+
+    @Override
+    public BizSourceStation getSourceStationById(Long stationId) {
+        return bizSourceStationMapper.selectById(stationId);
     }
 }

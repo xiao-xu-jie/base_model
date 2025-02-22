@@ -1,19 +1,26 @@
 package com.xujie.business.domain.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xujie.business.application.pay.PayService;
 import com.xujie.business.application.pay.entity.OrderRequest;
 import com.xujie.business.common.adapters.impl.HttpWebclientAdapterImpl;
+import com.xujie.business.common.annotations.MyCache;
 import com.xujie.business.common.enums.OrderStatusEnum;
+import com.xujie.business.common.enums.SubmitStatusEnum;
 import com.xujie.business.common.exception.CustomException;
-import com.xujie.business.config.SiteConfig;
+import com.xujie.business.common.templates.twoNinePlatform.DTO.request.QueryOrderStatusRequest;
+import com.xujie.business.common.templates.twoNinePlatform.TwoNineTemplate;
 import com.xujie.business.domain.service.OrderDomainService;
 import com.xujie.business.infra.DO.BizGood;
 import com.xujie.business.infra.DO.BizOrder;
+import com.xujie.business.infra.DO.BizSourceStation;
 import com.xujie.business.infra.mapper.BizOrderMapper;
 import com.xujie.business.infra.service.CategoryGoodService;
+import com.xujie.business.infra.service.SourceStationService;
 import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 订单领域服务实现类
@@ -42,7 +50,9 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     @Resource
     private BizOrderMapper bizOrderMapper;
     @Resource
-    private SiteConfig siteConfig;
+    private SourceStationService sourceStationService;
+    @Resource
+    private TwoNineTemplate platformTemplate;
 
     @Override
 //  @MyCache(key = "order:xxt", expire = 1, timeUnit = TimeUnit.MINUTES)
@@ -93,6 +103,30 @@ public class OrderDomainServiceImpl implements OrderDomainService {
         return order.getOrderStatus().equals(OrderStatusEnum.PAID);
     }
 
+    @MyCache(key = "order:status", expire = 30, timeUnit = TimeUnit.MINUTES)
+    @Override
+    public JSONArray queryUserOrders(String phone) {
+        // 查询所有订单
+        LambdaQueryWrapper<BizOrder> lambdaQueryWrapper = Wrappers.<BizOrder>lambdaQuery()
+                .eq(BizOrder::getSubmitStatus, SubmitStatusEnum.SUBMIT_SUCCESS)
+                .eq(BizOrder::getOrderStatus, OrderStatusEnum.PAID)
+                .eq(BizOrder::getPhone, phone)
+                .isNotNull(BizOrder::getPlatformUid)
+                .isNotNull(BizOrder::getStationUrl)
+                .isNotNull(BizOrder::getPlatformId);
+        List<BizOrder> orders = bizOrderMapper.selectList(lambdaQueryWrapper);
+        List<QueryOrderStatusRequest> queryOrderStatusRequests = orders.stream()
+                .map(order -> QueryOrderStatusRequest.builder()
+                        .platform(order.getPlatformId())
+                        .platformUid(order.getPlatformUid())
+                        .phone(order.getPhone())
+                        .password(order.getPassword())
+                        .url(order.getStationUrl())
+                        .build())
+                .toList();
+        return platformTemplate.queryOrderStatusList(queryOrderStatusRequests);
+    }
+
     private Long saveOrder(
             Long orderNo,
             BizGood bizGood,
@@ -102,6 +136,7 @@ public class OrderDomainServiceImpl implements OrderDomainService {
             Integer num,
             BigDecimal totalPrice) {
         // 保存订单信息
+        BizSourceStation sourceStation = sourceStationService.getSourceStationById(bizGood.getStationId());
         BizOrder order =
                 BizOrder.builder()
                         .orderNo(orderNo)
@@ -111,6 +146,9 @@ public class OrderDomainServiceImpl implements OrderDomainService {
                         .totalPrice(totalPrice)
                         .goodDesc(bizGood.getGoodDesc())
                         .school("school")
+                        .platformId(bizGood.getPlatformId())
+                        .platformUid(sourceStation.getUid())
+                        .stationUrl(sourceStation.getStationUrl())
                         .phone(user)
                         .password(pass)
                         .orderStatus(OrderStatusEnum.UNPAID)

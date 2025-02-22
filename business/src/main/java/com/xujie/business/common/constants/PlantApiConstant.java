@@ -7,4 +7,5 @@ package com.xujie.business.common.constants;
 public class PlantApiConstant {
     public final static String QUERY_CLASS_SUFFIX = "/api.php?act=get";
     public final static String SUBMIT_CLASS_SUFFIX = "/api.php?act=add";
+    public static final String QUERY_ORDER_SUFFIX = "/api.php?act=chadan";
 }
