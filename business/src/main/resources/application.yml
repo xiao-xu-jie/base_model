@@ -16,6 +16,6 @@ spring:
       - nacos:application-${spring.profiles.active}.yml
 
 logging:
-  config: classpath:log4j2-spring-info.xml
+  config: classpath:logback-spring.xml
   level:
     com.xujie.business.common.templates: debug

@@ -9,12 +9,16 @@ import com.xujie.business.common.entity.Result;
 import com.xujie.business.domain.convert.ClassConvert;
 import com.xujie.business.domain.service.ClassDomainService;
 import jakarta.annotation.Resource;
-import java.util.List;
+import org.apache.skywalking.apm.toolkit.trace.Tag;
+import org.apache.skywalking.apm.toolkit.trace.Tags;
+import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 课程控制器
@@ -27,23 +31,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/class")
 public class ClassController {
 
-  @Resource private ClassConvert classConvert;
-  @Resource private PlatForm29AdapterImpl platForm29Adapter;
+    @Resource
+    private ClassConvert classConvert;
+    @Resource
+    private PlatForm29AdapterImpl platForm29Adapter;
 
-  @Resource private ClassDomainService classDomainService;
+    @Resource
+    private ClassDomainService classDomainService;
 
-  /**
-   * 查课
-   *
-   * @return 用户课程信息
-   */
-  @PostMapping("/query")
-  public Result<List<ClassQueryResDTO>> query(
-      @RequestBody @Validated ClassQueryReqDTO classQueryReq) {
-    //    List<ClassQueryResDTO> resDTOList = platForm29Adapter.queryUserClass(classQueryReq);
-    QueryResDTO queryResDTO =
-        classDomainService.queryClassInfo(classConvert.convertToBO(classQueryReq));
-
-    return Result.ok(queryResDTO.getData());
-  }
+    /**
+     * 查课
+     *
+     * @return 用户课程信息
+     */
+    @Trace(operationName = "查课")
+    @Tags({@Tag(key = "param", value = "arg[0]"),
+            @Tag(key = "classes", value = "returnedObj")})
+    @PostMapping("/query")
+    public Result<List<ClassQueryResDTO>> query(
+            @RequestBody @Validated ClassQueryReqDTO classQueryReq) {
+        QueryResDTO queryResDTO =
+                classDomainService.queryClassInfo(classConvert.convertToBO(classQueryReq));
+        return Result.ok(queryResDTO.getData());
+    }
 }

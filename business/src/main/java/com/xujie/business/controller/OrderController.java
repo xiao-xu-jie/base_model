@@ -9,6 +9,9 @@ import com.xujie.business.DTO.res.OrderInfoResDTO;
 import com.xujie.business.common.entity.Result;
 import com.xujie.business.domain.service.OrderDomainService;
 import jakarta.annotation.Resource;
+import org.apache.skywalking.apm.toolkit.trace.Tag;
+import org.apache.skywalking.apm.toolkit.trace.Tags;
+import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +34,9 @@ public class OrderController {
      *
      * @return 支付信息
      */
+    @Trace(operationName = "创建订单")
+    @Tags({@Tag(key = "params", value = "arg[0]"),
+            @Tag(key = "orderInfo", value = "returnedObj")})
     @PostMapping("/create")
     public Result<OrderInfoResDTO> submit(
             @RequestBody @Validated OrderCreateReqDTO orderCreateReqDTO) {
@@ -64,6 +70,9 @@ public class OrderController {
         return Result.ok(status);
     }
 
+    @Trace(operationName = "订单状态查询")
+    @Tags({@Tag(key = "phone", value = "arg[0]"),
+            @Tag(key = "orders", value = "returnedObj")})
     @GetMapping("/query")
     public Result<JSONArray> query(@RequestParam(value = "phone", required = true) String phone) {
         return Result.ok(orderDomainService.queryUserOrders(phone));
