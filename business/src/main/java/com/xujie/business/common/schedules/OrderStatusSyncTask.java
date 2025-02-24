@@ -9,6 +9,7 @@ import com.xujie.business.domain.service.OrderDomainService;
 import com.xujie.business.infra.DO.BizOrder;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class OrderStatusSyncTask {
     @Resource
     private OrderStatusRepository orderStatusRepository;
 
-    @Scheduled(cron = " 0 0/1 * * * *")
+    @Scheduled(cron = " 0 0/30 * * * *")
     public void syncOrderStatus() {
         // 获取所有待同步状态的订单
         List<BizOrder> allInProgressOrders = orderDomainService.getAllInProgressOrders();
@@ -53,6 +54,9 @@ public class OrderStatusSyncTask {
         log.info("[订单状态同步] 获取所有待同步订单状态：{}", list);
 
         // 保存到ES
-        orderStatusRepository.saveAll(list);
+        if (ObjectUtils.isNotEmpty(list)) {
+            orderStatusRepository.saveAll(list);
+        }
+
     }
 }
