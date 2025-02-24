@@ -5,6 +5,8 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.xujie.business.application.es.DTO.OrderStatusEsDTO;
+import com.xujie.business.application.es.repository.OrderStatusRepository;
 import com.xujie.business.application.pay.PayService;
 import com.xujie.business.application.pay.entity.OrderRequest;
 import com.xujie.business.common.adapters.impl.HttpWebclientAdapterImpl;
@@ -53,6 +55,8 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     private SourceStationService sourceStationService;
     @Resource
     private TwoNineTemplate platformTemplate;
+    @Resource
+    private OrderStatusRepository orderStatusRepository;
 
     @Override
 //  @MyCache(key = "order:xxt", expire = 1, timeUnit = TimeUnit.MINUTES)
@@ -103,19 +107,18 @@ public class OrderDomainServiceImpl implements OrderDomainService {
         return order.getOrderStatus().equals(OrderStatusEnum.PAID);
     }
 
-    @MyCache(key = "order:status", expire = 30, timeUnit = TimeUnit.MINUTES)
+    @MyCache(key = "order:status", expire = 5, timeUnit = TimeUnit.MINUTES)
     @Override
     public JSONArray queryUserOrders(String phone) {
         // 查询所有订单
-        LambdaQueryWrapper<BizOrder> lambdaQueryWrapper = Wrappers.<BizOrder>lambdaQuery()
-                .eq(BizOrder::getSubmitStatus, SubmitStatusEnum.SUBMIT_SUCCESS)
-                .eq(BizOrder::getOrderStatus, OrderStatusEnum.PAID)
-                .eq(BizOrder::getPhone, phone)
-                .isNotNull(BizOrder::getPlatformUid)
-                .isNotNull(BizOrder::getStationUrl)
-                .isNotNull(BizOrder::getPlatformId);
-        List<BizOrder> orders = bizOrderMapper.selectList(lambdaQueryWrapper);
-        List<QueryOrderStatusRequest> queryOrderStatusRequests = orders.stream()
+//        List<BizOrder> orders = getInProgressOrderByPhone(phone);
+//        List<QueryOrderStatusRequest> queryOrderStatusRequests = getQueryOrderStatusRequests(orders);
+        List<OrderStatusEsDTO> byUser = orderStatusRepository.findByUser(phone);
+        return new JSONArray(byUser);
+    }
+
+    private static List<QueryOrderStatusRequest> getQueryOrderStatusRequests(List<BizOrder> orders) {
+        return orders.stream()
                 .map(order -> QueryOrderStatusRequest.builder()
                         .platform(order.getPlatformId())
                         .platformUid(order.getPlatformUid())
@@ -124,7 +127,35 @@ public class OrderDomainServiceImpl implements OrderDomainService {
                         .url(order.getStationUrl())
                         .build())
                 .toList();
-        return platformTemplate.queryOrderStatusList(queryOrderStatusRequests);
+    }
+
+    private List<BizOrder> getInProgressOrderByPhone(String phone) {
+        LambdaQueryWrapper<BizOrder> lambdaQueryWrapper = Wrappers.<BizOrder>lambdaQuery()
+                .eq(BizOrder::getOrderStatus, OrderStatusEnum.PAID)
+                .and((i) -> {
+                    i.eq(BizOrder::getSubmitStatus, SubmitStatusEnum.SUBMIT_SUCCESS)
+                            .or()
+                            .eq(BizOrder::getSubmitStatus, SubmitStatusEnum.IN_PROGRESS);
+                })
+                .eq(BizOrder::getPhone, phone)
+                .isNotNull(BizOrder::getPlatformUid)
+                .isNotNull(BizOrder::getStationUrl)
+                .isNotNull(BizOrder::getPlatformId);
+        return bizOrderMapper.selectList(lambdaQueryWrapper);
+    }
+
+    public List<BizOrder> getAllInProgressOrders() {
+        LambdaQueryWrapper<BizOrder> lambdaQueryWrapper = Wrappers.<BizOrder>lambdaQuery()
+                .eq(BizOrder::getOrderStatus, OrderStatusEnum.PAID)
+                .and((i) -> {
+                    i.eq(BizOrder::getSubmitStatus, SubmitStatusEnum.SUBMIT_SUCCESS)
+                            .or()
+                            .eq(BizOrder::getSubmitStatus, SubmitStatusEnum.IN_PROGRESS);
+                })
+                .isNotNull(BizOrder::getPlatformUid)
+                .isNotNull(BizOrder::getStationUrl)
+                .isNotNull(BizOrder::getPlatformId);
+        return bizOrderMapper.selectList(lambdaQueryWrapper);
     }
 
     private Long saveOrder(

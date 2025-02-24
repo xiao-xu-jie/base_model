@@ -2,6 +2,8 @@ package com.xujie.business;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONObject;
+import com.xujie.business.application.es.DTO.OrderStatusEsDTO;
+import com.xujie.business.application.es.repository.OrderStatusRepository;
 import com.xujie.business.application.pay.entity.OrderRequest;
 import com.xujie.business.application.pay.impl.HuPiJiaoPayService;
 import com.xujie.business.common.constants.HuPiJiaoPayConstant;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +25,8 @@ import java.util.Map;
 public class TestNotify {
     @Resource
     private HuPiJiaoPayService payService;
+    @Resource
+    private OrderStatusRepository orderStatusRepository;
 
 
     @Test
@@ -44,4 +49,11 @@ public class TestNotify {
         JSONObject response = payService.createOrder(request);
         log.info(response.toString());
     }
+
+    @Test
+    public void TestES() {
+        List<OrderStatusEsDTO> byPhone = orderStatusRepository.findByUser("15182659916");
+        log.info(byPhone.toString());
+    }
+
 }

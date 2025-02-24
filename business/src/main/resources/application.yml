@@ -3,6 +3,12 @@ server:
 spring:
   profiles:
     active: dev
+  elasticsearch:
+    uris: http://110.40.43.179:9200
+    username: elastic
+    password: T2hKpwHsEmM22imD
+  
+  
   cloud:
     nacos:
       config:
@@ -13,9 +19,10 @@ spring:
         namespace: chaoxing
   config:
     import:
-      - nacos:application-${spring.profiles.active}.yml
+      - optional:nacos:application-${spring.profiles.active}.yml
 
 logging:
+  
   config: classpath:logback-spring.xml
   level:
     com.xujie.business.common.templates: debug

@@ -2,6 +2,9 @@ package com.xujie.business.domain.service;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.xujie.business.infra.DO.BizOrder;
+
+import java.util.List;
 
 public interface OrderDomainService {
 
@@ -10,4 +13,6 @@ public interface OrderDomainService {
     Boolean getOrderStatus(Long orderNo);
 
     JSONArray queryUserOrders(String phone);
+
+    public List<BizOrder> getAllInProgressOrders();
 }
