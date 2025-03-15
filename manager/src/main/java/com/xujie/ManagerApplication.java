@@ -5,10 +5,8 @@ import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author Xujie
@@ -17,10 +15,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Slf4j
 @MapperScan("com.xujie.manager.infra.mapper")
 @EnableCaching
-@EnableTransactionManagement
-@EnableFileStorage
 @EnableAspectJAutoProxy
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@EnableFileStorage
+@SpringBootApplication
 public class ManagerApplication {
     public static void main(String[] args) {
         log.info("ManagerApplication start...");

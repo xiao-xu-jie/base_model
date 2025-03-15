@@ -1,9 +1,10 @@
 package com.xujie.manager.domain.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.xujie.manager.DTO.res.Meta;
-import com.xujie.manager.DTO.res.RoutersQueryResDTO;
 import com.xujie.manager.common.exception.CustomException;
+import com.xujie.manager.common.utils.ConditionCheck;
 import com.xujie.manager.common.utils.RouterUtil;
 import com.xujie.manager.domain.BO.RoleBO;
 import com.xujie.manager.domain.BO.RoutersBO;
@@ -16,10 +17,8 @@ import com.xujie.manager.infra.DO.SysRouters;
 import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RoleService;
 import com.xujie.manager.infra.service.RouterService;
-import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +44,6 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     private RoutersConvert routersConvert;
 
 
-
     @Override
     public List<RoleBO> getAllRoleList() {
         List<SysRole> allRoleByEntity = baseService.getListByEntity(SysRole.builder().build());
@@ -65,7 +63,7 @@ public class RoleDomainServiceImpl implements RoleDomainService {
         List<SysRouters> allRouters = routerService.getAllRouters();
         List<RoutersBO> routerBOS = routersConvert.convertListDO2BO(allRouters);
         routerBOS.forEach(item -> {
-            item.setMeta(new Meta(item.getTitle(), item.getIcon(), item.getRank(),item.getShowlink()));
+            item.setMeta(new Meta(item.getTitle(), item.getIcon(), item.getRank(), item.getShowlink()));
         });
         // 递归设置子节点
         routerBOS = RouterUtil.setChildren(routerBOS);
@@ -77,7 +75,7 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     public void add(RoleBO roleBO) {
         Long id = baseService.addOne(roleConvert.convertBO2DO(roleBO));
         ConditionCheck.nullAndThrow(id, new CustomException("添加角色失败"));
-        if(roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
+        if (roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
             return;
         }
         roleRouterService.addRoleRouter(roleBO.getRouters(), id);
@@ -103,7 +101,7 @@ public class RoleDomainServiceImpl implements RoleDomainService {
     public void update(RoleBO roleBO) {
         baseService.updateOne(roleBO.getId(), roleConvert.convertBO2DO(roleBO));
         roleRouterService.deleteRoleRouterByRoleId(roleBO.getId());
-        if(roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
+        if (roleBO.getRouters() == null || roleBO.getRouters().isEmpty()) {
             return;
         }
         roleRouterService.addRoleRouter(roleBO.getRouters(), roleBO.getId());

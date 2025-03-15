@@ -1,4 +1,4 @@
-package com.xujie.tools;
+package com.xujie.manager.common.utils;
 
 import java.lang.reflect.InvocationTargetException;
 

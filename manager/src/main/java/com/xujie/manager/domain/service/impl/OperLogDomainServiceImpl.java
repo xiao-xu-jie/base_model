@@ -2,12 +2,12 @@ package com.xujie.manager.domain.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xujie.manager.common.exception.CustomException;
+import com.xujie.manager.common.utils.ConditionCheck;
 import com.xujie.manager.domain.BO.OperLogBO;
 import com.xujie.manager.domain.convert.OperLogConvert;
 import com.xujie.manager.domain.service.OperLogDomainService;
 import com.xujie.manager.infra.DO.SysOperLog;
 import com.xujie.manager.infra.service.OperLogService;
-import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

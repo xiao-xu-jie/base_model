@@ -1,11 +1,11 @@
 package com.xujie.manager.DTO.res;
 
+import com.google.common.collect.Lists;
 import com.xujie.manager.common.base.model.BaseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.assertj.core.util.Lists;
 
 import java.util.Date;
 import java.util.List;

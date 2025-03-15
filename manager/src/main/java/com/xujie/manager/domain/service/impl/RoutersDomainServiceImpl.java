@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.xujie.manager.DTO.res.Meta;
 import com.xujie.manager.common.exception.CustomException;
+import com.xujie.manager.common.utils.ConditionCheck;
 import com.xujie.manager.common.utils.RouterUtil;
 import com.xujie.manager.domain.BO.RoutersBO;
 import com.xujie.manager.domain.convert.RoutersConvert;
@@ -11,7 +12,6 @@ import com.xujie.manager.domain.service.RoutersDomainService;
 import com.xujie.manager.infra.DO.SysRouters;
 import com.xujie.manager.infra.service.RoleRouterService;
 import com.xujie.manager.infra.service.RouterService;
-import com.xujie.tools.ConditionCheck;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -68,7 +68,7 @@ public class RoutersDomainServiceImpl implements RoutersDomainService {
     public List<RoutersBO> getRouters() {
         List<RoutersBO> routerBOS = routerConvert.convertListDO2BO(routerService.getRouters());
         routerBOS.forEach(item -> {
-            item.setMeta(new Meta(item.getTitle(), item.getIcon(), item.getRank(),item.getShowlink()));
+            item.setMeta(new Meta(item.getTitle(), item.getIcon(), item.getRank(), item.getShowlink()));
 //            item.setChildren(Lists.newArrayList());
         });
         // 递归设置子节点
