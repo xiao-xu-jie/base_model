@@ -4,9 +4,9 @@ FROM maven:3.8-openjdk-11 AS builder
 WORKDIR /build
 
 # 首先复制依赖相关文件，利用Docker缓存机制
-COPY pom.xml .
+
 COPY public-denpendency ./public-denpendency/
-COPY business/pom.xml ./business/
+
 
 # 构建公共依赖
 RUN cd public-denpendency && mvn clean install -DskipTests=true
@@ -15,7 +15,7 @@ RUN cd public-denpendency && mvn clean install -DskipTests=true
 COPY business ./business/
 
 # 构建业务应用
-RUN cd business && mvn clean package -DskipTests=true
+RUN cd ../business && mvn clean package -DskipTests=true
 
 # 运行时环境
 FROM openjdk:17
