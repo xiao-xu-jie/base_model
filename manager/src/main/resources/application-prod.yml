@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/chaoxingv2?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8
-    username: root
-    password: 123456
+    username: chaoxingv2
+    password: y5DPDk6ATXkW7wM5
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 20

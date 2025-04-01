@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xujie.manager.auth.AuthInterceptor;
 import com.xujie.manager.common.exception.AuthException;
+import io.netty.util.concurrent.CompleteFuture;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +50,7 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
     @Override
     protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         super.configureMessageConverters(converters);
+        
         converters.add(mappingJackson2HttpMessageConverter());
     }
 
@@ -115,7 +117,7 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
 //    }
 
     @Bean(name = "logExecutor")
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(20);
