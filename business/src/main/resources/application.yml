@@ -3,10 +3,7 @@ server:
 spring:
   profiles:
     active: dev
-  elasticsearch:
-    uris: http://110.40.43.179:9200
-    username: elastic
-    password: T2hKpwHsEmM22imD
+
   
   
   cloud:
