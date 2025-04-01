@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  xujie-business:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xujie-business
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-8899}:8899"
+    volumes:
+      - ${PROJECT_PATH}/logs:/app/logs
+      - ${PROJECT_PATH}/data:/app/data
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8899
+      - JVM_OPTS=-Xms2048M -Xmx2048M -Xss512K -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=256M -Xlog:gc*:file=/app/logs/gc.log:time,level,tags
+    networks:
+      - xujie-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8899/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  xujie-network:
+    driver: bridge
