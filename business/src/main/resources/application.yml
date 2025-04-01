@@ -16,7 +16,8 @@ spring:
         namespace: chaoxing
   config:
     import:
-      - optional:nacos:application-${spring.profiles.active}.yml
+      - nacos:application-${spring.profiles.active}.yml
+      - nacos:nacos-discovery.yml
 
 logging:
   
