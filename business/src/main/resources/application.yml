@@ -1,11 +1,10 @@
 server:
   port: 8899
 spring:
+  application:
+    name: chaoxingxing
   profiles:
     active: prod
-
-  
-  
   cloud:
     nacos:
       config:
@@ -21,6 +20,7 @@ spring:
 
 logging:
   
-  config: classpath:logback-spring.xml
+  config: classpath:log4j2-spring-info.xml
   level:
+    com.alibaba.cloud.nacos: debug
     com.xujie.business.common.templates: debug

@@ -9,9 +9,6 @@ import com.xujie.business.common.entity.Result;
 import com.xujie.business.domain.convert.ClassConvert;
 import com.xujie.business.domain.service.ClassDomainService;
 import jakarta.annotation.Resource;
-import org.apache.skywalking.apm.toolkit.trace.Tag;
-import org.apache.skywalking.apm.toolkit.trace.Tags;
-import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,9 +41,6 @@ public class ClassController {
      *
      * @return 用户课程信息
      */
-    @Trace(operationName = "查课")
-    @Tags({@Tag(key = "param", value = "arg[0]"),
-            @Tag(key = "classes", value = "returnedObj")})
     @PostMapping("/query")
     public Result<List<ClassQueryResDTO>> query(
             @RequestBody @Validated ClassQueryReqDTO classQueryReq) {
