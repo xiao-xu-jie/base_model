@@ -15,7 +15,7 @@ ENV SPRING_PROFILES_ACTIVE=prod \
     SERVER_PORT=8899 \
     REGISTER_PORT=${SERVER_PORT} \
     SERVER_IP=127.0.0.1 \
-    JVM_OPTS="-Xms2048M -Xmx2048M -Xss512K -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=256M -Xlog:gc*:file=/app/logs/gc.log:time,level,tags"
+    JVM_OPTS="-Xms1024M -Xmx1024M -Xss256K -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=256M -Xlog:gc*:file=/app/logs/gc.log:time,level,tags"
 
 # 暴露端口
 EXPOSE ${SERVER_PORT}
