@@ -128,10 +128,14 @@ public class TwoNineTemplate
             CompletableFuture<Void> postAsync = WebclientUtil
                     .postAsync(item.getUrl() + PlantApiConstant.QUERY_ORDER_SUFFIX, mapVal, MediaType.APPLICATION_FORM_URLENCODED, String.class, 500, taskExecutor)
                     .thenAccept((result) -> {
+                        if (result == null || !JSONUtil.isTypeJSON(result)) return;
                         // 序列化
                         JSONObject jsonObject = new JSONObject(result);
-                        if (jsonObject.getInt("code") != 1) return;
+                        if (jsonObject.isEmpty() ||  jsonObject.getInt("code") != 1) return;
                         addToJsonArray(jsonArray, jsonObject);
+                    }).exceptionally(e -> {
+                        log.error("订单状态同步发送异常",e);
+                        return null;
                     });
             futures.add(postAsync);
         });
