@@ -4,11 +4,9 @@ spring:
   profiles:
     active: dev
   elasticsearch:
-    uris: http://110.40.43.179:9200
+    uris: http://183.131.51.137:9200
     username: elastic
-    password: T2hKpwHsEmM22imD
-  
-  
+    password: xujie520.
   cloud:
     nacos:
       config:

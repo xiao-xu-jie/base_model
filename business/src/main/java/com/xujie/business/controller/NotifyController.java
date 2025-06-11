@@ -30,8 +30,8 @@ import java.util.Map;
 public class NotifyController {
     @Resource
     private NotifyDomainService notifyDomainService;
-    @Resource
-    private SiteConfig siteConfig;
+//    @Resource
+//    private SiteConfig siteConfig;
     @Qualifier("huPiJiaoPayConfig")
     @Autowired
     private HuPiJiaoPayConfig config;

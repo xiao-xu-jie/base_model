@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Configuration
+//@Configuration
 public class SiteConfig {
   @Value("${site.id}")
   private String id;
