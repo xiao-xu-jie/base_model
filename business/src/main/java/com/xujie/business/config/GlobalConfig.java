@@ -31,7 +31,6 @@ import java.util.List;
  */
 @Configuration
 @EnableScheduling
-@EnableFormValidator
 public class GlobalConfig extends WebMvcConfigurationSupport {
 
     @Resource
@@ -76,6 +75,6 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return new MappingJackson2HttpMessageConverter(objectMapper);
     }
-    
+
 
 }

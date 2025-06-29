@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: ${SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR}
+        file-extension: yml   #指定配置文件扩展名为yml
+        username: ${SPRING_CLOUD_NACOS_CONFIG_USERNAME}
+        password: ${SPRING_CLOUD_NACOS_CONFIG_PASSWORD}
+        namespace: ${SPRING_CLOUD_NACOS_CONFIG_NAMESPACE:base-model}
+
+  config:
+    import:
+      - optional:nacos:${spring.application.name}.yml
+      - nacos:nacos-discovery-dev.yml
+      - optional:nacos:common-db.yml
+      - optional:nacos:common-redis.yml

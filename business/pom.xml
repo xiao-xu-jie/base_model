@@ -46,6 +46,20 @@
             <artifactId>future-contract</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.xujie</groupId>
+            <artifactId>future-spring-boot-starter</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!-- 注册、配置中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
     </dependencies>
     <!-- 阿里云的Maven镜像源 -->
     <repositories>

@@ -1,7 +1,10 @@
 server:
   port: 8888
 spring:
+  application:
+    name: base-model-service
   profiles:
     active: ${env-flag:dev}
 logging:
   config: classpath:log4j2-spring.xml
+
