@@ -52,6 +52,12 @@ public class User implements DbEntity {
     private String nickname;
 
     /**
+     * 用户简介
+     */
+    @MongoIndex
+    private String userInstruction;
+
+    /**
      * 密码
      */
     @MongoIndex
@@ -65,13 +71,13 @@ public class User implements DbEntity {
     /**
      * 电话号码
      */
-    @MongoIndex
+    @MongoIndex(unique = true)
     private String phoneNumber;
 
     /**
      * 邮箱
      */
-    @MongoIndex
+    @MongoIndex(unique = true)
     private String email;
 
     /**
