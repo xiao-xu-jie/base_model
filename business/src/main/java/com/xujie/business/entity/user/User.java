@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
+import static com.xujie.business.commom.constants.user.UserConstant.USER_DEFAULT_AVATAR;
+
+
 /**
  * 用户实体
  */
@@ -49,13 +52,19 @@ public class User implements DbEntity {
      * 昵称
      */
     @MongoIndex
-    private String nickname;
+    private String nickname = createRandomNickName();
 
     /**
      * 用户简介
      */
     @MongoIndex
-    private String userInstruction;
+    private String userInstruction = "无";
+
+    /**
+     * 用户地区
+     */
+    @MongoIndex
+    private String userArea = "";
 
     /**
      * 密码
@@ -66,7 +75,7 @@ public class User implements DbEntity {
     /**
      * 头像地址
      */
-    private String avatar;
+    private String avatar = USER_DEFAULT_AVATAR;
 
     /**
      * 电话号码
@@ -110,4 +119,9 @@ public class User implements DbEntity {
      * 更新时间
      */
     private Long updateTime = Timer.currentTimestamp();
+
+    private String createRandomNickName() {
+        // 生成随机昵称的逻辑
+        return "User" + (int) (Math.random() * 1000);
+    }
 }

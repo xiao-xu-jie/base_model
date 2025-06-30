@@ -45,6 +45,7 @@ public class UserWxAccountBind {
 
     @MongoIndex
     private String avatarUrl;
+
     /**
      * 删除状态
      */

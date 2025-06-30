@@ -14,3 +14,4 @@ spring:
       - nacos:nacos-discovery-dev.yml
       - optional:nacos:common-db.yml
       - optional:nacos:common-redis.yml
+
