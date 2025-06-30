@@ -1,4 +1,4 @@
-package com.xujie.business.security.utils;
+package com.xujie.business.commom.security.utils;
 
 /**
  * @author Xujie

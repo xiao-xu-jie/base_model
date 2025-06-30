@@ -1,4 +1,4 @@
-package com.xujie.business.security.aop;
+package com.xujie.business.commom.security.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserInfoAop {
 
-    @Around("@annotation(com.xujie.business.security.annotations.UserInfo)")
+    @Around("@annotation(com.xujie.business.commom.security.annotations.UserInfo)")
     public Object handleMyAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         // 找到对应用户的参数

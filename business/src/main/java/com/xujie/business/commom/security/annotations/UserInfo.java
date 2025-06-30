@@ -1,4 +1,4 @@
-package com.xujie.business.security.annotations;
+package com.xujie.business.commom.security.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
