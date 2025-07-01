@@ -11,7 +11,7 @@ import java.text.MessageFormat;
 
 
 public class SmsUtil {
-    public String generateCode(int length) throws NoSuchAlgorithmException {
+    private static String generateCode(int length) throws NoSuchAlgorithmException {
         StringBuilder code = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int digit = SecureRandom.getInstanceStrong().nextInt(10); // 生成0-9之间的随机数
@@ -20,14 +20,14 @@ public class SmsUtil {
         return code.toString();
     }
 
-    public String generateCode() throws NoSuchAlgorithmException {
+    public static String generateCode() throws NoSuchAlgorithmException {
         return generateCode(4); // 默认生成4位验证码
     }
 
     /**
      * 渲染模板
      */
-    public String renderTemplate(String template, String... body) {
+    public static String renderTemplate(String template, String... body) {
         MessageFormat messageFormat = new MessageFormat(template);
         return messageFormat.format(body);
 

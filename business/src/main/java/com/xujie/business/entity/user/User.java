@@ -120,7 +120,7 @@ public class User implements DbEntity {
      */
     private Long updateTime = Timer.currentTimestamp();
 
-    private String createRandomNickName() {
+    public static String createRandomNickName() {
         // 生成随机昵称的逻辑
         return "User" + (int) (Math.random() * 1000);
     }
