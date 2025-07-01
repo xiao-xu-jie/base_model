@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.xujie.business.commom.constants.SmsConstant.SMS_CODE_KEY;
 
 /**
+ * 通用请求处理控制器
+ *
  * @author Xujie
  * @since 2025/7/1 13:18
  **/
-
 @RestController
 @RequestMapping("/common")
 @RequiredArgsConstructor
@@ -28,6 +29,12 @@ public class CommonController {
     private final SmsService smsService;
     private final RedisService redisService;
 
+    /**
+     * 发送短信验证码
+     *
+     * @param request
+     * @return
+     */
     @SneakyThrows
     @PostMapping("/sms/send")
     public ResponseEntity<String> sendSms(@RequestBody CommonDto.SmsSendRequest request) {

@@ -1,0 +1,23 @@
+{
+  "outPath": "target/doc",
+  "projectName": "蛋价社区",
+  "packageFilters": "com.xujie.business.controller.*",
+  "openUrl": "http://apidocs.xxce.cn/api",
+  "appToken": "140f3f95e43049039761da75e2f9862a",
+  "debugEnvName": "DEV环境",
+  "debugEnvUrl": "http://127.0.0.1:8888",
+  "tornaDebug": true,
+  "replace": true,
+  "requestHeaders": [
+    {
+      "name": "Authorization",
+      "type": "string",
+      "desc": "Token",
+      "value": "a266db0e-c1f7-4985-9b9c-b74841dee6cf",
+      "required": true,
+      "since": "-",
+      "pathPatterns": "/**",
+      "excludePathPatterns": "/app/login"
+    }
+  ]
+}

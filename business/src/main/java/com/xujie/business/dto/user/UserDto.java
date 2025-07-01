@@ -71,4 +71,34 @@ public class UserDto {
         @NotBlank(message = "验证码不能为空")
         private String phoneCode;
     }
+
+    @Data
+    @ToString
+    public static class UserLoginRequest {
+        /**
+         * 用户名
+         */
+        private String username;
+
+        /**
+         * 手机号
+         */
+        private String phoneNumber;
+
+        /**
+         * 密码
+         */
+        private String password;
+
+        /**
+         * 手机验证码
+         */
+        private String phoneCode;
+    }
+
+    @Data
+    @ToString
+    public static class UserLoginResponse {
+
+    }
 }
