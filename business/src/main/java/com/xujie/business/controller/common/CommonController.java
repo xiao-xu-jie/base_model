@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.xujie.business.commom.constants.SmsConstant.PHONE_CODE_TEMPLATE;
 import static com.xujie.business.commom.constants.SmsConstant.SMS_CODE_KEY;
 
 /**
@@ -51,6 +52,8 @@ public class CommonController {
             return ResponseEntity.fail("验证码发送失败");
         }
         BeanUtils.copyProperties(request, smsSendRequest);
+        String template = SmsUtil.renderTemplate(PHONE_CODE_TEMPLATE, smsCode);
+        smsSendRequest.setContent(template);
         Boolean res = smsService.sendSms(smsSendRequest);
         if (!res) {
             // 如果发送失败，删除 Redis 中的验证码

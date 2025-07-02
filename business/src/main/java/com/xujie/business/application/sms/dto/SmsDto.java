@@ -38,7 +38,7 @@ public class SmsDto {
         private List<String> success_data;
 
         public Boolean isSuccess() {
-            return code == 0;
+            return code == 1;
         }
     }
 }

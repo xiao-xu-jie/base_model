@@ -7,4 +7,14 @@ spring:
     active: ${env-flag:dev}
 logging:
   config: classpath:log4j2-spring.xml
-
+sa-token:
+  filter:
+    # 需要拦截的路由（默认拦截所有）
+    include:
+      - /**
+    # 需要放行的路由
+    exclude:
+      - /common/sms/send
+      - /dj/user/login
+      - /dj/user/register
+      - /favicon.ico

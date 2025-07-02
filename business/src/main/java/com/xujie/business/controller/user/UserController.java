@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dj/user")
+@RequestMapping
 public class UserController {
     private final IUserService userService;
     private final CommonService commonService;
@@ -29,7 +29,7 @@ public class UserController {
      * @param userRegisterRequest 用户注册请求参数
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping("/dj/user/register")
     public ResponseEntity<String> userRegister(@RequestBody UserDto.UserRegisterRequest userRegisterRequest) {
         // 校验验证码
         Boolean flag = commonService.verifyCode(userRegisterRequest.getPhoneNumber(), userRegisterRequest.getPhoneCode());
@@ -48,7 +48,7 @@ public class UserController {
      * @param userLoginRequest 用户登录请求参数
      * @return
      */
-    @PostMapping("/login")
+    @PostMapping("/dj/user/login")
     public ResponseEntity<UserDto.UserLoginResponse> userLogin(@RequestBody UserDto.UserLoginRequest userLoginRequest) {
         return ResponseEntity.success(userService.loginUser(userLoginRequest));
     }

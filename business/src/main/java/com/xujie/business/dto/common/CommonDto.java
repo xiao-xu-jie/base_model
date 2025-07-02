@@ -13,6 +13,10 @@ public class CommonDto {
     @Data
     @ToString
     public static class SmsSendRequest {
+        /**
+         * @mock 19102849476
+         * 手机号码
+         */
         private String phone;
     }
 }
