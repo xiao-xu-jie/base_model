@@ -6,6 +6,9 @@ package com.xujie.business.config;
  * @Description:
  **/
 
+import cn.dev33.satoken.fun.strategy.SaCorsHandleFunction;
+import cn.dev33.satoken.router.SaHttpMethod;
+import cn.dev33.satoken.router.SaRouter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,15 +16,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-
-import java.util.List;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * mvc的全局处理
@@ -31,16 +32,10 @@ import java.util.List;
  */
 @Configuration
 @EnableScheduling
-public class GlobalConfig extends WebMvcConfigurationSupport {
+public class GlobalConfig implements WebMvcConfigurer {
 
     @Resource
     Environment env;
-
-    @Override
-    protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        super.configureMessageConverters(converters);
-        converters.add(mappingJackson2HttpMessageConverter());
-    }
 
 
     /**
@@ -49,7 +44,7 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
      * @param registry
      */
     @Override
-    protected void addFormatters(FormatterRegistry registry) {
+    public void addFormatters(FormatterRegistry registry) {
     }
 
 // 设置前缀
@@ -74,6 +69,28 @@ public class GlobalConfig extends WebMvcConfigurationSupport {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return new MappingJackson2HttpMessageConverter(objectMapper);
+    }
+
+    /**
+     * CORS 跨域处理策略
+     */
+    @Bean
+    public SaCorsHandleFunction corsHandle() {
+        return (req, res, sto) -> {
+            res.
+                    // 允许指定域访问跨域资源
+                            setHeader("Access-Control-Allow-Origin", "*")
+                    // 允许所有请求方式
+                    .setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
+                    // 有效时间
+                    .setHeader("Access-Control-Max-Age", "3600")
+                    // 允许的header参数
+                    .setHeader("Access-Control-Allow-Headers", "*");
+
+            // 如果是预检请求，则立即返回到前端
+            SaRouter.match(SaHttpMethod.OPTIONS)
+                    .back();
+        };
     }
 
 
