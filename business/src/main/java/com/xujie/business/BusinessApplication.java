@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * businessApplication
@@ -15,6 +16,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  * @since 2024/9/13 17:24
  **/
 @Slf4j
+@ComponentScan(basePackages = {"com.xujie.business", "com.xujie.future"})
 @EnableConfigurationProperties({WxAppConfiguration.class, SmsConfiguration.class})
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class BusinessApplication {

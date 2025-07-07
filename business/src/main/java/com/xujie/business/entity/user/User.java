@@ -87,12 +87,12 @@ public class User implements DbEntity {
      * 邮箱
      */
     @MongoIndex(unique = true)
-    private String email;
+    private String email = "";
 
     /**
      * 真实姓名
      */
-    private String realName;
+    private String realName = "";
 
     /**
      * 性别 0-男 1-女
